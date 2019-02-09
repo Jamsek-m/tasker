@@ -1,0 +1,41 @@
+@import "../../../styles/media-mixin";
+
+.page-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    .login-form {
+        margin-top: 50px;
+        width: 20%;
+
+        h1 {
+            margin-bottom: 40px;
+        }
+        .button-group {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            button {
+                width: 40%;
+            }
+        }
+    }
+}
+
+@include device-specific($tablet) {
+    .page-wrapper {
+        .login-form {
+            width: 40%;
+        }
+    }
+}
+
+@include device-specific($phone) {
+    .page-wrapper {
+        .login-form {
+            width: 80%;
+        }
+    }
+}

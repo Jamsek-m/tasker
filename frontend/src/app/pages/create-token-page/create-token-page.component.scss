@@ -1,0 +1,18 @@
+@import "../../../styles/media-mixin";
+
+form {
+    width: 40%;
+
+    .copy-btn {
+        cursor: pointer;
+    }
+    .back-btn {
+        margin-left: 10px;
+    }
+}
+
+@include device-specific($phone) {
+    form {
+        width: 80%;
+    }
+}

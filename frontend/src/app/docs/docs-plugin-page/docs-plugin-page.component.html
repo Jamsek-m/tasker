@@ -1,0 +1,22 @@
+<div class="page-wrapper" *ngIf="plugin !== null">
+    <h1>Plugin: {{plugin.name}}</h1>
+    <p>{{plugin.description}}</p>
+
+    <div class="actions" *ngIf="plugin.actions && plugin.actions.length > 0">
+        <h3>Actions</h3>
+
+        <div class="action" *ngFor="let action of plugin.actions" id="{{action.name}}">
+            <h5>{{action.name}}</h5>
+            <p>{{action.description}}</p>
+
+            <h6>Parameters</h6>
+            <ul>
+                <li *ngFor="let param of action.parameters">
+                    <span class="param-name">{{param.name}}</span> ({{param.type}}): {{param.description}}
+                </li>
+            </ul>
+
+        </div>
+
+    </div>
+</div>

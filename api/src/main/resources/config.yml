@@ -1,0 +1,20 @@
+kumuluzee:
+  name: tasker
+  version: 1.0.0
+  env:
+    name: dev
+  server:
+    base-url: http://localhost:8080
+  health:
+    servlet:
+      mapping: /health
+      enabled: true
+    checks:
+      data-source-health-check:
+        jndi-name: jdbc/mainDB
+  datasources:
+    - jndi-name: jdbc/mainDB
+      connection-url: jdbc:mysql://localhost:3306/tasker?serverTimezone=Europe/Ljubljana&useSSL=false
+      username: uporabnik
+      password: uporabnik
+      max-pool-size: 20

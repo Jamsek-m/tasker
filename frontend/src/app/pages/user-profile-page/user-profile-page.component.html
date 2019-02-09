@@ -1,0 +1,23 @@
+<div class="page-wrapper">
+    <h1>Profile</h1>
+    <p>Username: {{loginInfo.username}}</p>
+
+    <form (submit)="changePassword($event)">
+        <div class="form-group">
+            <input type="password" name="pass1" placeholder="Enter new password" class="form-control"
+                [(ngModel)]="pass.pass1" (ngModelChange)="checkPasswordMatch()"/>
+        </div>
+        <div class="form-group">
+            <input type="password" name="pass2" placeholder="Repeat password" class="form-control"
+                [(ngModel)]="pass.pass2" (ngModelChange)="checkPasswordMatch()"/>
+        </div>
+        <div>
+            <alert type="danger" *ngIf="states.notSame">Passwords don't match!</alert>
+            <alert type="danger" *ngIf="states.error">Error when changing password!</alert>
+            <alert type="success" *ngIf="states.success">Password changed!</alert>
+        </div>
+        <div>
+            <button class="btn btn-outline-primary" type="submit">Change password</button>
+        </div>
+    </form>
+</div>

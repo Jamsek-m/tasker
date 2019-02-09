@@ -1,0 +1,27 @@
+<div class="page-selector" *ngIf="totalItems > itemsPerPage">
+    <!-- first -->
+    <span class="page-item positioned edged"
+        (click)="activatePage(0)"
+        [ngClass]="{'disabled': currentPage === 0}">First</span>
+    <!-- previous -->
+    <span class="page-item positioned"
+        (click)="activatePositionedPage(currentPage - 1)"
+        [ngClass]="{'disabled': currentPage === 0}">Prev</span>
+    <!-- first filler -->
+    <span class="page-item filler" *ngIf="currentPage >= 3">...</span>
+    <!-- pages -->
+    <span *ngFor="let page of shownPages" class="page-item"
+        (click)="activatePage(page)" [ngClass]="{'active-page': currentPage === page}">
+            {{page + 1}}
+        </span>
+    <!-- last filler -->
+    <span class="page-item filler" *ngIf="currentPage + 3 < totalPages">...</span>
+    <!-- next -->
+    <span class="page-item positioned"
+        (click)="activatePositionedPage(currentPage + 1)"
+        [ngClass]="{'disabled': currentPage === totalPages - 1}">Next</span>
+    <!-- last -->
+    <span class="page-item positioned edged"
+        (click)="activatePage(totalPages - 1)"
+        [ngClass]="{'disabled': currentPage === totalPages - 1}">Last</span>
+</div>

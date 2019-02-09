@@ -1,0 +1,17 @@
+@import "../../../styles/_media-mixin.scss";
+
+form {
+    width: 30%;
+}
+
+@include device-specific($tablet) {
+    form {
+        width: 40%;
+    }
+}
+
+@include device-specific($phone) {
+    form {
+        width: 80%;
+    }
+}

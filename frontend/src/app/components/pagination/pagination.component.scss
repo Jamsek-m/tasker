@@ -1,0 +1,87 @@
+@import "../../../styles/variables";
+@import "../../../styles/functions";
+@import "../../../styles/media-mixin";
+
+.page-selector {
+    margin: 20px 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    .page-item {
+        width: 40px;
+        height: 40px;
+        min-width: 40px;
+        border-width: 2px;
+        margin: 0 2px;
+        border-color: $base-color;
+        border-style: solid;
+        font-weight: 600;
+        font-size: 18px;
+        color: $base-color;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        @include disable-text-selection();
+
+        &.positioned {
+            width: 80px;
+
+            &.disabled {
+                color: $light-grey;
+                border-color: $light-grey;
+                background-color: white;
+                cursor: not-allowed;
+            }
+        }
+        &.active-page {
+            color: white;
+            background-color: $base-color;
+        }
+        &.filler {
+            cursor: unset;
+        }
+    }
+}
+
+@include device-specific($phone) {
+    .page-selector {
+        .page-item {
+            width: 35px;
+            height: 35px;
+            min-width: 35px;
+
+            &.positioned {
+                &.edged {
+                    display: none;
+                }
+            }
+        }
+    }
+}
+
+@include device-specific($pc) {
+    .page-selector {
+        .page-item {
+            &:hover {
+                color: white;
+                background-color: $base-color;
+            }
+            &.positioned {
+                &.disabled {
+                    &:hover {
+                        color: white;
+                        background-color: $light-grey;
+                    }
+                }
+            }
+            &.filler {
+                &:hover {
+                    color: $base-color;
+                    background-color: white;
+                }
+            }
+        }
+    }
+}

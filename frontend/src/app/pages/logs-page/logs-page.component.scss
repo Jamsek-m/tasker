@@ -1,0 +1,56 @@
+@import "../../../styles/media-mixin";
+
+.inline-forma {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+
+    .form-grupa {
+        &.date {
+            width: 20%;
+            margin-right: 10px;
+        }
+        &.time {
+            width: 10%;
+            margin-right: 20px;
+        }
+    }
+}
+
+@include device-specific($tablet) {
+    .inline-forma {
+        .form-grupa {
+            &.date {
+                width: 40%;
+            }
+            &.time {
+                width: 20%;
+            }
+        }
+    }
+}
+@include device-specific($phone) {
+    .inline-forma {
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+
+        .form-grupa {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+
+            &.date {
+                width: 100%;
+                margin-right: 0;
+                margin-bottom: 10px;
+            }
+            &.time {
+                width: 100%;
+                margin-right: 0;
+                margin-bottom: 10px;
+            }
+        }
+    }
+}

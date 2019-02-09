@@ -1,0 +1,94 @@
+package com.mjamsek.tasker.resources;
+
+import com.mjamsek.tasker.admin.auth.SecureResource;
+import com.mjamsek.tasker.admin.entities.ConfigEntry;
+import com.mjamsek.tasker.admin.entities.LogSeverity;
+import com.mjamsek.tasker.admin.entities.dto.UserDTO;
+import com.mjamsek.tasker.admin.services.AuthService;
+import com.mjamsek.tasker.admin.services.ConfigService;
+import com.mjamsek.tasker.admin.services.LogService;
+import com.mjamsek.tasker.admin.services.UserService;
+import com.mjamsek.tasker.http.HttpHeader;
+
+import javax.enterprise.context.RequestScoped;
+import javax.inject.Inject;
+import javax.servlet.http.HttpServletResponse;
+import javax.ws.rs.*;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+
+@RequestScoped
+@Path("/auth")
+@Produces(MediaType.APPLICATION_JSON)
+@Consumes(MediaType.APPLICATION_JSON)
+public class AuthResource {
+    
+    @Inject
+    private UserService userService;
+    
+    @Inject
+    private AuthService authService;
+    
+    @Inject
+    private ConfigService configService;
+    
+    @Inject
+    private LogService logService;
+    
+    @POST
+    @Path("/login")
+    public Response login(UserDTO dto, @Context HttpServletResponse response) {
+        response = authService.loginUser(dto, response);
+        return Response.ok().header(HttpHeader.ACCESS_CONTROL_ALLOW_CREDENTIALS, "true").build();
+    }
+    
+    @GET
+    @Path("/logout")
+    public Response logout(@Context HttpServletResponse response) {
+        response = authService.logoutUser(response);
+        return Response.ok().header(HttpHeader.ACCESS_CONTROL_ALLOW_CREDENTIALS, "true").build();
+    }
+    
+    @GET
+    @Path("/is-authorized")
+    @SecureResource
+    public Response isAuthorized() {
+        return Response.ok().header(HttpHeader.ACCESS_CONTROL_ALLOW_CREDENTIALS, "true").build();
+    }
+    
+    @GET
+    @Path("/current-user")
+    @SecureResource
+    public Response getCurrentUser() {
+        return Response.ok(authService.getCurrentUser()).build();
+    }
+    
+    @PUT
+    @Path("/user/{id}")
+    @SecureResource
+    public Response changePassword(@PathParam("id") long userId, UserDTO dto) {
+        userService.changePassword(dto.getPassword(), userId);
+        logService.log(LogSeverity.INFO, "User with id: " + userId + " has changed password.");
+        return Response.ok().build();
+    }
+    
+    @POST
+    @Path("/new-user")
+    public Response createNewUser(UserDTO dto) {
+        ConfigEntry config = configService.getConfig("TASKER_ENABLED_REGISTRATION");
+        boolean enabled = Boolean.valueOf(config.getValue());
+        if (enabled) {
+            boolean created = userService.createUser(dto);
+            if (created) {
+                logService.log(LogSeverity.INFO, "User '" + dto.getUsername() + "' has been registered.");
+                return Response.status(Response.Status.CREATED).build();
+            } else {
+                return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+            }
+        } else {
+            return Response.status(Response.Status.FORBIDDEN).build();
+        }
+    }
+    
+}

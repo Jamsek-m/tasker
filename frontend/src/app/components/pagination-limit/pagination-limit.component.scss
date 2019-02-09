@@ -1,0 +1,18 @@
+@import "../../../styles/variables";
+
+.limit-selector {
+    margin-top: 20px;
+    margin-bottom: 20px;
+    margin-left: 0.5rem;
+
+    .limit-item {
+        margin-left: 5px;
+        color: $base-color;
+        font-weight: 600;
+        cursor: pointer;
+
+        &:hover {
+            text-decoration: underline;
+        }
+    }
+}

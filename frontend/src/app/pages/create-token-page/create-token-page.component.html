@@ -1,0 +1,41 @@
+<div class="page-wrapper" *ngIf="availableActions != null">
+    <h1>New token</h1>
+
+    <form (submit)="submitToken()">
+
+        <div class="form-group">
+            <input class="form-control" type="text" name="token-name" [(ngModel)]="tokenName" placeholder="token name"/>
+        </div>
+
+        <h3>Tasks</h3>
+        <div class="form-group form-check" *ngFor="let task of availableActions.tasks; let i = index">
+            <input type="checkbox" class="form-check-input" name="task-{{i}}" [value]="task" id="task-{{i}}"
+                [(ngModel)]="selectedActions[task]">
+            <label class="form-check-label" for="task-{{i}}">{{task}}</label>
+        </div>
+
+        <h3>Plugins</h3>
+
+        <div *ngFor="let plugin of pluginList; let j = index">
+            <h5>{{plugin}}</h5>
+            <div class="form-group form-check" *ngFor="let pluginAction of availableActions.plugins[plugin]; let i = index">
+                <input class="form-check-input" type="checkbox" name="plugin-{{j}}-{{i}}" id="plugin-{{j}}-{{i}}"
+                    [value]="pluginAction" [(ngModel)]="selectedActions[plugin + '.' + pluginAction]">
+                <label class="form-check-label" for="plugin-{{j}}-{{i}}">{{pluginAction}}</label>
+            </div>
+        </div>
+        <div>
+            <alert type="success" [dismissible]="true" [isOpen]="tokenKey !== ''">
+                Generated key is: {{tokenKey}}
+                <span class="copy-btn" [tooltip]="'Copy key'" (click)="copyKey()">
+                    <fa-icon [icon]="['fas', 'copy']"></fa-icon>
+                </span>
+            </alert>
+            <alert type="danger" [dismissible]="true" [isOpen]="error !== ''">Error! {{error}}</alert>
+        </div>
+        <div class="buttons">
+            <button type="submit" class="btn btn-outline-primary">Submit</button>
+            <button type="button" class="btn btn-outline-danger back-btn" (click)="goBack()">Back</button>
+        </div>
+    </form>
+</div>

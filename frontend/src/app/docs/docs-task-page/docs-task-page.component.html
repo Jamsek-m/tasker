@@ -1,0 +1,14 @@
+<div class="page-wrapper" *ngIf="task !== null">
+    <h1>Task: {{task.name}}</h1>
+    <p>{{task.description}}</p>
+
+    <div *ngIf="task.parameters && task.parameters.length > 0">
+        <h3>Parameters</h3>
+        <ul>
+            <li *ngFor="let param of task.parameters">
+                <span class="param-name">{{param.name}}</span> ({{param.type}}): {{param.description}}
+            </li>
+        </ul>
+    </div>
+
+</div>

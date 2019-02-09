@@ -1,0 +1,18 @@
+FROM openjdk:8-jre-alpine
+
+ENV JAVA_ENV=PRODUCTION
+ENV KUMULUZEE_ENV_NAME=prod
+ENV KUMULUZEE_ENV_PROD=true
+ENV KUMULUZEE_DATASOURCES0_CONNECTIONURL=not_set
+ENV KUMULUZEE_DATASOURCES0_USERNAME=not_set
+ENV KUMULUZEE_DATASOURCES0_PASSWORD=not_set
+
+RUN mkdir /app
+
+WORKDIR /app
+
+ADD ./api/target/tasker.jar /app
+
+EXPOSE 8080
+
+CMD ["java", "-jar", "tasker.jar"]

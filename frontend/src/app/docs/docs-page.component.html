@@ -1,0 +1,32 @@
+<div class="page-wrapper">
+    <h1>Documentation</h1>
+
+    <div class="actions mt-5">
+        <h2>Available actions</h2>
+
+        <h4>Tasks</h4>
+        <ul>
+            <li *ngFor="let task of tasks">
+                <a [routerLink]="['/docs/task/', task.name]">{{task.name}}</a>
+            </li>
+        </ul>
+
+        <h4>Plugins</h4>
+        <ul>
+            <li *ngFor="let plugin of plugins">
+                <a [routerLink]="['/docs/plugin/', plugin.name]">{{plugin.name}}</a>
+            </li>
+        </ul>
+    </div>
+    <div class="general mt-5">
+        <h2>General</h2>
+
+        <h5 class="mt-4">Authentication</h5>
+        <p>
+            For every call you must provide headers:<br/>
+            <span class="param-name">X-Tasker-Key</span>: secret key you get when generating token<br/>
+            <span class="param-name">X-Tasker-Name</span>: name of provided token
+        </p>
+    </div>
+
+</div>

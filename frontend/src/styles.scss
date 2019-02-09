@@ -1,0 +1,26 @@
+/* You can add global styles to this file, and also import other style files */
+
+@import "./styles/variables";
+@import "./styles/media-mixin";
+
+// overrides for bootstrap
+$primary: $base-color;
+// overrides for ngx-bootstrap
+$theme-green: $base-color;
+
+@import "~bootstrap/scss/bootstrap";
+@import "~ngx-bootstrap/datepicker/bs-datepicker.scss";
+
+.navbar-dark .navbar-nav .nav-link {
+    color: $white;
+}
+
+.page-wrapper {
+    padding: 50px;
+}
+
+@include device-specific($phone) {
+    .page-wrapper {
+        padding: 15px;
+    }
+}

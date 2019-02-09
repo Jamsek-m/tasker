@@ -1,0 +1,78 @@
+@import "../../../styles/variables";
+@import "../../../styles/media-mixin";
+
+form {
+    .new-item {
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+
+        input {
+            margin-right: 10px;
+            width: 20%;
+            display: inline-block;
+        }
+    }
+}
+
+.forma {
+    margin-top: 40px;
+
+    .forma-item {
+        padding: 5px 0;
+
+        input {
+            margin-right: 10px;
+            width: 20%;
+            display: inline-block;
+        }
+        .checkmark {
+            color: $green;
+            cursor: pointer;
+            font-size: 22px;
+        }
+    }
+    button {
+        margin-top: 20px;
+    }
+}
+
+@include device-specific($tablet) {
+    form {
+        .new-item {
+            input {
+                width: 40%;
+            }
+        }
+    }
+    .forma {
+        .forma-item {
+            input {
+                width: 40%;
+            }
+        }
+    }
+}
+
+@include device-specific($phone) {
+    form {
+        .new-item {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            justify-content: center;
+
+            input {
+                width: 90%;
+                margin-bottom: 5px;
+            }
+        }
+    }
+    .forma {
+        .forma-item {
+            input {
+                width: 42%;
+            }
+        }
+    }
+}

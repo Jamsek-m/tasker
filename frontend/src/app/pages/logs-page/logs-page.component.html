@@ -1,0 +1,40 @@
+<div class="page-wrapper">
+    <h1>Logs</h1>
+
+    <div>
+        <form (submit)="filterLogs()" class="inline-forma">
+            <div class="form-grupa date">
+                <input type="text" name="date-filter" [bsConfig]="{dateInputFormat: 'DD.MM.YYYY'}"
+                    class="form-control" bsDatepicker [(ngModel)]="dateFilter"/>
+            </div>
+            <div class="form-grupa time">
+                <timepicker name="time-filter" [showSeconds]="true" [showMeridian]="false" [(ngModel)]="timeFilter"></timepicker>
+            </div>
+            <button type="submit" class="btn btn-outline-primary">Filter</button>
+        </form>
+
+    </div>
+
+    <tasker-pagination-limit (whenLimitChanges)="limitChange($event)"></tasker-pagination-limit>
+
+    <div class="table-responsive">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th class="tb-name">Severity</th>
+                    <th class="tb-expired">Date</th>
+                    <th class="tb-actions">Message</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let log of logs">
+                    <td class="tb-name">{{log.severity}}</td>
+                    <td class="tb-expired">{{log.logDate | date: "dd.MM.yyyy HH:mm:ss"}}</td>
+                    <td class="tb-actions">{{log.message}}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <tasker-pagination [totalItems]="totalLogs" [itemsPerPage]="limit" (whenPageChange)="pageChange($event)"></tasker-pagination>
+</div>
