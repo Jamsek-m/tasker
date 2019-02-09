@@ -1,0 +1,63 @@
+pipeline {
+    environment {
+        registry = "https://docker.mjamsek.com"
+        registryCredential = "mjamsek-hub"
+        dockerImageTag = "docker.mjamsek.com/tasker"
+        dockerImage = ""
+        version = ""
+    }
+
+    agent any
+
+    tools {
+        maven "maven3.6"
+        nodejs "node11.6"
+        jdk "jdk8"
+    }
+
+    stages {
+        stage("Cloning git") {
+            steps {
+                git branch: "master",
+                        credentialsId: "github-token",
+                        url: "https://github.com/Jamsek-m/tasker.git"
+            }
+        }
+        stage("Set environment variables") {
+            steps {
+                script {
+                    version = readFile('VERSION').trim()
+                }
+            }
+        }
+        stage("Packaging application") {
+            steps {
+                sh "npm install --prefix ./frontend"
+                sh "mvn clean package"
+            }
+        }
+        stage("Building docker image") {
+            steps {
+                script {
+                    dockerImage = docker.build dockerImageTag
+                }
+            }
+        }
+        stage("Publishing docker image") {
+            steps {
+                script {
+                    docker.withRegistry(registry, registryCredential) {
+                        dockerImage.push("$version")
+                        dockerImage.push("latest")
+                    }
+                }
+            }
+        }
+        stage("Removing generated docker images") {
+            steps {
+                sh "docker rmi $dockerImageTag:$version"
+                sh "docker rmi $dockerImageTag:latest"
+            }
+        }
+    }
+}
