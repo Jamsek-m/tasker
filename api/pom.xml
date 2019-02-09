@@ -133,7 +133,7 @@
                             <resources>
                                 <resource>
                                     <directory>
-                                        ${basedir}}/../frontend/dist/tasker
+                                        ${basedir}/../frontend/dist/tasker
                                     </directory>
                                 </resource>
                             </resources>
