@@ -19,6 +19,7 @@ public class SecurityHeadersFilter implements Filter {
             resp.addHeader("X-XSS-Protection", "1; mode=block");
             resp.addHeader("X-Frame-Options", "DENY");
             resp.addHeader("Strict-Transport-Security", "max-age=63072000");
+            resp.addHeader("Content-Security-Policy", "default-src 'self'");
             chain.doFilter(request, resp);
         } else {
             chain.doFilter(request, response);
