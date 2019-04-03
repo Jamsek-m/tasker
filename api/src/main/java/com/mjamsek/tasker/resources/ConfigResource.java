@@ -1,8 +1,8 @@
 package com.mjamsek.tasker.resources;
 
-import com.mjamsek.tasker.admin.auth.SecureResource;
-import com.mjamsek.tasker.admin.entities.ConfigEntry;
-import com.mjamsek.tasker.admin.services.ConfigService;
+import com.mjamsek.tasker.auth.SecureResource;
+import com.mjamsek.tasker.entities.persistence.ConfigEntry;
+import com.mjamsek.tasker.services.ConfigService;
 
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;

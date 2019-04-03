@@ -1,8 +1,8 @@
 package com.mjamsek.tasker.mappers;
 
-import com.mjamsek.tasker.admin.entities.exceptions.AdminException;
-import com.mjamsek.tasker.admin.entities.exceptions.BadLoginException;
-import com.mjamsek.tasker.admin.entities.exceptions.TokenExistsException;
+import com.mjamsek.tasker.entities.exceptions.AdminException;
+import com.mjamsek.tasker.entities.exceptions.BadLoginException;
+import com.mjamsek.tasker.entities.exceptions.TokenExistsException;
 
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.ExceptionMapper;

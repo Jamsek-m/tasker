@@ -1,10 +1,10 @@
 package com.mjamsek.tasker.resources;
 
 import com.kumuluz.ee.rest.beans.QueryParameters;
-import com.mjamsek.tasker.admin.auth.SecureResource;
-import com.mjamsek.tasker.admin.entities.LogEntry;
-import com.mjamsek.tasker.admin.services.LogService;
+import com.mjamsek.tasker.auth.SecureResource;
+import com.mjamsek.tasker.entities.persistence.LogEntry;
 import com.mjamsek.tasker.http.HttpHeader;
+import com.mjamsek.tasker.services.LogService;
 
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;

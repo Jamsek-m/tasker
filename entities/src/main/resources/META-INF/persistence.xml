@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence xmlns="http://xmlns.jcp.org/xml/ns/persistence" version="2.1">
+    <persistence-unit name="main-jpa-unit" transaction-type="RESOURCE_LOCAL">
+
+        <non-jta-data-source>jdbc/mainDB</non-jta-data-source>
+
+        <class>com.mjamsek.tasker.entities.persistence.service.Service</class>
+        <class>com.mjamsek.tasker.entities.persistence.service.ServiceUrl</class>
+        <class>com.mjamsek.tasker.entities.persistence.service.ServiceHealthCheck</class>
+        <class>com.mjamsek.tasker.entities.persistence.service.ServiceHealthCheckFix</class>
+        <class>com.mjamsek.tasker.entities.persistence.ConfigEntry</class>
+        <class>com.mjamsek.tasker.entities.persistence.LogEntry</class>
+        <class>com.mjamsek.tasker.entities.persistence.LoginSession</class>
+        <class>com.mjamsek.tasker.entities.persistence.UserEntity</class>
+
+        <properties>
+            <property name="hibernate.dialect" value="org.hibernate.dialect.H2Dialect"/>
+            <!-- Debug values -->
+            <property name="hibernate.hbm2ddl.auto" value="create-drop"/>
+            <property name="hibernate.show_sql" value="true"/>
+<!--            <property name="hibernate.hbm2dll.import_files" value="import.sql"/>-->
+<!--            <property name="hibernate.hbm2ddl.auto" value="none"/>-->
+<!--            <property name="hibernate.show_sql" value="false"/>-->
+<!--            <property name="hibernate.hbm2dll.import_files" value=""/>-->
+
+            <property name="javax.persistence.schema-generation.create-source" value="metadata"/>
+            <property name="javax.persistence.schema-generation.drop-source" value="metadata"/>
+        </properties>
+    </persistence-unit>
+</persistence>
