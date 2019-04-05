@@ -1,5 +1,7 @@
 package com.mjamsek.tasker.entities.persistence.service;
 
+import com.mjamsek.tasker.entities.enums.HttpMethod;
+
 import javax.persistence.*;
 
 @Entity
@@ -16,7 +18,7 @@ public class ServiceHealthCheckFix {
     private String fixUrl;
     
     @Enumerated(EnumType.STRING)
-    private HealthFixMethod method;
+    private HttpMethod method;
     
     public long getId() {
         return id;
@@ -42,11 +44,11 @@ public class ServiceHealthCheckFix {
         this.fixUrl = fixUrl;
     }
     
-    public HealthFixMethod getMethod() {
+    public HttpMethod getMethod() {
         return method;
     }
     
-    public void setMethod(HealthFixMethod method) {
+    public void setMethod(HttpMethod method) {
         this.method = method;
     }
 }

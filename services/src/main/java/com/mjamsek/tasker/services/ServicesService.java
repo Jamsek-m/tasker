@@ -15,6 +15,8 @@ public interface ServicesService {
     
     Service getServiceById(long serviceId);
     
+    Service getServiceByIdOrName(String idOrName);
+    
     Service updateService(Service service);
     
     void doHealthCheck(long serviceId);

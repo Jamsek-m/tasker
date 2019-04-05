@@ -5,8 +5,13 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "services")
+@Table(name = "services", indexes = @Index(name = "NAME_UNIQ_INDEX", columnList = "name", unique = true))
+@NamedQueries({
+    @NamedQuery(name = Service.FIND_BY_NAME, query = "SELECT s FROM Service s WHERE s.name = :name")
+})
 public class Service {
+    
+    public static final String FIND_BY_NAME = "Service.findByName";
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,16 +25,27 @@ public class Service {
     @JsonIgnore
     private String token;
     
+    @JsonIgnore
+    private Boolean active;
+    
     @ManyToOne
-    @JoinColumn(name = "service_url")
+    @JoinColumn(name = "url_id")
     private ServiceUrl serviceUrl;
     
     @ManyToOne
-    @JoinColumn(name = "health_check")
+    @JoinColumn(name = "health_check_id")
     private ServiceHealthCheck healthCheck;
     
     public long getId() {
         return id;
+    }
+    
+    public Boolean isActive() {
+        return active;
+    }
+    
+    public void setActive(Boolean active) {
+        this.active = active;
     }
     
     public void setId(long id) {
