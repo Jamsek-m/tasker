@@ -1,7 +1,7 @@
 package com.mjamsek.tasker.services.impl;
 
-import com.mjamsek.tasker.entities.persistence.ConfigEntry;
-import com.mjamsek.tasker.entities.persistence.LogSeverity;
+import com.mjamsek.tasker.entities.persistence.admin.ConfigEntry;
+import com.mjamsek.tasker.entities.persistence.admin.LogSeverity;
 import com.mjamsek.tasker.services.ConfigService;
 import com.mjamsek.tasker.services.LogService;
 

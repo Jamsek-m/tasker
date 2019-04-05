@@ -1,16 +1,21 @@
-package com.mjamsek.tasker.entities.persistence;
+package com.mjamsek.tasker.entities.persistence.auth;
 
 import javax.persistence.*;
 import java.util.Date;
 
 @Entity
-@Table(name = "login_sessions", indexes = @Index(name = "IP_UNIQUE_INDEX", columnList = "ip", unique = true))
+@Table(name = "login_sessions", indexes = {
+    @Index(name = "IP_UNIQUE_INDEX", columnList = "ip", unique = true),
+    @Index(name = "SESSID_UNIQ_INDEX", columnList = "session_id", unique = true)
+})
 @NamedQueries({
     @NamedQuery(name = LoginSession.FIND_BY_IP, query = "SELECT l FROM LoginSession l WHERE l.ip = :ip"),
-    @NamedQuery(name = LoginSession.DELETE_BY_IP, query = "DELETE FROM LoginSession l WHERE l.ip = :ip")
+    @NamedQuery(name = LoginSession.DELETE_BY_IP, query = "DELETE FROM LoginSession l WHERE l.ip = :ip"),
+    @NamedQuery(name = LoginSession.FIND_BY_SESSION_ID, query = "SELECT l FROM LoginSession l WHERE l.sessionId = :sessionId")
 })
 public class LoginSession {
     
+    public static final String FIND_BY_SESSION_ID = "LoginSession.findBySessionId";
     public static final String FIND_BY_IP = "LoginSession.findByIp";
     public static final String DELETE_BY_IP = "LoginSession.deleteByIp";
     

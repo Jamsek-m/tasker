@@ -1,8 +1,8 @@
 package com.mjamsek.tasker.mappers;
 
-import com.mjamsek.tasker.entities.exceptions.AdminException;
-import com.mjamsek.tasker.entities.exceptions.BadLoginException;
-import com.mjamsek.tasker.entities.exceptions.TokenExistsException;
+import com.mjamsek.tasker.entities.exceptions.DockerException;
+import com.mjamsek.tasker.entities.exceptions.TaskerException;
+import com.mjamsek.tasker.entities.exceptions.UnauthorizedException;
 
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.ExceptionMapper;
@@ -10,15 +10,15 @@ import javax.ws.rs.ext.Provider;
 import java.util.HashMap;
 
 @Provider
-public class AdminExceptionMapper implements ExceptionMapper<AdminException> {
+public class AdminExceptionMapper implements ExceptionMapper<TaskerException> {
     
     @Override
-    public Response toResponse(AdminException exception) {
+    public Response toResponse(TaskerException exception) {
         HashMap<String, String> response = new HashMap<>();
         response.put("message", exception.getMessage());
-        if (exception instanceof TokenExistsException) {
-            return Response.status(Response.Status.CONFLICT).entity(response).build();
-        } else if (exception instanceof BadLoginException) {
+        if (exception instanceof DockerException) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(response).build();
+        } else if (exception instanceof UnauthorizedException) {
             return Response.status(Response.Status.UNAUTHORIZED).entity(response).build();
         }
         return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(response).build();

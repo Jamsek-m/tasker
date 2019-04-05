@@ -16,15 +16,13 @@ public class SecureResourceInterceptor {
     
     @AroundInvoke
     public Object checkCredentials(InvocationContext context) throws Exception {
-        
         NoAuthRefresh noAuth = context.getMethod().getAnnotation(NoAuthRefresh.class);
         if (noAuth == null) {
-            // refresh token
+            // refresh session
             authService.validateAuthorization(true);
         } else {
             authService.validateAuthorization(false);
         }
-        
         return context.proceed();
     }
 }

@@ -2,7 +2,7 @@ package com.mjamsek.tasker.services.impl;
 
 import com.mjamsek.tasker.entities.dto.User;
 import com.mjamsek.tasker.entities.exceptions.BadLoginException;
-import com.mjamsek.tasker.entities.persistence.UserEntity;
+import com.mjamsek.tasker.entities.persistence.auth.UserEntity;
 import com.mjamsek.tasker.services.UserService;
 import org.mindrot.jbcrypt.BCrypt;
 
@@ -30,7 +30,7 @@ public class UserServiceImpl implements UserService {
     }
     
     @Override
-    public UserEntity validateLogin(User dto) {
+    public UserEntity validateLogin(User dto) throws BadLoginException {
         UserEntity user = this.getUserByUsername(dto.getUsername());
         if (user == null) {
             throw new BadLoginException();

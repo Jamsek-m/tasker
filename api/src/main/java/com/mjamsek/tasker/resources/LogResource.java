@@ -2,7 +2,7 @@ package com.mjamsek.tasker.resources;
 
 import com.kumuluz.ee.rest.beans.QueryParameters;
 import com.mjamsek.tasker.auth.SecureResource;
-import com.mjamsek.tasker.entities.persistence.LogEntry;
+import com.mjamsek.tasker.entities.persistence.admin.LogEntry;
 import com.mjamsek.tasker.http.HttpHeader;
 import com.mjamsek.tasker.services.LogService;
 

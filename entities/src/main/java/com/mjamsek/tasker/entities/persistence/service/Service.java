@@ -1,5 +1,7 @@
 package com.mjamsek.tasker.entities.persistence.service;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 
 @Entity
@@ -14,6 +16,9 @@ public class Service {
     private String name;
     
     private String description;
+    
+    @JsonIgnore
+    private String token;
     
     @ManyToOne
     @JoinColumn(name = "service_url")
@@ -61,5 +66,13 @@ public class Service {
     
     public void setHealthCheck(ServiceHealthCheck healthCheck) {
         this.healthCheck = healthCheck;
+    }
+    
+    public String getToken() {
+        return token;
+    }
+    
+    public void setToken(String token) {
+        this.token = token;
     }
 }

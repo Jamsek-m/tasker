@@ -1,6 +1,6 @@
 package com.mjamsek.tasker.services;
 
-import com.mjamsek.tasker.entities.persistence.ConfigEntry;
+import com.mjamsek.tasker.entities.persistence.admin.ConfigEntry;
 
 import java.util.List;
 

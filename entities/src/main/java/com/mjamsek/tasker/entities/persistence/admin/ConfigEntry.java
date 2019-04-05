@@ -1,4 +1,4 @@
-package com.mjamsek.tasker.entities.persistence;
+package com.mjamsek.tasker.entities.persistence.admin;
 
 import javax.persistence.*;
 

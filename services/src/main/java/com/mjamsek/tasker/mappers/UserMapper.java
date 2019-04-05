@@ -1,7 +1,7 @@
 package com.mjamsek.tasker.mappers;
 
 import com.mjamsek.tasker.entities.dto.User;
-import com.mjamsek.tasker.entities.persistence.UserEntity;
+import com.mjamsek.tasker.entities.persistence.auth.UserEntity;
 
 public class UserMapper {
     

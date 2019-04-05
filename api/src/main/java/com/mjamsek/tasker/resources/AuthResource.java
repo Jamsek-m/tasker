@@ -1,9 +1,10 @@
 package com.mjamsek.tasker.resources;
 
+import com.mjamsek.tasker.auth.NoAuthRefresh;
 import com.mjamsek.tasker.auth.SecureResource;
 import com.mjamsek.tasker.entities.dto.User;
-import com.mjamsek.tasker.entities.persistence.ConfigEntry;
-import com.mjamsek.tasker.entities.persistence.LogSeverity;
+import com.mjamsek.tasker.entities.persistence.admin.ConfigEntry;
+import com.mjamsek.tasker.entities.persistence.admin.LogSeverity;
 import com.mjamsek.tasker.http.HttpHeader;
 import com.mjamsek.tasker.services.AuthService;
 import com.mjamsek.tasker.services.ConfigService;
@@ -38,6 +39,7 @@ public class AuthResource {
     
     @POST
     @Path("/login")
+    @NoAuthRefresh
     public Response login(User dto, @Context HttpServletResponse response) {
         authService.loginUser(dto, response);
         return Response.ok().header(HttpHeader.ACCESS_CONTROL_ALLOW_CREDENTIALS, "true").build();
@@ -45,14 +47,16 @@ public class AuthResource {
     
     @GET
     @Path("/logout")
+    @NoAuthRefresh
     public Response logout(@Context HttpServletResponse response) {
         authService.logoutUser(response);
-        return Response.ok().header(HttpHeader.ACCESS_CONTROL_ALLOW_CREDENTIALS, "true").build();
+        return Response.noContent().header(HttpHeader.ACCESS_CONTROL_ALLOW_CREDENTIALS, "true").build();
     }
     
     @GET
     @Path("/is-authorized")
     @SecureResource
+    @NoAuthRefresh
     public Response isAuthorized() {
         return Response.ok().header(HttpHeader.ACCESS_CONTROL_ALLOW_CREDENTIALS, "true").build();
     }
