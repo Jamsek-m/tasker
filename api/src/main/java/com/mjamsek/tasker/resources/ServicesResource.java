@@ -1,6 +1,7 @@
 package com.mjamsek.tasker.resources;
 
 import com.kumuluz.ee.rest.beans.QueryParameters;
+import com.mjamsek.tasker.entities.dto.ServiceToken;
 import com.mjamsek.tasker.entities.persistence.service.Service;
 import com.mjamsek.tasker.http.HttpHeader;
 import com.mjamsek.tasker.services.ServicesService;
@@ -46,6 +47,13 @@ public class ServicesResource {
     public Response getService(@PathParam("serviceId") long serviceId) {
         servicesService.doHealthCheck(serviceId);
         return Response.ok().build();
+    }
+    
+    @PATCH
+    @Path("/{serviceId}/token")
+    public Response generateServiceToken(@PathParam("serviceId") long serviceId) {
+        ServiceToken token = servicesService.generateServiceToken(serviceId);
+        return Response.status(Response.Status.CREATED).entity(token).build();
     }
     
     @DELETE

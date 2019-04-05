@@ -4,12 +4,15 @@ import com.kumuluz.ee.rest.beans.QueryFilter;
 import com.kumuluz.ee.rest.beans.QueryParameters;
 import com.kumuluz.ee.rest.enums.FilterOperation;
 import com.kumuluz.ee.rest.utils.JPAUtils;
+import com.mjamsek.tasker.entities.dto.ServiceToken;
 import com.mjamsek.tasker.entities.exceptions.FailedHealthCheckException;
 import com.mjamsek.tasker.entities.exceptions.ServiceNotFoundException;
 import com.mjamsek.tasker.entities.persistence.service.Service;
 import com.mjamsek.tasker.entities.persistence.service.ServiceHealthCheck;
 import com.mjamsek.tasker.services.ServicesService;
 import com.mjamsek.tasker.utils.HttpClient;
+import com.mjamsek.tasker.utils.RandomStringGenerator;
+import org.mindrot.jbcrypt.BCrypt;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.persistence.EntityManager;
@@ -74,6 +77,26 @@ public class ServicesServiceImpl implements ServicesService {
     @Override
     public Service updateService(Service service) {
         return null;
+    }
+    
+    @Override
+    public ServiceToken generateServiceToken(long serviceId) {
+        Service service = getServiceById(serviceId);
+        if (service == null) {
+            throw new ServiceNotFoundException(serviceId);
+        }
+        String token = RandomStringGenerator.generate(30);
+        
+        try {
+            em.getTransaction().begin();
+            service.setToken(BCrypt.hashpw(token, BCrypt.gensalt()));
+            em.merge(service);
+            em.getTransaction().commit();
+        } catch (Exception e) {
+            em.getTransaction().rollback();
+            return null;
+        }
+        return new ServiceToken(token);
     }
     
     @Override
