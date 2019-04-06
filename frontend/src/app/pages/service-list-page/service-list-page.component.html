@@ -1,0 +1,38 @@
+<div class="page-wrapper">
+
+    <h1>Services</h1>
+    <div>
+        <button class="btn btn-outline-primary" (click)="createNewToken()">
+            <fa-icon [icon]="['fas', 'plus']"></fa-icon>
+            Add token
+        </button>
+    </div>
+
+    <tasker-pagination-limit (whenLimitChanges)="limitChange($event)"></tasker-pagination-limit>
+    <div class="table-responsive">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th class="tb-id">ID</th>
+                    <th class="tb-health">Health</th>
+                    <th class="tb-name">Name</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let service of services">
+                    <td class="tb-id">
+                        {{service.id}}
+                    </td>
+                    <td class="tb-health">
+                        <tasker-health-overview [service]="service"></tasker-health-overview>
+                    </td>
+                    <td class="tb-name">
+                        <a class="details-link" [routerLink]="['/service', service.id]">{{service.name}}</a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <tasker-pagination [totalItems]="totalServices" [itemsPerPage]="limit" (whenPageChange)="pageChange($event)"></tasker-pagination>
+
+</div>

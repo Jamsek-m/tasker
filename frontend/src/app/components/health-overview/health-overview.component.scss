@@ -1,0 +1,20 @@
+@import "../../../styles/variables";
+
+.healthcheck {
+    cursor: pointer;
+    font-size: 32px;
+
+    &.bad {
+        color: $health-bad;
+    }
+    &.healthy {
+        color: $health-healthy;
+    }
+    &.checking {
+        color: $health-checking;
+    }
+    &.undef {
+        color: $health-undef;
+        cursor: unset;
+    }
+}

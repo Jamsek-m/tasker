@@ -1,0 +1,18 @@
+@import "../../../styles/variables";
+@import "../../../styles/media-mixin";
+
+.page-wrapper {
+    .tb-id {
+        width: 10%;
+    }
+    .tb-name {
+
+        .details-link {
+            color: $link-color;
+            cursor: pointer;
+        }
+    }
+    .tb-health {
+        width: 10%;
+    }
+}

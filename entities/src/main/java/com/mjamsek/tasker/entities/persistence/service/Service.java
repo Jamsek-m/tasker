@@ -29,6 +29,10 @@ public class Service {
     private Boolean active;
     
     @ManyToOne
+    @JoinColumn(name = "deployment_id")
+    private ServiceDeployment deployment;
+    
+    @ManyToOne
     @JoinColumn(name = "url_id")
     private ServiceUrl serviceUrl;
     

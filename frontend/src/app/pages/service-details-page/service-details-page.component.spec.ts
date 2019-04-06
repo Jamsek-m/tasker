@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { TokenListPageComponent } from './token-list-page.component';
+import { ServiceDetailsPageComponent } from './service-details-page.component';
 
-describe('TokenListPageComponent', () => {
-  let component: TokenListPageComponent;
-  let fixture: ComponentFixture<TokenListPageComponent>;
+describe('ServiceDetailsPageComponent', () => {
+  let component: ServiceDetailsPageComponent;
+  let fixture: ComponentFixture<ServiceDetailsPageComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ TokenListPageComponent ]
+      declarations: [ ServiceDetailsPageComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(TokenListPageComponent);
+    fixture = TestBed.createComponent(ServiceDetailsPageComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

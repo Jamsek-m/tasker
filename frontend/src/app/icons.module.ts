@@ -1,7 +1,7 @@
 import {NgModule} from "@angular/core";
 import {FontAwesomeModule} from "@fortawesome/angular-fontawesome";
 import {library} from "@fortawesome/fontawesome-svg-core";
-import {faPlus, faTimes, faCopy, faCheck} from "@fortawesome/free-solid-svg-icons";
+import {faPlus, faTimes, faCopy, faCheck, faHeartbeat} from "@fortawesome/free-solid-svg-icons";
 
 @NgModule({
     imports: [
@@ -20,7 +20,8 @@ export class IconsModule {
             faPlus,
             faTimes,
             faCopy,
-            faCheck
+            faCheck,
+            faHeartbeat
         ];
         icons.forEach(icon => library.add(icon));
     }

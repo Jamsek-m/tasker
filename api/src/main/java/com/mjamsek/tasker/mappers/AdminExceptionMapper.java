@@ -21,6 +21,8 @@ public class AdminExceptionMapper implements ExceptionMapper<TaskerException> {
             return Response.status(Response.Status.UNAUTHORIZED).entity(response).build();
         } else if (exception instanceof EntityNotFoundException) {
             return Response.status(Response.Status.NOT_FOUND).entity(response).build();
+        } else if (exception instanceof MissingHealthCheckException) {
+            return Response.status(Response.Status.EXPECTATION_FAILED).entity(response).build();
         } else if (exception instanceof FailedHealthCheckException) {
             return Response.status(Response.Status.BAD_REQUEST).entity(response).build();
         }

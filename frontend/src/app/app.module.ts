@@ -10,7 +10,7 @@ import {BootstrapModule} from "./bootstrap.module";
 import {AppComponent} from "./app.component";
 
 import {LoginPageComponent} from "./pages/login-page/login-page.component";
-import {TokenListPageComponent} from "./pages/token-list-page/token-list-page.component";
+import {ServiceListPageComponent} from "./pages/service-list-page/service-list-page.component";
 import {CreateTokenPageComponent} from "./pages/create-token-page/create-token-page.component";
 import {Error404PageComponent} from "./pages/error404-page/error404-page.component";
 import {DocsPageComponent} from "./docs/docs-page.component";
@@ -26,12 +26,16 @@ import {PaginationComponent} from "./components/pagination/pagination.component"
 import {PaginationLimitComponent} from "./components/pagination-limit/pagination-limit.component";
 
 import {HttpApiInterceptor} from "./services/http.interceptor";
+import { HealthOverviewComponent } from './components/health-overview/health-overview.component';
+import { ServiceDetailsPageComponent } from './pages/service-details-page/service-details-page.component';
+import { ServiceAddPageComponent } from './pages/service-add-page/service-add-page.component';
+import { ServiceEditPageComponent } from './pages/service-edit-page/service-edit-page.component';
 
 
 @NgModule({
     declarations: [
         AppComponent,
-        TokenListPageComponent,
+        ServiceListPageComponent,
         LoginPageComponent,
         Error404PageComponent,
         HeaderComponent,
@@ -44,7 +48,11 @@ import {HttpApiInterceptor} from "./services/http.interceptor";
         DocsPluginPageComponent,
         ConfigurationPageComponent,
         LogsPageComponent,
-        UserProfilePageComponent
+        UserProfilePageComponent,
+        HealthOverviewComponent,
+        ServiceDetailsPageComponent,
+        ServiceAddPageComponent,
+        ServiceEditPageComponent
     ],
     imports: [
         BrowserModule,

@@ -6,6 +6,7 @@ import com.kumuluz.ee.rest.enums.FilterOperation;
 import com.kumuluz.ee.rest.utils.JPAUtils;
 import com.mjamsek.tasker.entities.dto.ServiceToken;
 import com.mjamsek.tasker.entities.exceptions.FailedHealthCheckException;
+import com.mjamsek.tasker.entities.exceptions.MissingHealthCheckException;
 import com.mjamsek.tasker.entities.exceptions.ServiceNotFoundException;
 import com.mjamsek.tasker.entities.persistence.service.Service;
 import com.mjamsek.tasker.entities.persistence.service.ServiceHealthCheck;
@@ -106,6 +107,9 @@ public class ServicesServiceImpl implements ServicesService {
             throw new ServiceNotFoundException(serviceId);
         }
         ServiceHealthCheck healthCheck = service.getHealthCheck();
+        if (healthCheck == null) {
+            throw new MissingHealthCheckException();
+        }
         Response response = HttpClient.get(healthCheck.getHealthUrl());
         if (response.getStatus() >= 400) {
             throw new FailedHealthCheckException(service.getName());

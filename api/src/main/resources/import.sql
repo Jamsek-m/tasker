@@ -17,6 +17,18 @@ INSERT INTO logs(id, log_date, message, severity) VALUES (10, '2019-01-09 20:35:
 INSERT INTO logs(id, log_date, message, severity) VALUES (11, '2019-02-03 20:35:22', 'Random message', 'INFO');
 
 insert into service_healthchecks(health_url) values ('http://localhost:8080/health');
-insert into service_urls(url, version) VALUES ( 'http://localhost:8080', 'v1' );
+insert into service_healthchecks(health_url) values ('http://localhost:4200/health');
+insert into service_urls(url, version) VALUES ( 'http://localhost:8080', 'v2' );
 insert into services(description, name, health_check_id, url_id, active) VALUES ( 'File upload', 'lozigorbox', 1, 1, true );
 insert into services(description, name, health_check_id, url_id, active) VALUES ( 'File upload', 'lozigorbox-2', 1, 1, true );
+insert into services(description, name, health_check_id, url_id, active) VALUES ( 'File upload', 'lozigorbox-3', 2, 1, true );
+
+insert into services(description, name, active) VALUES ( 'File upload', 'lozigorbox-4', true );
+insert into services(description, name, active) VALUES ( 'File upload', 'lozigorbox-5', true );
+insert into services(description, name, active) VALUES ( 'File upload', 'lozigorbox-6', true );
+insert into services(description, name, active) VALUES ( 'File upload', 'lozigorbox-7', true );
+insert into services(description, name, active) VALUES ( 'File upload', 'lozigorbox-8', true );
+insert into services(description, name, active) VALUES ( 'File upload', 'lozigorbox-9', true );
+insert into services(description, name, active) VALUES ( 'File upload', 'lozigorbox-10', true );
+insert into services(description, name, active) VALUES ( 'File upload', 'lozigorbox-11', true );
+insert into services(description, name, active) VALUES ( 'File upload', 'lozigorbox-12', true );
