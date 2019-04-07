@@ -1,32 +1,65 @@
 <div class="page-wrapper">
-    <h1>Settings</h1>
+    <div class="general-settings">
+        <h1>Settings</h1>
 
-    <div>
-        <form (submit)="addConfiguration()">
-            <div class="new-item">
-                <input name="new-key" [(ngModel)]="newConfig.key" class="form-control" placeholder="Key"/>
-                <input name="new-value" [(ngModel)]="newConfig.value" class="form-control" placeholder="Value"/>
-                <button type="submit" class="btn btn-outline-primary">Submit</button>
-            </div>
-        </form>
-    </div>
+        <div>
+            <form (submit)="addConfiguration()">
+                <div class="new-item">
+                    <input name="new-key" [(ngModel)]="newConfig.key" class="form-control" placeholder="Key"/>
+                    <input name="new-value" [(ngModel)]="newConfig.value" class="form-control" placeholder="Value"/>
+                    <button type="submit" class="btn btn-outline-primary">Submit</button>
+                </div>
+            </form>
+        </div>
 
-    <div class="forma">
-        <div *ngFor="let conf of configs; let i = index" class="forma-item">
-            <input name="key-{{i}}" [(ngModel)]="conf.config.key" (ngModelChange)="conf.edited = true"
-                [ngClass]="{'edited': conf.edited}" disabled="disabled" class="form-control"/>
+        <div class="forma">
+            <div *ngFor="let conf of configs; let i = index" class="forma-item">
+                <input name="key-{{i}}" [(ngModel)]="conf.config.key" (ngModelChange)="conf.edited = true"
+                    [ngClass]="{'edited': conf.edited}" disabled="disabled" class="form-control"/>
 
-            <input name="value-{{i}}"
-                [(ngModel)]="conf.config.value"
-                (ngModelChange)="conf.edited = true"
-                [ngClass]="{'edited': conf.edited}" class="form-control"
-            />
+                <input name="value-{{i}}"
+                    [(ngModel)]="conf.config.value"
+                    (ngModelChange)="conf.edited = true"
+                    [ngClass]="{'edited': conf.edited}" class="form-control"
+                />
 
-            <span (click)="updateConfig(conf)" *ngIf="conf.edited" class="checkmark">
+                <span (click)="updateConfig(conf)" *ngIf="conf.edited" class="checkmark">
                 <fa-icon [icon]="['fas', 'check']"></fa-icon>
             </span>
+            </div>
+            <button type="button" (click)="resetConfig()" class="btn btn-secondary">Reset</button>
         </div>
-        <button type="button" (click)="reset()" class="btn btn-secondary">Reset</button>
+    </div>
+    <div class="daemons">
+        <h1>Docker Daemons</h1>
+
+        <div>
+            <form (submit)="addDaemon()">
+                <div class="new-item">
+                    <input name="new-key" [(ngModel)]="newDaemon.name" class="form-control" placeholder="Name"/>
+                    <input name="new-value" [(ngModel)]="newDaemon.url" class="form-control" placeholder="Url"/>
+                    <button type="submit" class="btn btn-outline-primary">Submit</button>
+                </div>
+            </form>
+        </div>
+
+        <div class="forma">
+            <div *ngFor="let daemon of daemons; let i = index" class="forma-item">
+                <input name="key-{{i}}" [(ngModel)]="daemon.daemon.name" (ngModelChange)="daemon.edited = true"
+                    [ngClass]="{'edited': daemon.edited}" disabled="disabled" class="form-control"/>
+
+                <input name="value-{{i}}"
+                    [(ngModel)]="daemon.daemon.url"
+                    (ngModelChange)="daemon.edited = true"
+                    [ngClass]="{'edited': daemon.edited}" class="form-control"
+                />
+
+                <span (click)="updateDaemon(daemon)" *ngIf="daemon.edited" class="checkmark">
+                <fa-icon [icon]="['fas', 'check']"></fa-icon>
+            </span>
+            </div>
+            <button type="button" (click)="resetDaemons()" class="btn btn-secondary">Reset</button>
+        </div>
     </div>
 
 </div>

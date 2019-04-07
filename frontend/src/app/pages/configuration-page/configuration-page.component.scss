@@ -37,6 +37,9 @@ form {
     }
 }
 
+.daemons {
+    margin-top: 40px;
+}
 @include device-specific($tablet) {
     form {
         .new-item {

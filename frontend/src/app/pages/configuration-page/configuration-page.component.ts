@@ -1,6 +1,8 @@
 import {Component, OnInit} from "@angular/core";
 import {ConfigService} from "../../services/config.service";
 import {ConfigEntry} from "../../models/config-entry.class";
+import {DockerDaemonService} from "../../services/docker-daemon.service";
+import {DockerDaemon} from "../../models/docker-daemon";
 
 @Component({
     selector: "tasker-configuration-page",
@@ -11,14 +13,19 @@ export class ConfigurationPageComponent implements OnInit {
 
     public configs: ConfigLine[];
     public newConfig: ConfigEntry;
+    public daemons: DaemonLine[];
+    public newDaemon: DockerDaemon;
 
-    constructor(private configService: ConfigService) {
+    constructor(private configService: ConfigService, private dockerDaemonService: DockerDaemonService) {
     }
 
     ngOnInit() {
         this.newConfig = new ConfigEntry();
+        this.newDaemon = new DockerDaemon();
         this.configs = [];
+        this.daemons = [];
         this.getConfiguration();
+        this.getDaemons();
     }
 
     public updateConfig(line: ConfigLine) {
@@ -32,8 +39,23 @@ export class ConfigurationPageComponent implements OnInit {
         );
     }
 
-    public reset() {
+    public updateDaemon(line: DaemonLine) {
+        this.dockerDaemonService.updateDaemon(line.daemon).subscribe(
+            () => {
+                this.getDaemons();
+            },
+            (err) => {
+                console.error(err);
+            }
+        );
+    }
+
+    public resetConfig() {
         this.getConfiguration();
+    }
+
+    public resetDaemons() {
+        this.getDaemons();
     }
 
     public addConfiguration() {
@@ -41,6 +63,18 @@ export class ConfigurationPageComponent implements OnInit {
             () => {
                 this.newConfig = new ConfigEntry();
                 this.getConfiguration();
+            },
+            (err) => {
+                console.error(err);
+            }
+        );
+    }
+
+    public addDaemon() {
+        this.dockerDaemonService.addDaemon(this.newDaemon).subscribe(
+            () => {
+                this.newDaemon = new DockerDaemon();
+                this.getDaemons();
             },
             (err) => {
                 console.error(err);
@@ -64,9 +98,30 @@ export class ConfigurationPageComponent implements OnInit {
         );
     }
 
+    private getDaemons() {
+        this.dockerDaemonService.getDaemons().subscribe(
+            (daemons: DockerDaemon[]) => {
+                this.daemons = daemons.map(daemon => {
+                    const line = new DaemonLine();
+                    line.edited = false;
+                    line.daemon = daemon;
+                    return line;
+                });
+            },
+            (err) => {
+                console.error(err);
+            }
+        );
+    }
+
 }
 
 class ConfigLine {
     public edited: boolean;
     public config: ConfigEntry;
+}
+
+class DaemonLine {
+    public edited: boolean;
+    public daemon: DockerDaemon;
 }
