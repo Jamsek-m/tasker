@@ -3,6 +3,7 @@ import {ConfigService} from "../../services/config.service";
 import {ConfigEntry} from "../../models/config-entry.class";
 import {DockerDaemonService} from "../../services/docker-daemon.service";
 import {DockerDaemon} from "../../models/docker-daemon";
+import {MessageService} from "../../services/message.service";
 
 @Component({
     selector: "tasker-configuration-page",
@@ -16,7 +17,9 @@ export class ConfigurationPageComponent implements OnInit {
     public daemons: DaemonLine[];
     public newDaemon: DockerDaemon;
 
-    constructor(private configService: ConfigService, private dockerDaemonService: DockerDaemonService) {
+    constructor(private configService: ConfigService,
+                private messageService: MessageService,
+                private dockerDaemonService: DockerDaemonService) {
     }
 
     ngOnInit() {
@@ -78,6 +81,28 @@ export class ConfigurationPageComponent implements OnInit {
             },
             (err) => {
                 console.error(err);
+            }
+        );
+    }
+
+    public openDeleteDialog(daemon: DockerDaemon): void {
+        this.messageService.openConfirmationDialog("Are you sure you want to delete docker daemon?", {
+            onConfirmation: (ref) => {
+                ref.hide();
+                this.deleteDaemon(daemon);
+            }
+        }, {confirmIsDestructive: true});
+    }
+
+    private deleteDaemon(daemon: DockerDaemon): void {
+        this.dockerDaemonService.removeDaemon(daemon.id).subscribe(
+            () => {
+                this.messageService.openToastNotification("Success!", "Docker daemon was removed", "ok");
+                this.getDaemons();
+            },
+            (err) => {
+                console.error(err);
+                this.messageService.openToastNotification("Error!", "Error removing docker daemon", "error", {duration: -1});
             }
         );
     }

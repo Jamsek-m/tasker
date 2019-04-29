@@ -1,4 +1,5 @@
 import {Component} from "@angular/core";
+import {ToastaConfig} from "ngx-toasta";
 
 @Component({
     selector: "tasker-root",
@@ -6,4 +7,8 @@ import {Component} from "@angular/core";
     styleUrls: ["./app.component.scss"]
 })
 export class AppComponent {
+
+    constructor(private toastConfig: ToastaConfig) {
+        this.toastConfig.theme = "material";
+    }
 }

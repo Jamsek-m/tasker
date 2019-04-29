@@ -2,7 +2,9 @@ package com.mjamsek.tasker.services.impl;
 
 import com.kumuluz.ee.rest.beans.QueryParameters;
 import com.kumuluz.ee.rest.utils.JPAUtils;
+import com.mjamsek.tasker.entities.exceptions.ConflictException;
 import com.mjamsek.tasker.entities.exceptions.EntityNotFoundException;
+import com.mjamsek.tasker.entities.exceptions.ValidationException;
 import com.mjamsek.tasker.entities.persistence.service.DockerDaemon;
 import com.mjamsek.tasker.services.DockerDaemonService;
 
@@ -11,7 +13,10 @@ import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
+import javax.transaction.Transactional;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @ApplicationScoped
 public class DockerDaemonServiceImpl implements DockerDaemonService {
@@ -45,8 +50,32 @@ public class DockerDaemonServiceImpl implements DockerDaemonService {
         }
     }
     
+    private void validateDaemon(DockerDaemon daemon) {
+        if (daemon.getName().isEmpty()) {
+            throw new ValidationException("Daemon name is empty!");
+        }
+        if (daemon.getUrl().isEmpty()) {
+            throw new ValidationException("Daemon url is empty!");
+        }
+        
+        DockerDaemon existing = getDaemon(daemon.getName());
+        if (existing != null) {
+            throw new ConflictException("Daemon name is already in use!");
+        }
+        
+        daemon.setName(daemon.getName().trim());
+    
+        Pattern pattern = Pattern.compile("[^a-z0-9_]", Pattern.CASE_INSENSITIVE);
+        Matcher matcher = pattern.matcher(daemon.getName());
+        if (matcher.find()) {
+            throw new ValidationException("Daemon name can contain only alpha-numeric characters!");
+        }
+    }
+    
     @Override
     public DockerDaemon saveDaemon(DockerDaemon daemon) {
+        this.validateDaemon(daemon);
+        
         DockerDaemon newDaemon = new DockerDaemon();
         newDaemon.setName(daemon.getName());
         newDaemon.setUrl(daemon.getUrl());
@@ -85,6 +114,12 @@ public class DockerDaemonServiceImpl implements DockerDaemonService {
         if (existingDaemon == null) {
             throw new EntityNotFoundException("Daemon with given id not found!");
         }
-        em.remove(existingDaemon);
+        try {
+            em.getTransaction().begin();
+            em.remove(existingDaemon);
+            em.getTransaction().commit();
+        } catch (Exception e) {
+            em.getTransaction().rollback();
+        }
     }
 }

@@ -1,8 +1,8 @@
 -- miha : geslo123
 INSERT INTO users(id, password, username) VALUES (1, '$2a$10$bSHSvVaW3m2DvPPdCazPT.JbSpGAQRktmhH78d1kA9txUBxsdgcLK', 'miha');
 
-INSERT INTO configuration(id, config_key, config_value) VALUES (1, 'DOCKER_API_0', 'http://localhost:2375');
-INSERT INTO configuration(id, config_key, config_value) VALUES (2, 'TASKER_ENABLED_REGISTRATION', 'false');
+INSERT INTO configuration(id, config_key, config_value) VALUES (1, 'TASKER_ENABLED_REGISTRATION', 'false');
+INSERT INTO docker_daemons(id, name, url) VALUES (1, 'DOCKER_MIHASERVER', 'http://localhost:2375');
 
 INSERT INTO logs(id, log_date, message, severity) VALUES (1, '2019-01-04 20:35:22', 'Random message', 'INFO');
 INSERT INTO logs(id, log_date, message, severity) VALUES (2, '2019-01-03 20:35:22', 'Random message', 'INFO');

@@ -55,8 +55,11 @@
                 />
 
                 <span (click)="updateDaemon(daemon)" *ngIf="daemon.edited" class="checkmark">
-                <fa-icon [icon]="['fas', 'check']"></fa-icon>
-            </span>
+                    <fa-icon [icon]="['fas', 'check']"></fa-icon>
+                </span>
+                <span class="cross" (click)="openDeleteDialog(daemon.daemon)">
+                    <fa-icon [icon]="['fas', 'times']"></fa-icon>
+                </span>
             </div>
             <button type="button" (click)="resetDaemons()" class="btn btn-secondary">Reset</button>
         </div>

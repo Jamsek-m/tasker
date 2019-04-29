@@ -10,6 +10,7 @@ $theme-green: $base-color;
 
 @import "~bootstrap/scss/bootstrap";
 @import "~ngx-bootstrap/datepicker/bs-datepicker.scss";
+@import "~ngx-toasta/styles/style-material.css";
 
 .navbar-dark .navbar-nav .nav-link {
     color: $white;

@@ -26,10 +26,11 @@ import {PaginationComponent} from "./components/pagination/pagination.component"
 import {PaginationLimitComponent} from "./components/pagination-limit/pagination-limit.component";
 
 import {HttpApiInterceptor} from "./services/http.interceptor";
-import { HealthOverviewComponent } from './components/health-overview/health-overview.component';
-import { ServiceDetailsPageComponent } from './pages/service-details-page/service-details-page.component';
-import { ServiceAddPageComponent } from './pages/service-add-page/service-add-page.component';
-import { ServiceEditPageComponent } from './pages/service-edit-page/service-edit-page.component';
+import {HealthOverviewComponent} from "./components/health-overview/health-overview.component";
+import {ServiceDetailsPageComponent} from "./pages/service-details-page/service-details-page.component";
+import {ServiceAddPageComponent} from "./pages/service-add-page/service-add-page.component";
+import {ServiceEditPageComponent} from "./pages/service-edit-page/service-edit-page.component";
+import {ConfirmationDialogComponent} from "./components/confirmation-dialog/confirmation-dialog.component";
 
 
 @NgModule({
@@ -52,7 +53,8 @@ import { ServiceEditPageComponent } from './pages/service-edit-page/service-edit
         HealthOverviewComponent,
         ServiceDetailsPageComponent,
         ServiceAddPageComponent,
-        ServiceEditPageComponent
+        ServiceEditPageComponent,
+        ConfirmationDialogComponent
     ],
     imports: [
         BrowserModule,
@@ -64,6 +66,9 @@ import { ServiceEditPageComponent } from './pages/service-edit-page/service-edit
     ],
     providers: [
         {provide: HTTP_INTERCEPTORS, useClass: HttpApiInterceptor, multi: true}
+    ],
+    entryComponents: [
+        ConfirmationDialogComponent
     ],
     bootstrap: [AppComponent]
 })

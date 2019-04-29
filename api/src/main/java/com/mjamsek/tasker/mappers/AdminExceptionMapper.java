@@ -25,6 +25,10 @@ public class AdminExceptionMapper implements ExceptionMapper<TaskerException> {
             return Response.status(Response.Status.EXPECTATION_FAILED).entity(response).build();
         } else if (exception instanceof FailedHealthCheckException) {
             return Response.status(Response.Status.BAD_REQUEST).entity(response).build();
+        } else if (exception instanceof ValidationException) {
+            return Response.status(422).entity(response).build();
+        } else if (exception instanceof ConflictException) {
+            return Response.status(Response.Status.CONFLICT).entity(response).build();
         }
         return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(response).build();
     }
