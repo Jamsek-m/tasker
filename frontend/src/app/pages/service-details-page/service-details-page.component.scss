@@ -1,4 +1,40 @@
+@import "../../../styles/variables";
 
+.page-wrapper {
+    padding: 50px 0 0 150px;
+
+}
 .description {
     font-style: italic;
+}
+
+h4 {
+    margin-top: 60px;
+    margin-bottom: 20px;
+}
+.health-status {
+    text-transform: uppercase;
+    font-weight: 600;
+    cursor: pointer;
+
+    &.status-healthy {
+        color: $health-healthy;
+    }
+    &.status-bad {
+        color: $health-bad;
+    }
+    &.status-checking {
+        color: $health-checking;
+    }
+    &.status-undef {
+        color: $health-undef;
+    }
+}
+.actions {
+    .btn {
+        width: 100px;
+    }
+    .with-marg {
+        margin-right: 10px;
+    }
 }

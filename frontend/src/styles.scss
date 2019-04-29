@@ -11,6 +11,15 @@ $theme-green: $base-color;
 @import "~bootstrap/scss/bootstrap";
 @import "~ngx-bootstrap/datepicker/bs-datepicker.scss";
 @import "~ngx-toasta/styles/style-material.css";
+@import "~jsoneditor/dist/jsoneditor.min.css";
+
+div.jsoneditor {
+    border: 1px solid $base-color;
+}
+div.jsoneditor-menu {
+    background-color: $base-color;
+    border-bottom: 1px solid $base-color;
+}
 
 .navbar-dark .navbar-nav .nav-link {
     color: $white;

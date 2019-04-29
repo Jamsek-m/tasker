@@ -10,8 +10,10 @@ public class ServiceDeployment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     
+    @Column(name = "container_id")
     private String containerId;
     
+    @Column(name = "container_name")
     private String containerName;
     
     private String version;

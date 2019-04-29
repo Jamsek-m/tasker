@@ -31,6 +31,9 @@ import {ServiceDetailsPageComponent} from "./pages/service-details-page/service-
 import {ServiceAddPageComponent} from "./pages/service-add-page/service-add-page.component";
 import {ServiceEditPageComponent} from "./pages/service-edit-page/service-edit-page.component";
 import {ConfirmationDialogComponent} from "./components/confirmation-dialog/confirmation-dialog.component";
+import {ClipboardComponent} from "./components/clipboard/clipboard.component";
+import {JsonViewComponent} from "./components/json-view/json-view.component";
+import {NgJsonEditorModule} from "ang-jsoneditor";
 
 
 @NgModule({
@@ -54,7 +57,9 @@ import {ConfirmationDialogComponent} from "./components/confirmation-dialog/conf
         ServiceDetailsPageComponent,
         ServiceAddPageComponent,
         ServiceEditPageComponent,
-        ConfirmationDialogComponent
+        ConfirmationDialogComponent,
+        ClipboardComponent,
+        JsonViewComponent
     ],
     imports: [
         BrowserModule,
@@ -62,7 +67,8 @@ import {ConfirmationDialogComponent} from "./components/confirmation-dialog/conf
         HttpClientModule,
         AppRoutingModule,
         BootstrapModule,
-        IconsModule
+        IconsModule,
+        NgJsonEditorModule
     ],
     providers: [
         {provide: HTTP_INTERCEPTORS, useClass: HttpApiInterceptor, multi: true}

@@ -28,15 +28,15 @@ public class Service {
     @JsonIgnore
     private Boolean active;
     
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "deployment_id")
     private ServiceDeployment deployment;
     
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "url_id")
     private ServiceUrl serviceUrl;
     
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "health_check_id")
     private ServiceHealthCheck healthCheck;
     
@@ -94,5 +94,17 @@ public class Service {
     
     public void setToken(String token) {
         this.token = token;
+    }
+    
+    public Boolean getActive() {
+        return active;
+    }
+    
+    public ServiceDeployment getDeployment() {
+        return deployment;
+    }
+    
+    public void setDeployment(ServiceDeployment deployment) {
+        this.deployment = deployment;
     }
 }

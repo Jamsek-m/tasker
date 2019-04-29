@@ -1,0 +1,8 @@
+@import "../../../styles/variables";
+.copy-btn {
+    cursor: pointer;
+
+    &.copied {
+        color: $green;
+    }
+}

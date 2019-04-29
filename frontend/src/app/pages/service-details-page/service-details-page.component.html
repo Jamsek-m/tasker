@@ -1,4 +1,58 @@
 <div class="page-wrapper">
     <h2>{{service.name}}</h2>
     <p class="description">{{service.description}}</p>
+
+    <h4 *ngIf="service.serviceUrl">
+        <fa-icon [icon]="['fas', 'wifi']"></fa-icon>
+        Service
+    </h4>
+    <div *ngIf="service.serviceUrl">
+        <p>
+            Base url: {{service.serviceUrl.url}}
+            <tasker-clipboard [data]="service.serviceUrl.url"></tasker-clipboard>
+        </p>
+        <p>
+            API base url: {{service.serviceUrl.url + '/' + service.serviceUrl.version}}
+            <tasker-clipboard [data]="service.serviceUrl.url + '/' + service.serviceUrl.version"></tasker-clipboard>
+        </p>
+    </div>
+
+    <h4 *ngIf="service.healthCheck">
+        <fa-icon [icon]="['fas', 'heartbeat']"></fa-icon>
+        Health
+    </h4>
+    <div *ngIf="service.healthCheck">
+        <p>Status: <span (click)="checkHealth()" class="health-status status-{{status}}">{{status}}</span></p>
+        <p>
+            Health url: {{service.healthCheck.healthUrl}}
+            <tasker-clipboard [data]="service.healthCheck.healthUrl"></tasker-clipboard>
+        </p>
+    </div>
+
+    <h4 *ngIf="service.deployment">
+        <fa-icon [icon]="['fas', 'cogs']"></fa-icon>
+        Deployment
+    </h4>
+    <div *ngIf="service.deployment">
+        <h5>Container</h5>
+        <p>Name: {{service.deployment.containerName}}</p>
+        <p>Id: {{service.deployment.containerId}}</p>
+        <p>Version: {{service.deployment.version}}</p>
+        <p>Daemon: {{service.deployment.dockerDaemon.name}}</p>
+    </div>
+
+    <h4>
+        <fa-icon [icon]="['fas', 'cogs']"></fa-icon>
+        Actions
+    </h4>
+    <div class="actions">
+        <button class="btn btn-outline-info with-marg" (click)="getServiceInfo()" [disabled]="blockActions">Info</button>
+        <button class="btn btn-outline-info with-marg" (click)="startService()" [disabled]="blockActions">Start</button>
+        <button class="btn btn-outline-info with-marg" (click)="recreateService()" [disabled]="blockActions">Recreate</button>
+        <button class="btn btn-outline-danger" (click)="stopService()" [disabled]="blockActions">Stop</button>
+    </div>
+
+    <div>
+        <tasker-json-view [data]="service"></tasker-json-view>
+    </div>
 </div>
