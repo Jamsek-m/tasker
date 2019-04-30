@@ -24,13 +24,3 @@ div.jsoneditor-menu {
 .navbar-dark .navbar-nav .nav-link {
     color: $white;
 }
-
-.page-wrapper {
-    padding: 50px;
-}
-
-@include device-specific($phone) {
-    .page-wrapper {
-        padding: 15px;
-    }
-}

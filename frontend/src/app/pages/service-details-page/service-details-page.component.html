@@ -46,10 +46,14 @@
         Actions
     </h4>
     <div class="actions">
-        <button class="btn btn-outline-info with-marg" (click)="getServiceInfo()" [disabled]="blockActions">Info</button>
-        <button class="btn btn-outline-info with-marg" (click)="startService()" [disabled]="blockActions">Start</button>
-        <button class="btn btn-outline-info with-marg" (click)="recreateService()" [disabled]="blockActions">Recreate</button>
-        <button class="btn btn-outline-danger" (click)="stopService()" [disabled]="blockActions">Stop</button>
+        <button class="btn btn-outline-info with-marg" (click)="getServiceInfo()"
+            [disabled]="blockActions">Info</button>
+        <button class="btn btn-outline-info with-marg" (click)="startService()"
+            [disabled]="blockActions">Start</button>
+        <button class="btn btn-outline-info with-marg" (click)="recreateService()"
+            [disabled]="blockActions">Recreate</button>
+        <button class="btn btn-outline-danger" (click)="stopService()"
+            a[disabled]="blockActions">Stop</button>
     </div>
 
     <div>

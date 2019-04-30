@@ -1,0 +1,25 @@
+@import "../styles/variables";
+@import "../styles/media-mixin";
+
+main {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+}
+
+@include device-specific($phone) {
+    section {
+        width: 100%;
+        padding: 15px;
+    }
+}
+@include device-specific($tablet) {
+    section {
+        width: 90%;
+    }
+}
+@include device-specific($pc) {
+    section {
+        width: 60%;
+    }
+}
