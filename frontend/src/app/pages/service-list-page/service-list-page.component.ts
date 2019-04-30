@@ -33,8 +33,8 @@ export class ServiceListPageComponent implements OnInit {
         this.getServices();
     }
 
-    public createNewToken(): void {
-        this.router.navigate(["/new-token"]);
+    public createNewService(): void {
+        this.router.navigate(["/service/add"]);
     }
 
     private getServices(): void {

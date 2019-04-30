@@ -14,6 +14,9 @@ public class ServiceUrl {
     
     private String version;
     
+    @Column(name = "url_versioning")
+    private boolean urlVersioning;
+    
     public long getId() {
         return id;
     }
@@ -36,5 +39,13 @@ public class ServiceUrl {
     
     public void setVersion(String version) {
         this.version = version;
+    }
+    
+    public boolean isUrlVersioning() {
+        return urlVersioning;
+    }
+    
+    public void setUrlVersioning(boolean urlVersioning) {
+        this.urlVersioning = urlVersioning;
     }
 }

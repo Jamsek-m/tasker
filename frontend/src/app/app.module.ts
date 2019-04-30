@@ -34,6 +34,7 @@ import {ConfirmationDialogComponent} from "./components/confirmation-dialog/conf
 import {ClipboardComponent} from "./components/clipboard/clipboard.component";
 import {JsonViewComponent} from "./components/json-view/json-view.component";
 import {NgJsonEditorModule} from "ang-jsoneditor";
+import { HelpComponent } from './components/help/help.component';
 
 
 @NgModule({
@@ -59,7 +60,8 @@ import {NgJsonEditorModule} from "ang-jsoneditor";
         ServiceEditPageComponent,
         ConfirmationDialogComponent,
         ClipboardComponent,
-        JsonViewComponent
+        JsonViewComponent,
+        HelpComponent
     ],
     imports: [
         BrowserModule,

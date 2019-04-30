@@ -10,6 +10,7 @@ export class ServiceUrl {
     public id: number;
     public url: string;
     public version: string;
+    public urlVersioning: boolean;
 }
 
 export class ServiceDeployment {
@@ -18,15 +19,12 @@ export class ServiceDeployment {
     public containerName: string;
     public version: string;
     public dockerDaemon: DockerDaemon;
-
-    constructor() {
-        this.dockerDaemon = new DockerDaemon();
-    }
 }
 
 export class Service {
     public id: number;
     public name: string;
+    public version: string;
     public description: string;
     public serviceUrl: ServiceUrl;
     public deployment: ServiceDeployment;
@@ -37,6 +35,7 @@ export class Service {
         service.serviceUrl = new ServiceUrl();
         service.healthCheck = new ServiceHealthCheck();
         service.deployment = new ServiceDeployment();
+        service.deployment.dockerDaemon = new DockerDaemon();
         service.healthCheck.fixes = [];
         return service;
     }

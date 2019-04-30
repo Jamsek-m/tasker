@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "services", indexes = @Index(name = "NAME_UNIQ_INDEX", columnList = "name", unique = true))
+@Table(name = "services", indexes = @Index(name = "NAME_UNIQ_INDEX", columnList = "name,version", unique = true))
 @NamedQueries({
     @NamedQuery(name = Service.FIND_BY_NAME, query = "SELECT s FROM Service s WHERE s.name = :name")
 })
@@ -17,10 +17,13 @@ public class Service {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     
-    @Column(name = "name", unique = true, updatable = false, nullable = false)
+    @Column(name = "name", updatable = false, nullable = false)
     private String name;
     
     private String description;
+    
+    @Column(name = "version", nullable = false)
+    private String version;
     
     @JsonIgnore
     private String token;
@@ -106,5 +109,13 @@ public class Service {
     
     public void setDeployment(ServiceDeployment deployment) {
         this.deployment = deployment;
+    }
+    
+    public String getVersion() {
+        return version;
+    }
+    
+    public void setVersion(String version) {
+        this.version = version;
     }
 }

@@ -1,3 +1,158 @@
-<p>
-  service-add-page works!
-</p>
+<div class="row p-0 m-0">
+    <div class="col-8">
+        <div class="basic-info">
+            <h3>General info</h3>
+            <div class="form-row">
+                <div class="col-9">
+                    <label for="name">
+                        Service name:
+                        <tasker-help
+                            help="Unique service name. Only alphanumeric characters, underscore and dash allowed."></tasker-help>
+                    </label>
+                    <input type="text" id="name" name="name" class="form-control" [(ngModel)]="service.name"/>
+                </div>
+                <div class="col-3">
+                    <label for="version">
+                        Service version:
+                        <tasker-help help="Service version."></tasker-help>
+                    </label>
+                    <input type="text" id="version" name="version" class="form-control" [(ngModel)]="service.version"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="description">
+                    Description:
+                    <tasker-help help="Description of your service."></tasker-help>
+                </label>
+                <input type="text" id="description" name="description" class="form-control"
+                    [(ngModel)]="service.description"/>
+            </div>
+        </div>
+
+        <hr/>
+
+        <div class="service-location">
+            <h3>Deployment</h3>
+            <div class="form-check form-check-inline group-enabler">
+                <input type="checkbox" id="is-deployed" name="is-deployed" class="form-check-input"
+                    [(ngModel)]="isDeployed"/>
+                <label class="form-check-label" for="is-deployed">
+                    Is deployed?
+                    <tasker-help help="Is service already deployed?"></tasker-help>
+                </label>
+            </div>
+            <div class="form-check form-check-inline group-enabler" *ngIf="isDeployed">
+                <input type="checkbox" id="url-versioning" name="url-versioning" class="form-check-input"
+                    [(ngModel)]="service.serviceUrl.urlVersioning"/>
+                <label class="form-check-label" for="url-versioning">
+                    Uses url versioning?
+                    <tasker-help help="Is version part of url?"></tasker-help>
+                </label>
+            </div>
+            <div class="form-row" *ngIf="isDeployed">
+                <div class="col">
+                    <label for="service-url">
+                        Service base url:
+                        <tasker-help help="Base url of service, including context path if present."></tasker-help>
+                    </label>
+                    <input type="text" id="service-url" name="service-url" class="form-control"
+                        [(ngModel)]="service.serviceUrl.url"/>
+                </div>
+                <div class="col">
+                    <label for="service-version">
+                        API version:
+                        <tasker-help
+                            help="If your API is using url versioning this will be appended to base path."></tasker-help>
+                    </label>
+                    <input type="text" id="service-version" name="service-version" class="form-control"
+                        [(ngModel)]="service.serviceUrl.version"/>
+                </div>
+            </div>
+        </div>
+
+        <hr/>
+
+        <div class="service-deployment">
+            <h3>Docker deployment</h3>
+
+            <div class="form-check group-enabler">
+                <input type="checkbox" id="is-dockerized" name="is-dockerized" class="form-check-input"
+                    [(ngModel)]="isDockerized"/>
+                <label class="form-check-label" for="is-dockerized">
+                    Is deployed on docker?
+                    <tasker-help help="If service is not deployed on docker disable this option."></tasker-help>
+                </label>
+            </div>
+            <div class="form-row" *ngIf="isDockerized">
+                <div class="col">
+                    <label for="daemon">
+                        Docker daemon:
+                        <tasker-help help="Docker daemon where your service is deployed."></tasker-help>
+                    </label>
+                    <select class="custom-select" id="daemon" name="daemon"
+                        [(ngModel)]="service.deployment.dockerDaemon">
+                        <option *ngFor="let daemon of daemons" [ngValue]="daemon">{{daemon.name}}</option>
+                    </select>
+                </div>
+                <div class="col">
+                    <label for="container-name">
+                        Container name:
+                        <tasker-help
+                            help="Name of your deployed container. Name is persisted even on recreating container."></tasker-help>
+                    </label>
+                    <input type="text" id="container-name" name="container-name" class="form-control"
+                        [typeaheadAsync]="true"
+                        [typeahead]="dockerContainerNameObservable"
+                        [typeaheadOptionsLimit]="5"
+                        [typeaheadItemTemplate]="containerNameSearchTemplate"
+                        (typeaheadOnSelect)="containerNameChange($event.item)"
+                        placeholder="Container name"
+                        [(ngModel)]="service.deployment.containerName"/>
+                    <ng-template #containerNameSearchTemplate let-model="item" let-index="index">
+                        <span>{{model.Names[0]}}</span>
+                    </ng-template>
+                </div>
+            </div>
+            <div class="form-group" *ngIf="isDockerized">
+                <label for="container-id">
+                    Container id:
+                    <tasker-help
+                        help="Id of your deployed container. If container is recreated its id will change."></tasker-help>
+                </label>
+                <input class="form-control" type="text" readonly name="container-id"
+                    id="container-id" [(ngModel)]="service.deployment.containerId"/>
+            </div>
+        </div>
+
+        <hr/>
+
+        <div class="service-healthcheck">
+            <h3>Healthcheck</h3>
+            <div class="form-check group-enabler">
+                <input type="checkbox" id="has-healthcheck" name="has-healthcheck" class="form-check-input"
+                    [(ngModel)]="hasHealthcheck"/>
+                <label class="form-check-label" for="has-healthcheck">Has health check?</label>
+            </div>
+
+            <div class="form-group" *ngIf="hasHealthcheck">
+                <label for="healthcheck-url">
+                    Healthcheck url:
+                    <tasker-help help="Url where your service exposes healthcheck endpoint."></tasker-help>
+                </label>
+                <div class="input-group">
+                    <input type="text" id="healthcheck-url" name="healthcheck-url" class="form-control"
+                        [(ngModel)]="service.healthCheck.healthUrl"/>
+                    <span class="input-group-append">
+                <button class="btn-sm btn-outline-secondary"
+                    (click)="prependUrlToHealthcheck()">Prepend base url</button>
+            </span>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <div class="col-4">
+        <div>Service: {{service.name}}:{{service.version}}</div>
+        <div>{{service.description}}</div>
+    </div>
+</div>
