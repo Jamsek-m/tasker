@@ -1,5 +1,5 @@
 <div class="row p-0 m-0">
-    <div class="col-8">
+    <div class="col-md-8 col-sm-12">
         <div class="basic-info">
             <h3>General info</h3>
             <div class="form-row">
@@ -151,8 +151,45 @@
         </div>
 
     </div>
-    <div class="col-4">
-        <div>Service: {{service.name}}:{{service.version}}</div>
-        <div>{{service.description}}</div>
+    <div class="col-md-4 col-sm-12" #formSummaryContainer>
+        <div class="form-summary" id="form-summary" #formSummary>
+            <div>Service: {{service.name}}:{{service.version}}</div>
+            <div>{{service.description}}</div>
+
+            <hr/>
+
+            <div *ngIf="isDeployed; else notDeployed">
+                <div>Service base url: {{service.serviceUrl.url}}</div>
+                <div>
+                    API base url:
+                    {{service.serviceUrl.url + (service.serviceUrl.urlVersioning ? '/' + service.serviceUrl.version: '')}}
+                </div>
+            </div>
+            <ng-template #notDeployed>
+                <div>Service is not deployed.</div>
+            </ng-template>
+
+            <hr/>
+
+            <div *ngIf="isDockerized; else notDockerized">
+                <div>Docker daemon: {{service.deployment.dockerDaemon.name}}</div>
+                <div>Container name: {{service.deployment.containerName}}</div>
+                <div>Container id: {{service.deployment.containerId}}</div>
+            </div>
+            <ng-template #notDockerized>
+                <div>Service is not deployed on docker.</div>
+            </ng-template>
+
+            <hr/>
+
+            <div *ngIf="hasHealthcheck; else noHealthcheck">
+                <div>
+                    Healthcheck endpoint: {{service.healthCheck.healthUrl}}
+                </div>
+            </div>
+            <ng-template #noHealthcheck>
+                <div>Service doesn't have healthcheck.</div>
+            </ng-template>
+        </div>
     </div>
 </div>

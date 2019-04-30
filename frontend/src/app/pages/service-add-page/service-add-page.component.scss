@@ -1,3 +1,4 @@
+@import "../../../styles/media-mixin";
 
 hr {
     margin: 2rem 0;
@@ -7,4 +8,23 @@ h3 {
 }
 .group-enabler {
     margin-bottom: 20px;
+}
+
+@include device-specific($tablet) {
+    .form-summary {
+        overflow: hidden;
+    }
+    .sticky {
+        position: fixed;
+        top: 100px;
+    }
+}
+@include device-specific($pc) {
+    .form-summary {
+        overflow: hidden;
+    }
+    .sticky {
+        position: fixed;
+        top: 100px;
+    }
 }

@@ -1,4 +1,4 @@
-import {Component, OnInit} from "@angular/core";
+import {AfterViewInit, Component, ElementRef, HostListener, OnInit, ViewChild} from "@angular/core";
 import {DockerDaemonService} from "../../services/docker-daemon.service";
 import {DockerDaemon} from "../../models/docker-daemon";
 import {Service} from "../../models/service.class";
@@ -11,7 +11,7 @@ import {mergeMap} from "rxjs/operators";
     templateUrl: "./service-add-page.component.html",
     styleUrls: ["./service-add-page.component.scss"]
 })
-export class ServiceAddPageComponent implements OnInit {
+export class ServiceAddPageComponent implements OnInit, AfterViewInit {
 
     public daemons: DockerDaemon[] = [];
     public service = Service.empty();
@@ -19,6 +19,14 @@ export class ServiceAddPageComponent implements OnInit {
     public isDockerized = true;
     public hasHealthcheck = true;
     public dockerContainerNameObservable: Observable<any>;
+
+    @ViewChild("formSummary")
+    public formSummary: ElementRef<HTMLDivElement>;
+
+    @ViewChild("formSummaryContainer")
+    public formSummaryContainer: ElementRef<HTMLDivElement>;
+
+    public sticky: number;
 
     constructor(private dockerDaemonService: DockerDaemonService,
                 private dockerService: DockerService) {
@@ -28,6 +36,20 @@ export class ServiceAddPageComponent implements OnInit {
         this.initDaemons();
         this.setDefaultOptions();
         this.registerContainerSearchObserver();
+    }
+
+    ngAfterViewInit(): void {
+        this.sticky = this.formSummary.nativeElement.offsetTop;
+        this.formSummary.nativeElement.style.width = `${this.formSummaryContainer.nativeElement.offsetWidth}px`;
+    }
+
+    @HostListener("window:scroll")
+    private onScroll(): void {
+        if (window.pageYOffset >= this.sticky) {
+            this.formSummary.nativeElement.classList.add("sticky");
+        } else {
+            this.formSummary.nativeElement.classList.remove("sticky");
+        }
     }
 
     public containerNameChange(containerInfo: any): void {
