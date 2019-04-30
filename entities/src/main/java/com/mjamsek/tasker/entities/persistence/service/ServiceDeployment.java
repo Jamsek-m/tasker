@@ -53,4 +53,12 @@ public class ServiceDeployment {
     public void setVersion(String version) {
         this.version = version;
     }
+    
+    public DockerDaemon getDockerDaemon() {
+        return dockerDaemon;
+    }
+    
+    public void setDockerDaemon(DockerDaemon dockerDaemon) {
+        this.dockerDaemon = dockerDaemon;
+    }
 }

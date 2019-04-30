@@ -7,14 +7,16 @@
         Service
     </h4>
     <div *ngIf="service.serviceUrl">
-        <p>
-            Base url: {{service.serviceUrl.url}}
+        <div class="data-row">
+            <span class="row-title">Base url:</span>
+            <span class="row-value">{{service.serviceUrl.url}}</span>
             <tasker-clipboard [data]="service.serviceUrl.url"></tasker-clipboard>
-        </p>
-        <p>
-            API base url: {{service.serviceUrl.url + '/' + service.serviceUrl.version}}
+        </div>
+        <div class="data-row">
+            <span class="row-title">API base url:</span>
+            <span class="row-value">{{service.serviceUrl.url + '/' + service.serviceUrl.version}}</span>
             <tasker-clipboard [data]="service.serviceUrl.url + '/' + service.serviceUrl.version"></tasker-clipboard>
-        </p>
+        </div>
     </div>
 
     <h4 *ngIf="service.healthCheck">
@@ -22,11 +24,17 @@
         Health
     </h4>
     <div *ngIf="service.healthCheck">
-        <p>Status: <span (click)="checkHealth()" class="health-status status-{{status}}">{{status}}</span></p>
-        <p>
-            Health url: {{service.healthCheck.healthUrl}}
+        <div class="data-row">
+            <span class="row-title">Status:</span>
+            <span class="row-value">
+                <span (click)="checkHealth()" class="health-status status-{{status}}">{{status}}</span>
+            </span>
+        </div>
+        <div class="data-row">
+            <span class="row-title">Health url:</span>
+            <span class="row-value">{{service.healthCheck.healthUrl}}</span>
             <tasker-clipboard [data]="service.healthCheck.healthUrl"></tasker-clipboard>
-        </p>
+        </div>
     </div>
 
     <h4 *ngIf="service.deployment">
@@ -35,10 +43,23 @@
     </h4>
     <div *ngIf="service.deployment">
         <h5>Container</h5>
-        <p>Name: {{service.deployment.containerName}}</p>
-        <p>Id: {{service.deployment.containerId}}</p>
-        <p>Version: {{service.deployment.version}}</p>
-        <p>Daemon: {{service.deployment.dockerDaemon.name}}</p>
+        <div class="data-row">
+            <span class="row-title">Name:</span>
+            <span class="row-value">{{service.deployment.containerName}}</span>
+        </div>
+        <div class="data-row">
+            <span class="row-title">Id:</span>
+            <span class="row-value">{{service.deployment.containerId}}</span>
+        </div>
+        <div class="data-row">
+            <span class="row-title">Version:</span>
+            <span class="row-value">{{service.deployment.version}}</span>
+        </div>
+        <div class="data-row">
+            <span class="row-title">Daemon:</span>
+            <span class="row-value">{{service.deployment.dockerDaemon.name}}</span>
+            <fa-icon [icon]="['fas', 'arrow-right']"></fa-icon>
+        </div>
     </div>
 
     <h4>
@@ -53,10 +74,10 @@
         <button class="btn btn-outline-info with-marg" (click)="recreateService()"
             [disabled]="blockActions">Recreate</button>
         <button class="btn btn-outline-danger" (click)="stopService()"
-            a[disabled]="blockActions">Stop</button>
+            [disabled]="blockActions">Stop</button>
     </div>
 
-    <div>
+    <div class="container-info" *ngIf="containerInfo !== null">
         <tasker-json-view [data]="service"></tasker-json-view>
     </div>
 </div>

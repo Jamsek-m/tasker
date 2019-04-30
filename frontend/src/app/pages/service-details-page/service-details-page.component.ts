@@ -14,6 +14,7 @@ export class ServiceDetailsPageComponent implements OnInit {
     public service: Service = Service.empty();
     public blockActions = false;
     public status: "bad" | "healthy" | "checking" | "undef";
+    public containerInfo: any = null;
 
     constructor(private router: Router,
                 private activatedRoute: ActivatedRoute,
