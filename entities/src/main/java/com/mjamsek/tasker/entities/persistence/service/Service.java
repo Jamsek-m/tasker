@@ -31,15 +31,15 @@ public class Service {
     @JsonIgnore
     private Boolean active;
     
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "deployment_id")
     private ServiceDeployment deployment;
     
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "url_id")
     private ServiceUrl serviceUrl;
     
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "health_check_id")
     private ServiceHealthCheck healthCheck;
     

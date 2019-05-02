@@ -1,0 +1,77 @@
+<h5>General info</h5>
+<div *ngIf="service.name && service.version; else nameUndef">
+    <div>
+        Service:
+        <span class="field-val">{{service.name}}@{{service.version}}</span>
+    </div>
+    <div class="description">{{service.description}}</div>
+</div>
+<ng-template #nameUndef>
+    <div class="undef">Name and version must be specified!</div>
+</ng-template>
+
+<hr/>
+
+<h5>Deployment</h5>
+<div *ngIf="service.isDeployed; else notDeployed">
+    <div *ngIf="service.serviceUrl.url && service.serviceUrl.url !== 'http://' && service.serviceUrl.version; else serviceUrlUndef">
+        <div>
+            Service base url:
+            <span class="field-val">{{service.serviceUrl.url}}</span>
+        </div>
+        <div>
+            API base url:
+            <span class="field-val">{{service.serviceUrl.url + (service.serviceUrl.urlVersioning ? '/' + service.serviceUrl.version : '')}}</span>
+        </div>
+    </div>
+    <ng-template #serviceUrlUndef>
+        <div class="undef">Service base url and version must be specified!</div>
+    </ng-template>
+</div>
+<ng-template #notDeployed>
+    <div class="not-used">Service is not deployed.</div>
+</ng-template>
+
+<hr/>
+
+<h5>Docker deployment</h5>
+<div *ngIf="service.isDockerized; else notDockerized">
+    <div *ngIf="service.deployment.dockerDaemon && service.deployment.containerId && service.deployment.containerName; else dockerUndef">
+        <div>
+            Docker daemon:
+            <span class="field-val">{{service.deployment.dockerDaemon.name}}</span>
+        </div>
+        <div>
+            Container name:
+            <span class="field-val">{{service.deployment.containerName}}</span>
+        </div>
+        <div>
+            Container id:
+            <span class="field-val">{{shortenContainerId()}}</span>
+        </div>
+    </div>
+    <ng-template #dockerUndef>
+        <div class="undef">Service is not connected with docker container!</div>
+    </ng-template>
+</div>
+<ng-template #notDockerized>
+    <div class="not-used">Service is not deployed on docker.</div>
+</ng-template>
+
+<hr/>
+
+<h5>Healthcheck</h5>
+<div *ngIf="service.hasHealthcheck; else noHealthcheck">
+    <div *ngIf="service.healthCheck.healthUrl; else healthUndef">
+        <div>
+            Healthcheck endpoint:
+            <span class="field-val">{{service.healthCheck.healthUrl}}</span>
+        </div>
+    </div>
+    <ng-template #healthUndef>
+        <div class="undef">Healthcheck url must be provided!</div>
+    </ng-template>
+</div>
+<ng-template #noHealthcheck>
+    <div class="not-used">Service doesn't have healthcheck.</div>
+</ng-template>

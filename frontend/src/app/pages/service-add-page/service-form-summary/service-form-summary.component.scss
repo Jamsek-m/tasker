@@ -1,0 +1,18 @@
+@import "../../../../styles/variables";
+
+.description {
+    font-style: italic;
+}
+
+.field-val {
+    font-weight: 600;
+}
+
+.undef {
+    font-weight: 600;
+    color: $darkRed;
+}
+
+.not-used {
+    font-style: italic;
+}

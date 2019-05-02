@@ -7,5 +7,7 @@ import java.util.List;
 public interface DockerService {
     
     List<DockerContainerInfo> queryContainersByName(String name, long daemonId);
+    
+    String getContainerInfo(String containerId, long daemonId);
 
 }

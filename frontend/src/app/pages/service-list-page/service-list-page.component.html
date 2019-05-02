@@ -1,11 +1,30 @@
-<div class="page-wrapper">
+<div>
 
     <h1>Services</h1>
-    <div>
+    <div class="actions">
         <button class="btn btn-outline-primary" (click)="createNewService()">
             <fa-icon [icon]="['fas', 'plus']"></fa-icon>
             Add service
         </button>
+
+        <div class="input-group searchbar-group">
+            <input type="text" class="form-control" placeholder="Search service"
+                [typeaheadAsync]="true"
+                [typeahead]="serviceQueryObservable"
+                [typeaheadOptionsLimit]="5"
+                [typeaheadWaitMs]="500"
+                [typeaheadItemTemplate]="searchResultTemplate"
+                (typeaheadOnSelect)="selectSearchResult($event.item)"
+                [(ngModel)]="query"/>
+            <div class="input-group-append">
+                <div class="input-group-text">
+                    <fa-icon [icon]="['fas', 'search']"></fa-icon>
+                </div>
+            </div>
+            <ng-template #searchResultTemplate let-model="item" let-index="index">
+                <span>{{model.name}}</span>
+            </ng-template>
+        </div>
     </div>
 
     <tasker-pagination-limit (whenLimitChanges)="limitChange($event)"></tasker-pagination-limit>
@@ -27,7 +46,9 @@
                         <tasker-health-overview [service]="service"></tasker-health-overview>
                     </td>
                     <td class="tb-name">
-                        <a class="details-link" [routerLink]="['/service', service.id]">{{service.name}}</a>
+                        <a class="details-link" [routerLink]="['/service', service.id]">
+                            {{service.name}}@{{service.version}}
+                        </a>
                     </td>
                 </tr>
             </tbody>

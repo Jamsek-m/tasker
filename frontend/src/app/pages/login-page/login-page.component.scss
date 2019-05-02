@@ -7,7 +7,7 @@
 
     .login-form {
         margin-top: 50px;
-        width: 20%;
+        width: 40%;
 
         h1 {
             margin-bottom: 40px;
@@ -18,7 +18,7 @@
             align-items: center;
 
             button {
-                width: 40%;
+                width: 150px;
             }
         }
     }
@@ -27,7 +27,7 @@
 @include device-specific($tablet) {
     .page-wrapper {
         .login-form {
-            width: 40%;
+            width: 50%;
         }
     }
 }
@@ -35,7 +35,7 @@
 @include device-specific($phone) {
     .page-wrapper {
         .login-form {
-            width: 80%;
+            width: 90%;
         }
     }
 }

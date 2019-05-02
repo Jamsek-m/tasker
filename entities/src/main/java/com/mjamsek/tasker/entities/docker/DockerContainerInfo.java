@@ -3,6 +3,7 @@ package com.mjamsek.tasker.entities.docker;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -20,12 +21,12 @@ public class DockerContainerInfo {
     @JsonProperty("Command")
     private String command;
     @JsonProperty("Created")
-    private Integer created;
+    private Date created;
     @JsonProperty("Ports")
     private List<Port> ports = null;
     @JsonProperty("Labels")
     private Map<String, Object> labels;
-    @JsonProperty("State")
+    @JsonProperty(value = "State", defaultValue = "")
     private String state;
     @JsonProperty("Status")
     private String status;
@@ -76,11 +77,11 @@ public class DockerContainerInfo {
         this.command = command;
     }
     
-    public Integer getCreated() {
+    public Date getCreated() {
         return created;
     }
     
-    public void setCreated(Integer created) {
+    public void setCreated(Date created) {
         this.created = created;
     }
     
@@ -315,7 +316,7 @@ public class DockerContainerInfo {
     
     public static class Port {
         @JsonProperty("IP")
-        private String iP;
+        private String ip;
         @JsonProperty("PrivatePort")
         private Integer privatePort;
         @JsonProperty("PublicPort")
@@ -323,12 +324,12 @@ public class DockerContainerInfo {
         @JsonProperty("Type")
         private String type;
         
-        public String getiP() {
-            return iP;
+        public String getIp() {
+            return ip;
         }
         
-        public void setiP(String iP) {
-            this.iP = iP;
+        public void setIp(String ip) {
+            this.ip = ip;
         }
         
         public Integer getPrivatePort() {

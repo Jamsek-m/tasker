@@ -9,14 +9,22 @@
                         <tasker-help
                             help="Unique service name. Only alphanumeric characters, underscore and dash allowed."></tasker-help>
                     </label>
-                    <input type="text" id="name" name="name" class="form-control" [(ngModel)]="service.name"/>
+                    <input required type="text" id="name" name="name" class="form-control"
+                        [ngClass]="{'is-invalid': validation.name}" [(ngModel)]="service.name"/>
+                    <div class="invalid-feedback" *ngIf="validation.name">
+                        {{validation.name}}
+                    </div>
                 </div>
                 <div class="col-3">
                     <label for="version">
                         Service version:
                         <tasker-help help="Service version."></tasker-help>
                     </label>
-                    <input type="text" id="version" name="version" class="form-control" [(ngModel)]="service.version"/>
+                    <input type="text" id="version" name="version" class="form-control" required
+                        [ngClass]="{'is-invalid': validation.version}" [(ngModel)]="service.version"/>
+                    <div class="invalid-feedback" *ngIf="validation.version">
+                        {{validation.version}}
+                    </div>
                 </div>
             </div>
             <div class="form-group">
@@ -35,13 +43,13 @@
             <h3>Deployment</h3>
             <div class="form-check form-check-inline group-enabler">
                 <input type="checkbox" id="is-deployed" name="is-deployed" class="form-check-input"
-                    [(ngModel)]="isDeployed"/>
+                    [(ngModel)]="service.isDeployed"/>
                 <label class="form-check-label" for="is-deployed">
                     Is deployed?
                     <tasker-help help="Is service already deployed?"></tasker-help>
                 </label>
             </div>
-            <div class="form-check form-check-inline group-enabler" *ngIf="isDeployed">
+            <div class="form-check form-check-inline group-enabler" *ngIf="service.isDeployed">
                 <input type="checkbox" id="url-versioning" name="url-versioning" class="form-check-input"
                     [(ngModel)]="service.serviceUrl.urlVersioning"/>
                 <label class="form-check-label" for="url-versioning">
@@ -49,14 +57,17 @@
                     <tasker-help help="Is version part of url?"></tasker-help>
                 </label>
             </div>
-            <div class="form-row" *ngIf="isDeployed">
+            <div class="form-row" *ngIf="service.isDeployed">
                 <div class="col">
                     <label for="service-url">
                         Service base url:
                         <tasker-help help="Base url of service, including context path if present."></tasker-help>
                     </label>
-                    <input type="text" id="service-url" name="service-url" class="form-control"
-                        [(ngModel)]="service.serviceUrl.url"/>
+                    <input type="text" id="service-url" name="service-url" class="form-control" required
+                        [ngClass]="{'is-invalid': validation.url}" [(ngModel)]="service.serviceUrl.url"/>
+                    <div class="invalid-feedback" *ngIf="validation.url">
+                        {{validation.url}}
+                    </div>
                 </div>
                 <div class="col">
                     <label for="service-version">
@@ -64,8 +75,11 @@
                         <tasker-help
                             help="If your API is using url versioning this will be appended to base path."></tasker-help>
                     </label>
-                    <input type="text" id="service-version" name="service-version" class="form-control"
-                        [(ngModel)]="service.serviceUrl.version"/>
+                    <input type="text" id="service-version" name="service-version" class="form-control" required
+                        [ngClass]="{'is-invalid': validation.ApiVersion}" [(ngModel)]="service.serviceUrl.version"/>
+                    <div class="invalid-feedback" *ngIf="validation.ApiVersion">
+                        {{validation.ApiVersion}}
+                    </div>
                 </div>
             </div>
         </div>
@@ -77,22 +91,26 @@
 
             <div class="form-check group-enabler">
                 <input type="checkbox" id="is-dockerized" name="is-dockerized" class="form-check-input"
-                    [(ngModel)]="isDockerized"/>
+                    [(ngModel)]="service.isDockerized"/>
                 <label class="form-check-label" for="is-dockerized">
                     Is deployed on docker?
                     <tasker-help help="If service is not deployed on docker disable this option."></tasker-help>
                 </label>
             </div>
-            <div class="form-row" *ngIf="isDockerized">
+            <div class="form-row" *ngIf="service.isDockerized">
                 <div class="col">
                     <label for="daemon">
                         Docker daemon:
                         <tasker-help help="Docker daemon where your service is deployed."></tasker-help>
                     </label>
-                    <select class="custom-select" id="daemon" name="daemon"
+                    <select class="custom-select" id="daemon" name="daemon" required
+                        [ngClass]="{'is-invalid': validation.dockerDaemon}"
                         [(ngModel)]="service.deployment.dockerDaemon">
                         <option *ngFor="let daemon of daemons" [ngValue]="daemon">{{daemon.name}}</option>
                     </select>
+                    <div class="invalid-feedback" *ngIf="validation.dockerDaemon">
+                        {{validation.dockerDaemon}}
+                    </div>
                 </div>
                 <div class="col">
                     <label for="container-name">
@@ -101,6 +119,8 @@
                             help="Name of your deployed container. Name is persisted even on recreating container."></tasker-help>
                     </label>
                     <input type="text" id="container-name" name="container-name" class="form-control"
+                        required
+                        [ngClass]="{'is-invalid': validation.containerName}"
                         [typeaheadAsync]="true"
                         [typeahead]="dockerContainerNameObservable"
                         [typeaheadOptionsLimit]="5"
@@ -108,19 +128,26 @@
                         (typeaheadOnSelect)="containerNameChange($event.item)"
                         placeholder="Container name"
                         [(ngModel)]="service.deployment.containerName"/>
+                    <div class="invalid-feedback" *ngIf="validation.containerName">
+                        {{validation.containerName}}
+                    </div>
                     <ng-template #containerNameSearchTemplate let-model="item" let-index="index">
                         <span>{{model.Names[0]}}</span>
                     </ng-template>
                 </div>
             </div>
-            <div class="form-group" *ngIf="isDockerized">
+            <div class="form-group" *ngIf="service.isDockerized">
                 <label for="container-id">
                     Container id:
                     <tasker-help
                         help="Id of your deployed container. If container is recreated its id will change."></tasker-help>
                 </label>
-                <input class="form-control" type="text" readonly name="container-id"
+                <input class="form-control" type="text" readonly name="container-id" required
+                    [ngClass]="{'is-invalid': validation.containerId}"
                     id="container-id" [(ngModel)]="service.deployment.containerId"/>
+                <div class="invalid-feedback" *ngIf="validation.containerId">
+                    {{validation.containerId}}
+                </div>
             </div>
         </div>
 
@@ -130,66 +157,39 @@
             <h3>Healthcheck</h3>
             <div class="form-check group-enabler">
                 <input type="checkbox" id="has-healthcheck" name="has-healthcheck" class="form-check-input"
-                    [(ngModel)]="hasHealthcheck"/>
+                    [(ngModel)]="service.hasHealthcheck"/>
                 <label class="form-check-label" for="has-healthcheck">Has health check?</label>
             </div>
 
-            <div class="form-group" *ngIf="hasHealthcheck">
+            <div class="form-group" *ngIf="service.hasHealthcheck">
                 <label for="healthcheck-url">
                     Healthcheck url:
                     <tasker-help help="Url where your service exposes healthcheck endpoint."></tasker-help>
                 </label>
                 <div class="input-group">
                     <input type="text" id="healthcheck-url" name="healthcheck-url" class="form-control"
-                        [(ngModel)]="service.healthCheck.healthUrl"/>
+                        [ngClass]="{'is-invalid': validation.healthUrl}"
+                        required [(ngModel)]="service.healthCheck.healthUrl"/>
                     <span class="input-group-append">
-                <button class="btn-sm btn-outline-secondary"
-                    (click)="prependUrlToHealthcheck()">Prepend base url</button>
-            </span>
+                        <button class="btn-sm btn-outline-secondary"
+                            (click)="prependUrlToHealthcheck()">Prepend base url</button>
+                    </span>
+                    <div class="invalid-feedback" *ngIf="validation.healthUrl">
+                        {{validation.healthUrl}}
+                    </div>
                 </div>
             </div>
+        </div>
+
+        <div class="service-actions">
+            <button class="btn btn-outline-danger cancel" (click)="cancel()">Cancel</button>
+            <button class="btn btn-outline-primary save" (click)="save()">Save</button>
         </div>
 
     </div>
     <div class="col-md-4 col-sm-12" #formSummaryContainer>
         <div class="form-summary" id="form-summary" #formSummary>
-            <div>Service: {{service.name}}:{{service.version}}</div>
-            <div>{{service.description}}</div>
-
-            <hr/>
-
-            <div *ngIf="isDeployed; else notDeployed">
-                <div>Service base url: {{service.serviceUrl.url}}</div>
-                <div>
-                    API base url:
-                    {{service.serviceUrl.url + (service.serviceUrl.urlVersioning ? '/' + service.serviceUrl.version: '')}}
-                </div>
-            </div>
-            <ng-template #notDeployed>
-                <div>Service is not deployed.</div>
-            </ng-template>
-
-            <hr/>
-
-            <div *ngIf="isDockerized; else notDockerized">
-                <div>Docker daemon: {{service.deployment.dockerDaemon.name}}</div>
-                <div>Container name: {{service.deployment.containerName}}</div>
-                <div>Container id: {{service.deployment.containerId}}</div>
-            </div>
-            <ng-template #notDockerized>
-                <div>Service is not deployed on docker.</div>
-            </ng-template>
-
-            <hr/>
-
-            <div *ngIf="hasHealthcheck; else noHealthcheck">
-                <div>
-                    Healthcheck endpoint: {{service.healthCheck.healthUrl}}
-                </div>
-            </div>
-            <ng-template #noHealthcheck>
-                <div>Service doesn't have healthcheck.</div>
-            </ng-template>
+            <tasker-service-form-summary [service]="service"></tasker-service-form-summary>
         </div>
     </div>
 </div>

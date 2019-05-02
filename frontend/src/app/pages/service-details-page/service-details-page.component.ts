@@ -3,6 +3,8 @@ import {ActivatedRoute, Router} from "@angular/router";
 import {HealthCheckResponse, ServicesService} from "../../services/services.service";
 import {Service} from "../../models/service.class";
 import {HttpErrorResponse} from "@angular/common/http";
+import {DockerService} from "../../services/docker.service";
+import {MessageService} from "../../services/message.service";
 
 @Component({
     selector: "tasker-service-details-page",
@@ -18,6 +20,8 @@ export class ServiceDetailsPageComponent implements OnInit {
 
     constructor(private router: Router,
                 private activatedRoute: ActivatedRoute,
+                private dockerService: DockerService,
+                private messageService: MessageService,
                 private servicesService: ServicesService) {
     }
 
@@ -34,10 +38,6 @@ export class ServiceDetailsPageComponent implements OnInit {
     }
 
     public recreateService(): void {
-        this.blockActions = true;
-    }
-
-    public getServiceInfo(): void {
         this.blockActions = true;
     }
 
@@ -72,6 +72,21 @@ export class ServiceDetailsPageComponent implements OnInit {
                 }
             );
         }, 250);
+    }
+
+    public getContainerInfo(): void {
+        this.blockActions = true;
+        this.dockerService.getContainerInfo(this.service).subscribe(
+            (info) => {
+                this.containerInfo = info;
+                this.blockActions = false;
+            },
+            (err) => {
+                this.blockActions = false;
+                console.error(err);
+                this.messageService.openToastNotification("Error", "Error fetching container info!", "error");
+            }
+        );
     }
 
 }

@@ -1,10 +1,15 @@
 import {AfterViewInit, Component, ElementRef, HostListener, OnInit, ViewChild} from "@angular/core";
 import {DockerDaemonService} from "../../services/docker-daemon.service";
 import {DockerDaemon} from "../../models/docker-daemon";
-import {Service} from "../../models/service.class";
+import {Service, ServiceValidation} from "../../models/service.class";
 import {DockerService} from "../../services/docker.service";
 import {Observable} from "rxjs";
 import {mergeMap} from "rxjs/operators";
+import {Router} from "@angular/router";
+import {MessageService} from "../../services/message.service";
+import {BsModalRef} from "ngx-bootstrap";
+import {ServicesService} from "../../services/services.service";
+import {BaseError} from "../../errors/base.error";
 
 @Component({
     selector: "tasker-service-add-page",
@@ -15,9 +20,7 @@ export class ServiceAddPageComponent implements OnInit, AfterViewInit {
 
     public daemons: DockerDaemon[] = [];
     public service = Service.empty();
-    public isDeployed = true;
-    public isDockerized = true;
-    public hasHealthcheck = true;
+    public validation = new ServiceValidation();
     public dockerContainerNameObservable: Observable<any>;
 
     @ViewChild("formSummary")
@@ -29,6 +32,9 @@ export class ServiceAddPageComponent implements OnInit, AfterViewInit {
     public sticky: number;
 
     constructor(private dockerDaemonService: DockerDaemonService,
+                private router: Router,
+                private servicesService: ServicesService,
+                private messageService: MessageService,
                 private dockerService: DockerService) {
     }
 
@@ -65,6 +71,31 @@ export class ServiceAddPageComponent implements OnInit, AfterViewInit {
         this.service.healthCheck.healthUrl = this.service.serviceUrl.url + (this.service.healthCheck.healthUrl || "");
     }
 
+    public save(): void {
+        this.validation = this.servicesService.validateService(this.service);
+        if (this.validation.validEntity) {
+            this.servicesService.createService(this.service).subscribe(
+                (created: Service) => {
+                    console.log(created);
+                    this.messageService.openToastNotification("Success!", "Service created!", "ok");
+                },
+                (err: BaseError) => {
+                    console.error(err);
+                    this.messageService.openToastNotification("Error!", err.message, "error");
+                }
+            );
+        }
+    }
+
+    public cancel(): void {
+        this.messageService.openConfirmationDialog("Are you sure? All unsaved data will be lost.", {
+            onConfirmation: (ref: BsModalRef) => {
+                ref.hide();
+                this.router.navigate(["/"]);
+            }
+        }, {confirmIsDestructive: true});
+    }
+
     private registerContainerSearchObserver(): void {
         this.dockerContainerNameObservable = new Observable((observer: any) => {
             observer.next(this.service.deployment.containerName);
@@ -88,8 +119,6 @@ export class ServiceAddPageComponent implements OnInit, AfterViewInit {
         this.service.version = "1.0.0";
         this.service.serviceUrl.url = "http://";
         this.service.deployment.containerName = "";
-
     }
-
 
 }

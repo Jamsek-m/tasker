@@ -1,18 +1,46 @@
 @import "../../../styles/variables";
 @import "../../../styles/media-mixin";
 
-.page-wrapper {
-    .tb-id {
-        width: 10%;
-    }
-    .tb-name {
+.tb-id {
+    width: 10%;
+}
+.tb-name {
 
-        .details-link {
-            color: $link-color;
-            cursor: pointer;
+    .details-link {
+        color: $link-color;
+        cursor: pointer;
+    }
+}
+.tb-health {
+    width: 10%;
+}
+.actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+
+    .searchbar-group {
+        width: 45%;
+        margin-left: 40px;
+    }
+}
+
+
+@include device-specific($phone) {
+    .actions {
+        flex-wrap: wrap;
+
+        .searchbar-group {
+            width: 90%;
+            margin-left: 0;
+            margin-top: 20px;
         }
     }
-    .tb-health {
-        width: 10%;
+}
+@include device-specific($tablet) {
+    .actions {
+        .searchbar-group {
+            width: 45%;
+        }
     }
 }

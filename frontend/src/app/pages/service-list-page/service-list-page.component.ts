@@ -7,6 +7,8 @@ import {BsModalRef, BsModalService, ModalOptions} from "ngx-bootstrap";
 import {Service} from "../../models/service.class";
 import {ServicesService} from "../../services/services.service";
 import {ServiceDTO} from "../../models/service.dto";
+import {Observable} from "rxjs";
+import {mergeMap} from "rxjs/operators";
 
 @Component({
     selector: "tasker-token-list-page",
@@ -19,6 +21,8 @@ export class ServiceListPageComponent implements OnInit {
     private offset = 0;
     public totalServices = 0;
     public services: Service[] = [];
+    public query = "";
+    public serviceQueryObservable: Observable<Service[]>;
 
     @ViewChild("expireModal")
     private expireModal: TemplateRef<any>;
@@ -31,6 +35,7 @@ export class ServiceListPageComponent implements OnInit {
 
     ngOnInit() {
         this.getServices();
+        this.registerServiceQueryObserver();
     }
 
     public createNewService(): void {
@@ -58,6 +63,19 @@ export class ServiceListPageComponent implements OnInit {
         this.limit = newLimit;
         this.offset = 0;
         this.getServices();
+    }
+
+    public selectSearchResult(service: Service) {
+        this.query = "";
+        this.router.navigate(["/service", service.id]);
+    }
+
+    private registerServiceQueryObserver(): void {
+        this.serviceQueryObservable = new Observable((observer: any) => {
+            observer.next(this.query);
+        }).pipe(mergeMap((nameQuery: string) => {
+            return this.servicesService.queryServicesByName(nameQuery);
+        }));
     }
 
 }

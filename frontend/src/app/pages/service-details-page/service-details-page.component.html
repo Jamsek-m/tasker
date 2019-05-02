@@ -3,7 +3,7 @@
     <p class="description">{{service.description}}</p>
 
     <h4 *ngIf="service.serviceUrl">
-        <fa-icon [icon]="['fas', 'wifi']"></fa-icon>
+        <fa-icon [icon]="['fas', 'cogs']"></fa-icon>
         Service
     </h4>
     <div *ngIf="service.serviceUrl">
@@ -38,7 +38,7 @@
     </div>
 
     <h4 *ngIf="service.deployment">
-        <fa-icon [icon]="['fas', 'cogs']"></fa-icon>
+        <fa-icon [icon]="['fab', 'docker']"></fa-icon>
         Deployment
     </h4>
     <div *ngIf="service.deployment">
@@ -63,11 +63,11 @@
     </div>
 
     <h4>
-        <fa-icon [icon]="['fas', 'cogs']"></fa-icon>
+        <fa-icon [icon]="['fas', 'bolt']"></fa-icon>
         Actions
     </h4>
     <div class="actions">
-        <button class="btn btn-outline-info with-marg" (click)="getServiceInfo()"
+        <button class="btn btn-outline-info with-marg" (click)="getContainerInfo()"
             [disabled]="blockActions">Info</button>
         <button class="btn btn-outline-info with-marg" (click)="startService()"
             [disabled]="blockActions">Start</button>
@@ -78,6 +78,6 @@
     </div>
 
     <div class="container-info" *ngIf="containerInfo !== null">
-        <tasker-json-view [data]="service"></tasker-json-view>
+        <tasker-json-view [data]="containerInfo"></tasker-json-view>
     </div>
 </div>

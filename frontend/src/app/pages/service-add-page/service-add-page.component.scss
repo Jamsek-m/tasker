@@ -9,6 +9,16 @@ h3 {
 .group-enabler {
     margin-bottom: 20px;
 }
+.service-actions {
+    margin-top: 80px;
+
+    .btn {
+        width: 100px;
+    }
+    .cancel {
+        margin-right: 15px;
+    }
+}
 
 @include device-specific($tablet) {
     .form-summary {

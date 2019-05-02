@@ -4,18 +4,18 @@ import com.kumuluz.ee.rest.beans.QueryFilter;
 import com.kumuluz.ee.rest.beans.QueryParameters;
 import com.kumuluz.ee.rest.enums.FilterOperation;
 import com.kumuluz.ee.rest.utils.JPAUtils;
+import com.mjamsek.tasker.entities.dto.ServiceRequest;
 import com.mjamsek.tasker.entities.dto.ServiceToken;
-import com.mjamsek.tasker.entities.exceptions.FailedHealthCheckException;
-import com.mjamsek.tasker.entities.exceptions.MissingHealthCheckException;
-import com.mjamsek.tasker.entities.exceptions.ServiceNotFoundException;
-import com.mjamsek.tasker.entities.persistence.service.Service;
-import com.mjamsek.tasker.entities.persistence.service.ServiceHealthCheck;
+import com.mjamsek.tasker.entities.exceptions.*;
+import com.mjamsek.tasker.entities.persistence.service.*;
+import com.mjamsek.tasker.services.DockerDaemonService;
 import com.mjamsek.tasker.services.ServicesService;
 import com.mjamsek.tasker.utils.HttpClient;
 import com.mjamsek.tasker.utils.RandomStringGenerator;
 import org.mindrot.jbcrypt.BCrypt;
 
 import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
@@ -28,6 +28,9 @@ public class ServicesServiceImpl implements ServicesService {
     
     @PersistenceContext(unitName = "main-jpa-unit")
     private EntityManager em;
+    
+    @Inject
+    private DockerDaemonService dockerDaemonService;
     
     @Override
     public List<Service> getServices(QueryParameters queryParameters) {
@@ -76,7 +79,58 @@ public class ServicesServiceImpl implements ServicesService {
     }
     
     @Override
-    public Service updateService(Service service) {
+    public Service createService(ServiceRequest dto) {
+        
+        Service existing = this.getServiceByName(dto.getName());
+        if (existing != null && dto.getVersion().equals(existing.getVersion())) {
+            throw new ConflictException("Service with given name and version already exists!");
+        }
+        
+        Service service = new Service();
+        service.setName(dto.getName());
+        service.setDescription(dto.getDescription());
+        service.setVersion(dto.getVersion());
+        service.setActive(true);
+    
+        if (dto.isDeployed()) {
+            ServiceUrl url = new ServiceUrl();
+            url.setUrl(dto.getServiceUrl().getUrl());
+            url.setUrlVersioning(dto.getServiceUrl().isUrlVersioning());
+            url.setVersion(dto.getServiceUrl().getVersion());
+            service.setServiceUrl(url);
+        }
+        
+        if (dto.isHasHealthcheck()) {
+            ServiceHealthCheck health = new ServiceHealthCheck();
+            health.setHealthUrl(dto.getHealthCheck().getHealthUrl());
+            service.setHealthCheck(health);
+        }
+        
+        if (dto.isDockerized()) {
+            ServiceDeployment deployment = new ServiceDeployment();
+            deployment.setContainerName(dto.getDeployment().getContainerName());
+            deployment.setContainerId(dto.getDeployment().getContainerId());
+            DockerDaemon daemon = dockerDaemonService.getDaemon(dto.getDeployment().getDockerDaemon().getName());
+            if (daemon == null) {
+                throw new ValidationException("Invalid daemon name!");
+            }
+            deployment.setDockerDaemon(daemon);
+            service.setDeployment(deployment);
+        }
+        
+        try {
+            em.getTransaction().begin();
+            em.persist(service);
+            em.getTransaction().commit();
+            return service;
+        } catch (Exception e) {
+            em.getTransaction().rollback();
+            throw new TaskerException("Error saving entity!");
+        }
+    }
+    
+    @Override
+    public Service updateService(Service dto) {
         return null;
     }
     

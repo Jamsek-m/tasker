@@ -1,6 +1,7 @@
 package com.mjamsek.tasker.services;
 
 import com.kumuluz.ee.rest.beans.QueryParameters;
+import com.mjamsek.tasker.entities.dto.ServiceRequest;
 import com.mjamsek.tasker.entities.dto.ServiceToken;
 import com.mjamsek.tasker.entities.persistence.service.Service;
 
@@ -18,7 +19,9 @@ public interface ServicesService {
     
     Service getServiceByIdOrName(String idOrName);
     
-    Service updateService(Service service);
+    Service createService(ServiceRequest dto);
+    
+    Service updateService(Service dto);
     
     ServiceToken generateServiceToken(long serviceId);
     

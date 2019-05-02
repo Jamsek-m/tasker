@@ -1,6 +1,7 @@
 package com.mjamsek.tasker.resources;
 
 import com.kumuluz.ee.rest.beans.QueryParameters;
+import com.mjamsek.tasker.entities.dto.ServiceRequest;
 import com.mjamsek.tasker.entities.dto.ServiceToken;
 import com.mjamsek.tasker.entities.persistence.service.Service;
 import com.mjamsek.tasker.http.HttpHeader;
@@ -40,6 +41,12 @@ public class ServicesResource {
     public Response getService(@PathParam("serviceId") String serviceIdOrName) {
         Service service = servicesService.getServiceByIdOrName(serviceIdOrName);
         return Response.ok(service).build();
+    }
+    
+    @POST
+    public Response createService(ServiceRequest service) {
+        Service created = servicesService.createService(service);
+        return Response.status(Response.Status.CREATED).entity(created).build();
     }
     
     @GET

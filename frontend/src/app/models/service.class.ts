@@ -30,6 +30,16 @@ export class Service {
     public deployment: ServiceDeployment;
     public healthCheck: ServiceHealthCheck;
 
+    public hasHealthcheck: boolean;
+    public isDeployed: boolean;
+    public isDockerized: boolean;
+
+    constructor() {
+        this.isDeployed = true;
+        this.isDockerized = true;
+        this.hasHealthcheck = true;
+    }
+
     public static empty(): Service {
         const service = new Service();
         service.serviceUrl = new ServiceUrl();
@@ -38,5 +48,24 @@ export class Service {
         service.deployment.dockerDaemon = new DockerDaemon();
         service.healthCheck.fixes = [];
         return service;
+    }
+}
+
+export class ServiceValidation {
+    public name: string;
+    public version: string;
+    public description: string;
+    public containerId: string;
+    public containerName: string;
+    public deploymentVersion: string;
+    public url: string;
+    public ApiVersion: string;
+    public healthUrl: string;
+    public dockerDaemon: string;
+
+    public validEntity: boolean;
+
+    constructor() {
+        this.validEntity = true;
     }
 }

@@ -1,7 +1,19 @@
 import {NgModule} from "@angular/core";
 import {FontAwesomeModule} from "@fortawesome/angular-fontawesome";
 import {library} from "@fortawesome/fontawesome-svg-core";
-import {faPlus, faTimes, faCopy, faCheck, faHeartbeat, faCogs, faWifi, faClipboard, faArrowRight, faQuestionCircle} from "@fortawesome/free-solid-svg-icons";
+import {
+    faPlus,
+    faTimes,
+    faCopy,
+    faCheck,
+    faHeartbeat,
+    faCogs,
+    faClipboard,
+    faArrowRight,
+    faQuestionCircle,
+    faBolt, faSearch
+} from "@fortawesome/free-solid-svg-icons";
+import {faDocker} from "@fortawesome/free-brands-svg-icons";
 
 @NgModule({
     imports: [
@@ -23,10 +35,12 @@ export class IconsModule {
             faCheck,
             faHeartbeat,
             faCogs,
-            faWifi,
             faClipboard,
             faArrowRight,
-            faQuestionCircle
+            faQuestionCircle,
+            faDocker,
+            faBolt,
+            faSearch
         ];
         icons.forEach(icon => library.add(icon));
     }

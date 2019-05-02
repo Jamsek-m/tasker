@@ -35,6 +35,7 @@ import {ClipboardComponent} from "./components/clipboard/clipboard.component";
 import {JsonViewComponent} from "./components/json-view/json-view.component";
 import {NgJsonEditorModule} from "ang-jsoneditor";
 import { HelpComponent } from './components/help/help.component';
+import { ServiceFormSummaryComponent } from './pages/service-add-page/service-form-summary/service-form-summary.component';
 
 
 @NgModule({
@@ -61,7 +62,8 @@ import { HelpComponent } from './components/help/help.component';
         ConfirmationDialogComponent,
         ClipboardComponent,
         JsonViewComponent,
-        HelpComponent
+        HelpComponent,
+        ServiceFormSummaryComponent
     ],
     imports: [
         BrowserModule,
