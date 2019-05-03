@@ -5,6 +5,8 @@ import {Service} from "../../models/service.class";
 import {HttpErrorResponse} from "@angular/common/http";
 import {DockerService} from "../../services/docker.service";
 import {MessageService} from "../../services/message.service";
+import {DockerState} from "../../models/docker-state.class";
+import {BsModalRef} from "ngx-bootstrap";
 
 @Component({
     selector: "tasker-service-details-page",
@@ -14,6 +16,7 @@ import {MessageService} from "../../services/message.service";
 export class ServiceDetailsPageComponent implements OnInit {
 
     public service: Service = Service.empty();
+    public containerState: DockerState = new DockerState();
     public blockActions = false;
     public status: "bad" | "healthy" | "checking" | "undef";
     public containerInfo: any = null;
@@ -31,27 +34,65 @@ export class ServiceDetailsPageComponent implements OnInit {
 
     public startService(): void {
         this.blockActions = true;
+        this.dockerService.startContainer(this.service).subscribe(
+            () => {
+                this.blockActions = false;
+                this.messageService.openToastNotification("Success!", "Container was started!");
+                this.getContainerState();
+            },
+            (err) => {
+                this.blockActions = false;
+                console.error(err);
+                this.messageService.openToastNotification("Error!", "Error starting container!", "error");
+            }
+        );
     }
 
     public stopService(): void {
-        this.blockActions = true;
+        this.messageService.openConfirmationDialog("Are you sure you want to stop container?", {
+            onConfirmation: (ref: BsModalRef) => {
+                ref.hide();
+                this.blockActions = true;
+                this.dockerService.stopContainer(this.service).subscribe(
+                    () => {
+                        this.blockActions = false;
+                        this.messageService.openToastNotification("Success!", "Container was stopped!");
+                        this.getContainerState();
+                    },
+                    (err) => {
+                        this.blockActions = false;
+                        console.error(err);
+                        this.messageService.openToastNotification("Error!", "Error stopping container!", "error");
+                    }
+                );
+            }
+        }, {confirmIsDestructive: true});
     }
 
     public recreateService(): void {
-        this.blockActions = true;
+        this.messageService.openConfirmationDialog("Are you sure you want to recreate container?", {
+            onConfirmation: (ref: BsModalRef) => {
+                ref.hide();
+                this.blockActions = true;
+                this.dockerService.recreateContainer(this.service).subscribe(
+                    () => {
+                        this.blockActions = false;
+                        this.messageService.openToastNotification("Success!", "Container was recreated!");
+                        this.getService();
+                        this.getContainerState();
+                    },
+                    (err) => {
+                        this.blockActions = false;
+                        console.error(err);
+                        this.messageService.openToastNotification("Error!", "Error recreating container!", "error");
+                    }
+                );
+            }
+        });
     }
 
-    private getService() {
-        const id = this.activatedRoute.snapshot.params["id"];
-        this.servicesService.getService(id).subscribe(
-            (service: Service) => {
-                this.service = service;
-                this.checkHealth();
-            },
-            (err: HttpErrorResponse) => {
-                this.router.navigate(["/404"]);
-            }
-        );
+    public back(): void {
+        this.router.navigate(["/"]);
     }
 
     public checkHealth(): void {
@@ -89,4 +130,32 @@ export class ServiceDetailsPageComponent implements OnInit {
         );
     }
 
+    public goToDaemons(): void {
+        this.router.navigate(["/config"]);
+    }
+
+    private getService() {
+        const id = this.activatedRoute.snapshot.params["id"];
+        this.servicesService.getService(id).subscribe(
+            (service: Service) => {
+                this.service = service;
+                this.checkHealth();
+                this.getContainerState();
+            },
+            (err: HttpErrorResponse) => {
+                this.router.navigate(["/404"]);
+            }
+        );
+    }
+
+    private getContainerState(): void {
+        this.dockerService.getContainerState(this.service).subscribe(
+            (state: DockerState) => {
+                this.containerState = state;
+            },
+            (err) => {
+                console.error(err);
+            }
+        );
+    }
 }

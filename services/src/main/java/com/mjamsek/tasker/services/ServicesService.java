@@ -2,6 +2,7 @@ package com.mjamsek.tasker.services;
 
 import com.kumuluz.ee.rest.beans.QueryParameters;
 import com.mjamsek.tasker.entities.docker.DockerContainerInfo;
+import com.mjamsek.tasker.entities.docker.DockerState;
 import com.mjamsek.tasker.entities.dto.ServiceRequest;
 import com.mjamsek.tasker.entities.dto.ServiceToken;
 import com.mjamsek.tasker.entities.persistence.service.Service;
@@ -22,22 +23,24 @@ public interface ServicesService {
     
     Service createService(ServiceRequest dto);
     
-    Service updateService(Service dto);
+    Service updateService(Service dto, long serviceId);
     
     ServiceToken generateServiceToken(long serviceId);
     
     void doHealthCheck(long serviceId);
-    
-    void startService(long serviceId);
-    
-    void stopService(long serviceId);
-    
-    void recreateServiceContainer(long serviceId);
     
     void deleteService(long serviceId);
     
     DockerContainerInfo getServiceContainer(long serviceId);
     
     String getRawServiceContainer(long serviceId);
+    
+    DockerState getContainerState(long serviceId);
+    
+    void startContainer(long serviceId);
+    
+    void stopContainer(long serviceId);
+    
+    void recreateContainer(long serviceId);
     
 }

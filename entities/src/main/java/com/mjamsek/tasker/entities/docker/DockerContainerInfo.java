@@ -2,6 +2,8 @@ package com.mjamsek.tasker.entities.docker;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.mjamsek.tasker.entities.docker.sub.DockerLogConfig;
+import com.mjamsek.tasker.entities.docker.sub.DockerRestartPolicy;
 
 import java.util.List;
 import java.util.Map;
@@ -155,29 +157,29 @@ public class DockerContainerInfo {
         @JsonProperty("ContainerIDFile")
         public String containerIDFile;
         @JsonProperty("LogConfig")
-        public LogConfig logConfig;
+        public DockerLogConfig logConfig;
         @JsonProperty("NetworkMode")
         public String networkMode;
         @JsonProperty("PortBindings")
         public Map<String, List<Port>> portBindings;
         @JsonProperty("RestartPolicy")
-        public RestartPolicy restartPolicy;
+        public DockerRestartPolicy restartPolicy;
         @JsonProperty("AutoRemove")
         public boolean autoRemove;
         @JsonProperty("VolumeDriver")
         public String volumeDriver;
         @JsonProperty("VolumesFrom")
-        public Object volumesFrom;
+        public List<String> volumesFrom;
         @JsonProperty("CapAdd")
         public Object capAdd;
         @JsonProperty("CapDrop")
         public Object capDrop;
         @JsonProperty("Dns")
-        public List<Object> dns = null;
+        public List<String> dns = null;
         @JsonProperty("DnsOptions")
-        public List<Object> dnsOptions = null;
+        public List<String> dnsOptions = null;
         @JsonProperty("DnsSearch")
-        public List<Object> dnsSearch = null;
+        public List<String> dnsSearch = null;
         @JsonProperty("ExtraHosts")
         public List<Object> extraHosts = null;
         @JsonProperty("GroupAdd")
@@ -279,12 +281,6 @@ public class DockerContainerInfo {
     }
     
     @JsonIgnoreProperties(ignoreUnknown = true)
-    public static class LogConfig {
-        @JsonProperty("Type")
-        public String type;
-    }
-    
-    @JsonIgnoreProperties(ignoreUnknown = true)
     public static class Mount {
         @JsonProperty("Type")
         public String type;
@@ -350,14 +346,6 @@ public class DockerContainerInfo {
         public String hostIp;
         @JsonProperty("HostPort")
         public String hostPort;
-    }
-    
-    @JsonIgnoreProperties(ignoreUnknown = true)
-    public static class RestartPolicy {
-        @JsonProperty("Name")
-        public String name;
-        @JsonProperty("MaximumRetryCount")
-        public int maximumRetryCount;
     }
     
     @JsonIgnoreProperties(ignoreUnknown = true)

@@ -5,10 +5,12 @@ import com.kumuluz.ee.rest.beans.QueryParameters;
 import com.kumuluz.ee.rest.enums.FilterOperation;
 import com.kumuluz.ee.rest.utils.JPAUtils;
 import com.mjamsek.tasker.entities.docker.DockerContainerInfo;
+import com.mjamsek.tasker.entities.docker.DockerState;
 import com.mjamsek.tasker.entities.dto.ServiceRequest;
 import com.mjamsek.tasker.entities.dto.ServiceToken;
 import com.mjamsek.tasker.entities.exceptions.*;
 import com.mjamsek.tasker.entities.persistence.service.*;
+import com.mjamsek.tasker.mappers.DockerMapper;
 import com.mjamsek.tasker.services.DockerDaemonService;
 import com.mjamsek.tasker.services.DockerService;
 import com.mjamsek.tasker.services.ServicesService;
@@ -135,7 +137,20 @@ public class ServicesServiceImpl implements ServicesService {
     }
     
     @Override
-    public Service updateService(Service dto) {
+    public Service updateService(Service dto, long serviceId) {
+        Service service = getServiceById(serviceId);
+        if (service == null) {
+            throw new EntityNotFoundException("Service with given id doesn't exist!");
+        }
+        
+        service.setVersion(dto.getVersion());
+        service.setDescription(dto.getDescription());
+        if (service.getHealthCheck() != null) {
+            service.getHealthCheck().setHealthUrl(dto.getHealthCheck().getHealthUrl());
+        } else {
+            service.setHealthCheck(dto.getHealthCheck());
+        }
+        
         return null;
     }
     
@@ -176,21 +191,6 @@ public class ServicesServiceImpl implements ServicesService {
     }
     
     @Override
-    public void startService(long serviceId) {
-    
-    }
-    
-    @Override
-    public void stopService(long serviceId) {
-    
-    }
-    
-    @Override
-    public void recreateServiceContainer(long serviceId) {
-    
-    }
-    
-    @Override
     public void deleteService(long serviceId) {
         Service service = getServiceById(serviceId);
         if (service == null) {
@@ -208,10 +208,7 @@ public class ServicesServiceImpl implements ServicesService {
     
     @Override
     public DockerContainerInfo getServiceContainer(long serviceId) {
-        Service service = getServiceById(serviceId);
-        if (service == null) {
-            throw new EntityNotFoundException("Service not found!");
-        }
+        Service service = getDeployedService(serviceId);
         
         return dockerService.getContainerInfo(
             service.getDeployment().getContainerId(),
@@ -221,14 +218,72 @@ public class ServicesServiceImpl implements ServicesService {
     
     @Override
     public String getRawServiceContainer(long serviceId) {
-        Service service = getServiceById(serviceId);
-        if (service == null) {
-            throw new EntityNotFoundException("Service not found!");
-        }
-    
+        Service service = getDeployedService(serviceId);
+        
         return dockerService.getRawContainerInfo(
             service.getDeployment().getContainerId(),
             service.getDeployment().getDockerDaemon()
         );
+    }
+    
+    @Override
+    public DockerState getContainerState(long serviceId) {
+        Service service = getDeployedService(serviceId);
+        
+        DockerContainerInfo containerInfo = dockerService.getContainerInfo(
+            service.getDeployment().getContainerId(),
+            service.getDeployment().getDockerDaemon()
+        );
+        
+        return DockerMapper.fromInfoToState(containerInfo);
+    }
+    
+    @Override
+    public void startContainer(long serviceId) {
+        Service service = getDeployedService(serviceId);
+        dockerService.startContainer(
+            service.getDeployment().getContainerId(),
+            service.getDeployment().getDockerDaemon()
+        );
+    }
+    
+    @Override
+    public void stopContainer(long serviceId) {
+        Service service = getDeployedService(serviceId);
+        dockerService.stopContainer(
+            service.getDeployment().getContainerId(),
+            service.getDeployment().getDockerDaemon()
+        );
+    }
+    
+    @Override
+    public void recreateContainer(long serviceId) {
+        Service service = getDeployedService(serviceId);
+        String newContainerId = dockerService.recreateContainer(
+            service.getDeployment().getContainerId(),
+            service.getDeployment().getDockerDaemon()
+        );
+        
+        service.getDeployment().setContainerId(newContainerId);
+        
+        try {
+            em.getTransaction().begin();
+            em.merge(service);
+            em.getTransaction().commit();
+        } catch (Exception e) {
+            em.getTransaction().rollback();
+        }
+    }
+    
+    private Service getDeployedService(long serviceId) {
+        Service service = getServiceById(serviceId);
+        if (service == null) {
+            throw new EntityNotFoundException("Service not found!");
+        }
+        
+        if (service.getDeployment() == null) {
+            throw new NotDeployedException("Service is not deployed on docker.");
+        }
+        return service;
     }
 }

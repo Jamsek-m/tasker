@@ -1,9 +1,11 @@
 import {Injectable} from "@angular/core";
 import {HttpClient} from "@angular/common/http";
 import {DockerDaemon} from "../models/docker-daemon";
-import {Observable} from "rxjs";
+import {Observable, of} from "rxjs";
 import {environment} from "../../environments/environment";
 import {Service} from "../models/service.class";
+import {DockerState} from "../models/docker-state.class";
+import {map} from "rxjs/operators";
 
 
 @Injectable({
@@ -34,6 +36,26 @@ export class DockerService {
                 raw: "true"
             }
         });
+    }
+
+    public getContainerState(service: Service): Observable<DockerState> {
+        const url = `${this.serviceApiUrl}/${service.id}/container/state`;
+        return this.http.get(url).pipe(map(res => res as DockerState));
+    }
+
+    public startContainer(service: Service): Observable<void> {
+        const url = `${this.serviceApiUrl}/${service.id}/container/start`;
+        return this.http.post(url, null).pipe(map(() => null));
+    }
+
+    public stopContainer(service: Service): Observable<void> {
+        const url = `${this.serviceApiUrl}/${service.id}/container/stop`;
+        return this.http.delete(url).pipe(map(() => null));
+    }
+
+    public recreateContainer(service: Service): Observable<void> {
+        const url = `${this.serviceApiUrl}/${service.id}/container/recreate`;
+        return this.http.put(url, null).pipe(map(() => null));
     }
 
 }

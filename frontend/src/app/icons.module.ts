@@ -11,7 +11,7 @@ import {
     faClipboard,
     faArrowRight,
     faQuestionCircle,
-    faBolt, faSearch
+    faBolt, faSearch, faArrowLeft
 } from "@fortawesome/free-solid-svg-icons";
 import {faDocker} from "@fortawesome/free-brands-svg-icons";
 
@@ -40,7 +40,8 @@ export class IconsModule {
             faQuestionCircle,
             faDocker,
             faBolt,
-            faSearch
+            faSearch,
+            faArrowLeft
         ];
         icons.forEach(icon => library.add(icon));
     }

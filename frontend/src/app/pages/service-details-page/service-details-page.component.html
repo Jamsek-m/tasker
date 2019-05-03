@@ -1,83 +1,130 @@
-<div class="page-wrapper">
+<div>
+    <div class="back-btn">
+        <span (click)="back()">
+            <fa-icon [icon]="['fas', 'arrow-left']"></fa-icon> Back
+        </span>
+    </div>
+
     <h2>{{service.name}}</h2>
     <p class="description">{{service.description}}</p>
 
-    <h4 *ngIf="service.serviceUrl">
+    <h4>
         <fa-icon [icon]="['fas', 'cogs']"></fa-icon>
         Service
     </h4>
-    <div *ngIf="service.serviceUrl">
-        <div class="data-row">
-            <span class="row-title">Base url:</span>
-            <span class="row-value">{{service.serviceUrl.url}}</span>
-            <tasker-clipboard [data]="service.serviceUrl.url"></tasker-clipboard>
+    <div>
+        <div *ngIf="service.serviceUrl; else noDeployment">
+            <div class="data-row">
+                <span class="row-title">Base url:</span>
+                <span class="row-value">{{service.serviceUrl.url}}</span>
+                <tasker-clipboard [data]="service.serviceUrl.url"></tasker-clipboard>
+            </div>
+            <div class="data-row">
+                <span class="row-title">API base url:</span>
+                <span class="row-value">{{service.serviceUrl.url + '/' + service.serviceUrl.version}}</span>
+                <tasker-clipboard [data]="service.serviceUrl.url + '/' + service.serviceUrl.version"></tasker-clipboard>
+            </div>
         </div>
-        <div class="data-row">
-            <span class="row-title">API base url:</span>
-            <span class="row-value">{{service.serviceUrl.url + '/' + service.serviceUrl.version}}</span>
-            <tasker-clipboard [data]="service.serviceUrl.url + '/' + service.serviceUrl.version"></tasker-clipboard>
-        </div>
+        <ng-template #noDeployment>
+            <div>Service is not deployed.</div>
+        </ng-template>
     </div>
 
-    <h4 *ngIf="service.healthCheck">
+    <h4>
         <fa-icon [icon]="['fas', 'heartbeat']"></fa-icon>
         Health
     </h4>
-    <div *ngIf="service.healthCheck">
-        <div class="data-row">
-            <span class="row-title">Status:</span>
-            <span class="row-value">
+    <div>
+        <div *ngIf="service.healthCheck; else noHealth">
+            <div class="data-row">
+                <span class="row-title">Status:</span>
+                <span class="row-value">
                 <span (click)="checkHealth()" class="health-status status-{{status}}">{{status}}</span>
             </span>
+            </div>
+            <div class="data-row">
+                <span class="row-title">Health url:</span>
+                <span class="row-value">{{service.healthCheck.healthUrl}}</span>
+                <tasker-clipboard [data]="service.healthCheck.healthUrl"></tasker-clipboard>
+            </div>
         </div>
-        <div class="data-row">
-            <span class="row-title">Health url:</span>
-            <span class="row-value">{{service.healthCheck.healthUrl}}</span>
-            <tasker-clipboard [data]="service.healthCheck.healthUrl"></tasker-clipboard>
-        </div>
+        <ng-template #noHealth>
+            <div>Service does not have registered healthchecks.</div>
+        </ng-template>
     </div>
 
-    <h4 *ngIf="service.deployment">
+    <h4>
         <fa-icon [icon]="['fab', 'docker']"></fa-icon>
         Deployment
     </h4>
-    <div *ngIf="service.deployment">
-        <h5>Container</h5>
-        <div class="data-row">
-            <span class="row-title">Name:</span>
-            <span class="row-value">{{service.deployment.containerName}}</span>
+    <div>
+        <div *ngIf="service.deployment; else noDocker">
+            <h5>Container</h5>
+            <div class="data-row">
+                <span class="row-title">Name:</span>
+                <span class="row-value">{{service.deployment.containerName}}</span>
+                <tasker-clipboard [data]="service.deployment.containerName"></tasker-clipboard>
+            </div>
+            <div class="data-row" *ngIf="containerState && containerState.status !== ''">
+                <span class="row-title">Status:</span>
+                <span class="row-value container-state">{{containerState.status}}</span>
+            </div>
+            <div class="data-row">
+                <span class="row-title">Id:</span>
+                <span class="row-value">{{service.deployment.containerId}}</span>
+                <tasker-clipboard [data]="service.deployment.containerId"></tasker-clipboard>
+            </div>
+            <div class="data-row">
+                <span class="row-title">Version:</span>
+                <span class="row-value">{{service.deployment.version}}</span>
+            </div>
+            <div class="data-row">
+                <span class="row-title">Daemon:</span>
+                <span class="row-value daemon-link" (click)="goToDaemons()">
+                    {{service.deployment.dockerDaemon.name}}
+                    <fa-icon [icon]="['fas', 'arrow-right']"></fa-icon>
+                </span>
+            </div>
         </div>
-        <div class="data-row">
-            <span class="row-title">Id:</span>
-            <span class="row-value">{{service.deployment.containerId}}</span>
-        </div>
-        <div class="data-row">
-            <span class="row-title">Version:</span>
-            <span class="row-value">{{service.deployment.version}}</span>
-        </div>
-        <div class="data-row">
-            <span class="row-title">Daemon:</span>
-            <span class="row-value">{{service.deployment.dockerDaemon.name}}</span>
-            <fa-icon [icon]="['fas', 'arrow-right']"></fa-icon>
-        </div>
+        <ng-template #noDocker>
+            <div>
+                Service is not deployed on docker.
+            </div>
+        </ng-template>
     </div>
 
     <h4>
         <fa-icon [icon]="['fas', 'bolt']"></fa-icon>
         Actions
     </h4>
-    <div class="actions">
+    <div class="actions" *ngIf="service.deployment && service.deployment.dockerDaemon && containerState && containerState.status &&
+          service.deployment.containerId && service.deployment.containerId !== ''; else noActions">
         <button class="btn btn-outline-info with-marg" (click)="getContainerInfo()"
-            [disabled]="blockActions">Info</button>
+            [disabled]="blockActions">Inspect
+        </button>
         <button class="btn btn-outline-info with-marg" (click)="startService()"
-            [disabled]="blockActions">Start</button>
+            [disabled]="blockActions || containerState.running">Start
+        </button>
         <button class="btn btn-outline-info with-marg" (click)="recreateService()"
-            [disabled]="blockActions">Recreate</button>
+            [disabled]="blockActions">Recreate
+        </button>
         <button class="btn btn-outline-danger" (click)="stopService()"
-            [disabled]="blockActions">Stop</button>
+            [disabled]="blockActions || !containerState.running">Stop
+        </button>
+
+        <tasker-spiner *ngIf="blockActions" [width]="5"></tasker-spiner>
     </div>
+    <ng-template #noActions>
+        <div class="actions">Service is not deployed on docker, no actions available.</div>
+    </ng-template>
 
     <div class="container-info" *ngIf="containerInfo !== null">
         <tasker-json-view [data]="containerInfo"></tasker-json-view>
+    </div>
+
+    <div class="back-btn back-2">
+        <span (click)="back()">
+            <fa-icon [icon]="['fas', 'arrow-left']"></fa-icon> Back
+        </span>
     </div>
 </div>

@@ -7,7 +7,7 @@ INSERT INTO docker_daemons(id, name, url) VALUES (2, 'DEBUG', 'http://192.168.1.
 
 insert into deployments(id, container_name, container_id, version, docker_daemon_id) VALUES (1, 'kontejner', '123', '1.5.4', 1);
 insert into deployments(id, container_name, container_id, version, docker_daemon_id) values(2, 'tasker', 'd45d677ac120bd3d90073365951854a46ef042d2b6792286e994d2c765b19a8c', '1.0.0', 2);
-INSERT INTO DEPLOYMENTS (ID, CONTAINER_ID, CONTAINER_NAME, VERSION, DOCKER_DAEMON_ID) VALUES (3, '097cbafa62d8c28e7a3ee6cb5c4a95cfa352a5368812a1721eb596f7521aed78', 'tasker-test', null, 1);
+INSERT INTO DEPLOYMENTS (ID, CONTAINER_ID, CONTAINER_NAME, VERSION, DOCKER_DAEMON_ID) VALUES (3, 'e885a53516983c50ad4f797534967ffe1bc30490d6650849ade8a8731174fe27', 'tasker-test', null, 1);
 
 insert into service_healthchecks(id, health_url) values (1, 'http://localhost:8080/health');
 insert into service_healthchecks(id, health_url) values (2, 'http://localhost:4200/health');
