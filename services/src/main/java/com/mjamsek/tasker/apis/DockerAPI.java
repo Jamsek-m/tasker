@@ -23,6 +23,10 @@ public interface DockerAPI {
     
     @GET
     @Path("/containers/{containerId}/json")
-    String getContainerInfo(@PathParam("containerId") String containerId);
+    String getRawContainerInfo(@PathParam("containerId") String containerId);
+    
+    @GET
+    @Path("/containers/{containerId}/json")
+    DockerContainerInfo getContainerInfo(@PathParam("containerId") String containerId);
     
 }

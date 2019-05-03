@@ -24,11 +24,4 @@ public class DockerResource {
         List<DockerContainerInfo> containers = dockerService.queryContainersByName(name, daemonId);
         return Response.ok(containers).build();
     }
-    
-    @GET
-    @Path("/{containerId}")
-    public Response getContainerInfo(@PathParam("containerId") String containerId, @QueryParam("daemonId") long daemonId) {
-        String containerInfo = dockerService.getContainerInfo(containerId, daemonId);
-        return Response.ok(containerInfo).build();
-    }
 }

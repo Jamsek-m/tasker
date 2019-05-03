@@ -12,6 +12,7 @@ import {Service} from "../models/service.class";
 export class DockerService {
 
     private apiUrl = `${environment.apiUrl}/docker`;
+    private serviceApiUrl = `${environment.apiUrl}/services`;
 
     constructor(private http: HttpClient) {
 
@@ -27,10 +28,10 @@ export class DockerService {
     }
 
     public getContainerInfo(service: Service): Observable<any> {
-        const url = `${this.apiUrl}/${service.deployment.containerId}`;
+        const url = `${this.serviceApiUrl}/${service.id}/container`;
         return this.http.get(url, {
             params: {
-                daemonId: service.deployment.dockerDaemon.id.toString(10)
+                raw: "true"
             }
         });
     }

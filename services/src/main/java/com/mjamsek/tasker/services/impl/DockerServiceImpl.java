@@ -46,19 +46,27 @@ public class DockerServiceImpl implements DockerService {
     }
     
     @Override
-    public String getContainerInfo(String containerId, long daemonId) {
-        DockerDaemon daemon = dockerDaemonService.getDaemon(daemonId);
-        
-        if (daemon != null) {
-            try {
-                URI daemonUri = new URI(daemon.getUrl());
-                DockerAPI dockerAPI = RestClientBuilder.newBuilder().baseUri(daemonUri).build(DockerAPI.class);
-        
-                return dockerAPI.getContainerInfo(containerId);
-            } catch (URISyntaxException e) {
-                throw new TaskerException("Invalid daemon url!");
-            }
+    public String getRawContainerInfo(String containerId, DockerDaemon daemon) {
+        try {
+            URI daemonUri = new URI(daemon.getUrl());
+            DockerAPI dockerAPI = RestClientBuilder.newBuilder().baseUri(daemonUri).build(DockerAPI.class);
+            
+            return dockerAPI.getRawContainerInfo(containerId);
+        } catch (URISyntaxException e) {
+            throw new TaskerException("Invalid daemon url!");
         }
-        throw new EntityNotFoundException("Docker daemon not found!");
+    }
+    
+    @Override
+    public DockerContainerInfo getContainerInfo(String containerId, DockerDaemon daemon) {
+        try {
+            URI daemonUri = new URI(daemon.getUrl());
+            DockerAPI dockerAPI = RestClientBuilder.newBuilder().baseUri(daemonUri).build(DockerAPI.class);
+            
+            return dockerAPI.getContainerInfo(containerId);
+        } catch (URISyntaxException e) {
+            throw new TaskerException("Invalid daemon url!");
+        }
+        
     }
 }

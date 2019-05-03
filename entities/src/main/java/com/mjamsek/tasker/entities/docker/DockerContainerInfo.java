@@ -3,7 +3,6 @@ package com.mjamsek.tasker.entities.docker;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -11,349 +10,379 @@ import java.util.Map;
 public class DockerContainerInfo {
     
     @JsonProperty("Id")
-    private String id;
-    @JsonProperty("Names")
-    private List<String> names = null;
-    @JsonProperty("Image")
-    private String image;
-    @JsonProperty("ImageID")
-    private String imageID;
-    @JsonProperty("Command")
-    private String command;
+    public String id;
     @JsonProperty("Created")
-    private Date created;
-    @JsonProperty("Ports")
-    private List<Port> ports = null;
-    @JsonProperty("Labels")
-    private Map<String, Object> labels;
-    @JsonProperty(value = "State", defaultValue = "")
-    private String state;
-    @JsonProperty("Status")
-    private String status;
+    public String created;
+    @JsonProperty("Path")
+    public String path;
+    @JsonProperty("Args")
+    public List<String> args = null;
+    @JsonProperty("State")
+    public State state;
+    @JsonProperty("Image")
+    public String image;
+    @JsonProperty("ResolvConfPath")
+    public String resolvConfPath;
+    @JsonProperty("HostnamePath")
+    public String hostnamePath;
+    @JsonProperty("HostsPath")
+    public String hostsPath;
+    @JsonProperty("LogPath")
+    public String logPath;
+    @JsonProperty("Name")
+    public String name;
+    @JsonProperty("RestartCount")
+    public int restartCount;
+    @JsonProperty("Driver")
+    public String driver;
+    @JsonProperty("Platform")
+    public String platform;
+    @JsonProperty("MountLabel")
+    public String mountLabel;
+    @JsonProperty("ProcessLabel")
+    public String processLabel;
+    @JsonProperty("AppArmorProfile")
+    public String appArmorProfile;
+    @JsonProperty("ExecIDs")
+    public Object execIDs;
     @JsonProperty("HostConfig")
-    private HostConfig hostConfig;
-    @JsonProperty("NetworkSettings")
-    private NetworkSettings networkSettings;
+    public HostConfig hostConfig;
+    @JsonProperty("GraphDriver")
+    public GraphDriver graphDriver;
     @JsonProperty("Mounts")
-    private List<Object> mounts = null;
+    public List<Mount> mounts = null;
+    @JsonProperty("Config")
+    public Config config;
+    @JsonProperty("NetworkSettings")
+    public NetworkSettings networkSettings;
     
-    public String getId() {
-        return id;
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    public static class Config {
+        @JsonProperty("Hostname")
+        public String hostname;
+        @JsonProperty("Domainname")
+        public String domainname;
+        @JsonProperty("User")
+        public String user;
+        @JsonProperty("AttachStdin")
+        public boolean attachStdin;
+        @JsonProperty("AttachStdout")
+        public boolean attachStdout;
+        @JsonProperty("AttachStderr")
+        public boolean attachStderr;
+        @JsonProperty("ExposedPorts")
+        public Map<String, Object> exposedPorts;
+        @JsonProperty("Tty")
+        public boolean tty;
+        @JsonProperty("OpenStdin")
+        public boolean openStdin;
+        @JsonProperty("StdinOnce")
+        public boolean stdinOnce;
+        @JsonProperty("Env")
+        public List<String> env = null;
+        @JsonProperty("Cmd")
+        public List<String> cmd = null;
+        @JsonProperty("ArgsEscaped")
+        public boolean argsEscaped;
+        @JsonProperty("Image")
+        public String image;
+        @JsonProperty("Volumes")
+        public Map<String, Object> volumes;
+        @JsonProperty("WorkingDir")
+        public String workingDir;
+        @JsonProperty("Entrypoint")
+        public List<String> entrypoint = null;
+        @JsonProperty("OnBuild")
+        public Object onBuild;
+        @JsonProperty("Labels")
+        public Map<String, String> labels;
     }
     
-    public void setId(String id) {
-        this.id = id;
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    public static class Data {
+        @JsonProperty("LowerDir")
+        public String lowerDir;
+        @JsonProperty("MergedDir")
+        public String mergedDir;
+        @JsonProperty("UpperDir")
+        public String upperDir;
+        @JsonProperty("WorkDir")
+        public String workDir;
     }
     
-    public List<String> getNames() {
-        return names;
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    public static class GraphDriver {
+        @JsonProperty("Data")
+        public Data data;
+        @JsonProperty("Name")
+        public String name;
     }
     
-    public void setNames(List<String> names) {
-        this.names = names;
-    }
-    
-    public String getImage() {
-        return image;
-    }
-    
-    public void setImage(String image) {
-        this.image = image;
-    }
-    
-    public String getImageID() {
-        return imageID;
-    }
-    
-    public void setImageID(String imageID) {
-        this.imageID = imageID;
-    }
-    
-    public String getCommand() {
-        return command;
-    }
-    
-    public void setCommand(String command) {
-        this.command = command;
-    }
-    
-    public Date getCreated() {
-        return created;
-    }
-    
-    public void setCreated(Date created) {
-        this.created = created;
-    }
-    
-    public List<Port> getPorts() {
-        return ports;
-    }
-    
-    public void setPorts(List<Port> ports) {
-        this.ports = ports;
-    }
-    
-    public Map<String, Object> getLabels() {
-        return labels;
-    }
-    
-    public void setLabels(Map<String, Object> labels) {
-        this.labels = labels;
-    }
-    
-    public String getState() {
-        return state;
-    }
-    
-    public void setState(String state) {
-        this.state = state;
-    }
-    
-    public String getStatus() {
-        return status;
-    }
-    
-    public void setStatus(String status) {
-        this.status = status;
-    }
-    
-    public HostConfig getHostConfig() {
-        return hostConfig;
-    }
-    
-    public void setHostConfig(HostConfig hostConfig) {
-        this.hostConfig = hostConfig;
-    }
-    
-    public NetworkSettings getNetworkSettings() {
-        return networkSettings;
-    }
-    
-    public void setNetworkSettings(NetworkSettings networkSettings) {
-        this.networkSettings = networkSettings;
-    }
-    
-    public List<Object> getMounts() {
-        return mounts;
-    }
-    
-    public void setMounts(List<Object> mounts) {
-        this.mounts = mounts;
-    }
-    
-    public static class Bridge {
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    public static class Network {
         @JsonProperty("IPAMConfig")
-        private Object iPAMConfig;
+        public Object iPAMConfig;
         @JsonProperty("Links")
-        private Object links;
+        public Object links;
         @JsonProperty("Aliases")
-        private Object aliases;
+        public List<String> aliases = null;
         @JsonProperty("NetworkID")
-        private String networkID;
+        public String networkID;
         @JsonProperty("EndpointID")
-        private String endpointID;
+        public String endpointID;
         @JsonProperty("Gateway")
-        private String gateway;
+        public String gateway;
         @JsonProperty("IPAddress")
-        private String iPAddress;
+        public String iPAddress;
         @JsonProperty("IPPrefixLen")
-        private Integer iPPrefixLen;
+        public int iPPrefixLen;
         @JsonProperty("IPv6Gateway")
-        private String iPv6Gateway;
+        public String iPv6Gateway;
         @JsonProperty("GlobalIPv6Address")
-        private String globalIPv6Address;
+        public String globalIPv6Address;
         @JsonProperty("GlobalIPv6PrefixLen")
-        private Integer globalIPv6PrefixLen;
+        public int globalIPv6PrefixLen;
         @JsonProperty("MacAddress")
-        private String macAddress;
+        public String macAddress;
         @JsonProperty("DriverOpts")
-        private Object driverOpts;
-        
-        public Object getiPAMConfig() {
-            return iPAMConfig;
-        }
-        
-        public void setiPAMConfig(Object iPAMConfig) {
-            this.iPAMConfig = iPAMConfig;
-        }
-        
-        public Object getLinks() {
-            return links;
-        }
-        
-        public void setLinks(Object links) {
-            this.links = links;
-        }
-        
-        public Object getAliases() {
-            return aliases;
-        }
-        
-        public void setAliases(Object aliases) {
-            this.aliases = aliases;
-        }
-        
-        public String getNetworkID() {
-            return networkID;
-        }
-        
-        public void setNetworkID(String networkID) {
-            this.networkID = networkID;
-        }
-        
-        public String getEndpointID() {
-            return endpointID;
-        }
-        
-        public void setEndpointID(String endpointID) {
-            this.endpointID = endpointID;
-        }
-        
-        public String getGateway() {
-            return gateway;
-        }
-        
-        public void setGateway(String gateway) {
-            this.gateway = gateway;
-        }
-        
-        public String getiPAddress() {
-            return iPAddress;
-        }
-        
-        public void setiPAddress(String iPAddress) {
-            this.iPAddress = iPAddress;
-        }
-        
-        public Integer getiPPrefixLen() {
-            return iPPrefixLen;
-        }
-        
-        public void setiPPrefixLen(Integer iPPrefixLen) {
-            this.iPPrefixLen = iPPrefixLen;
-        }
-        
-        public String getiPv6Gateway() {
-            return iPv6Gateway;
-        }
-        
-        public void setiPv6Gateway(String iPv6Gateway) {
-            this.iPv6Gateway = iPv6Gateway;
-        }
-        
-        public String getGlobalIPv6Address() {
-            return globalIPv6Address;
-        }
-        
-        public void setGlobalIPv6Address(String globalIPv6Address) {
-            this.globalIPv6Address = globalIPv6Address;
-        }
-        
-        public Integer getGlobalIPv6PrefixLen() {
-            return globalIPv6PrefixLen;
-        }
-        
-        public void setGlobalIPv6PrefixLen(Integer globalIPv6PrefixLen) {
-            this.globalIPv6PrefixLen = globalIPv6PrefixLen;
-        }
-        
-        public String getMacAddress() {
-            return macAddress;
-        }
-        
-        public void setMacAddress(String macAddress) {
-            this.macAddress = macAddress;
-        }
-        
-        public Object getDriverOpts() {
-            return driverOpts;
-        }
-        
-        public void setDriverOpts(Object driverOpts) {
-            this.driverOpts = driverOpts;
-        }
+        public Object driverOpts;
     }
     
+    @JsonIgnoreProperties(ignoreUnknown = true)
     public static class HostConfig {
+        @JsonProperty("Binds")
+        public List<String> binds = null;
+        @JsonProperty("ContainerIDFile")
+        public String containerIDFile;
+        @JsonProperty("LogConfig")
+        public LogConfig logConfig;
         @JsonProperty("NetworkMode")
-        private String networkMode;
-        
-        public String getNetworkMode() {
-            return networkMode;
-        }
-        
-        public void setNetworkMode(String networkMode) {
-            this.networkMode = networkMode;
-        }
+        public String networkMode;
+        @JsonProperty("PortBindings")
+        public Map<String, List<Port>> portBindings;
+        @JsonProperty("RestartPolicy")
+        public RestartPolicy restartPolicy;
+        @JsonProperty("AutoRemove")
+        public boolean autoRemove;
+        @JsonProperty("VolumeDriver")
+        public String volumeDriver;
+        @JsonProperty("VolumesFrom")
+        public Object volumesFrom;
+        @JsonProperty("CapAdd")
+        public Object capAdd;
+        @JsonProperty("CapDrop")
+        public Object capDrop;
+        @JsonProperty("Dns")
+        public List<Object> dns = null;
+        @JsonProperty("DnsOptions")
+        public List<Object> dnsOptions = null;
+        @JsonProperty("DnsSearch")
+        public List<Object> dnsSearch = null;
+        @JsonProperty("ExtraHosts")
+        public List<Object> extraHosts = null;
+        @JsonProperty("GroupAdd")
+        public Object groupAdd;
+        @JsonProperty("IpcMode")
+        public String ipcMode;
+        @JsonProperty("Cgroup")
+        public String cgroup;
+        @JsonProperty("Links")
+        public Object links;
+        @JsonProperty("OomScoreAdj")
+        public int oomScoreAdj;
+        @JsonProperty("PidMode")
+        public String pidMode;
+        @JsonProperty("Privileged")
+        public boolean privileged;
+        @JsonProperty("PublishAllPorts")
+        public boolean publishAllPorts;
+        @JsonProperty("ReadonlyRootfs")
+        public boolean readonlyRootfs;
+        @JsonProperty("SecurityOpt")
+        public Object securityOpt;
+        @JsonProperty("UTSMode")
+        public String uTSMode;
+        @JsonProperty("UsernsMode")
+        public String usernsMode;
+        @JsonProperty("ShmSize")
+        public int shmSize;
+        @JsonProperty("Runtime")
+        public String runtime;
+        @JsonProperty("ConsoleSize")
+        public List<Integer> consoleSize = null;
+        @JsonProperty("Isolation")
+        public String isolation;
+        @JsonProperty("CpuShares")
+        public int cpuShares;
+        @JsonProperty("Memory")
+        public int memory;
+        @JsonProperty("NanoCpus")
+        public int nanoCpus;
+        @JsonProperty("CgroupParent")
+        public String cgroupParent;
+        @JsonProperty("BlkioWeight")
+        public int blkioWeight;
+        @JsonProperty("BlkioWeightDevice")
+        public Object blkioWeightDevice;
+        @JsonProperty("BlkioDeviceReadBps")
+        public Object blkioDeviceReadBps;
+        @JsonProperty("BlkioDeviceWriteBps")
+        public Object blkioDeviceWriteBps;
+        @JsonProperty("BlkioDeviceReadIOps")
+        public Object blkioDeviceReadIOps;
+        @JsonProperty("BlkioDeviceWriteIOps")
+        public Object blkioDeviceWriteIOps;
+        @JsonProperty("CpuPeriod")
+        public int cpuPeriod;
+        @JsonProperty("CpuQuota")
+        public int cpuQuota;
+        @JsonProperty("CpuRealtimePeriod")
+        public int cpuRealtimePeriod;
+        @JsonProperty("CpuRealtimeRuntime")
+        public int cpuRealtimeRuntime;
+        @JsonProperty("CpusetCpus")
+        public String cpusetCpus;
+        @JsonProperty("CpusetMems")
+        public String cpusetMems;
+        @JsonProperty("Devices")
+        public List<Object> devices = null;
+        @JsonProperty("DeviceCgroupRules")
+        public Object deviceCgroupRules;
+        @JsonProperty("DiskQuota")
+        public int diskQuota;
+        @JsonProperty("KernelMemory")
+        public int kernelMemory;
+        @JsonProperty("MemoryReservation")
+        public int memoryReservation;
+        @JsonProperty("MemorySwap")
+        public int memorySwap;
+        @JsonProperty("MemorySwappiness")
+        public Object memorySwappiness;
+        @JsonProperty("OomKillDisable")
+        public boolean oomKillDisable;
+        @JsonProperty("PidsLimit")
+        public int pidsLimit;
+        @JsonProperty("Ulimits")
+        public Object ulimits;
+        @JsonProperty("CpuCount")
+        public int cpuCount;
+        @JsonProperty("CpuPercent")
+        public int cpuPercent;
+        @JsonProperty("IOMaximumIOps")
+        public int iOMaximumIOps;
+        @JsonProperty("IOMaximumBandwidth")
+        public int iOMaximumBandwidth;
+        @JsonProperty("MaskedPaths")
+        public List<String> maskedPaths = null;
+        @JsonProperty("ReadonlyPaths")
+        public List<String> readonlyPaths = null;
     }
     
-    public static class NetworkSettings {
-        
-        @JsonProperty("Networks")
-        private Networks networks;
-        
-        public Networks getNetworks() {
-            return networks;
-        }
-        
-        public void setNetworks(Networks networks) {
-            this.networks = networks;
-        }
-        
-        public static class Networks {
-            @JsonProperty("bridge")
-            private Bridge bridge;
-            
-            public Bridge getBridge() {
-                return bridge;
-            }
-            
-            public void setBridge(Bridge bridge) {
-                this.bridge = bridge;
-            }
-        }
-    }
-    
-    public static class Port {
-        @JsonProperty("IP")
-        private String ip;
-        @JsonProperty("PrivatePort")
-        private Integer privatePort;
-        @JsonProperty("PublicPort")
-        private Integer publicPort;
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    public static class LogConfig {
         @JsonProperty("Type")
-        private String type;
-        
-        public String getIp() {
-            return ip;
-        }
-        
-        public void setIp(String ip) {
-            this.ip = ip;
-        }
-        
-        public Integer getPrivatePort() {
-            return privatePort;
-        }
-        
-        public void setPrivatePort(Integer privatePort) {
-            this.privatePort = privatePort;
-        }
-        
-        public Integer getPublicPort() {
-            return publicPort;
-        }
-        
-        public void setPublicPort(Integer publicPort) {
-            this.publicPort = publicPort;
-        }
-        
-        public String getType() {
-            return type;
-        }
-        
-        public void setType(String type) {
-            this.type = type;
-        }
+        public String type;
+    }
+    
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    public static class Mount {
+        @JsonProperty("Type")
+        public String type;
+        @JsonProperty("Name")
+        public String name;
+        @JsonProperty("Source")
+        public String source;
+        @JsonProperty("Destination")
+        public String destination;
+        @JsonProperty("Driver")
+        public String driver;
+        @JsonProperty("Mode")
+        public String mode;
+        @JsonProperty("RW")
+        public boolean rW;
+        @JsonProperty("Propagation")
+        public String propagation;
+    }
+    
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    public static class NetworkSettings {
+        @JsonProperty("Bridge")
+        public String bridge;
+        @JsonProperty("SandboxID")
+        public String sandboxID;
+        @JsonProperty("HairpinMode")
+        public boolean hairpinMode;
+        @JsonProperty("LinkLocalIPv6Address")
+        public String linkLocalIPv6Address;
+        @JsonProperty("LinkLocalIPv6PrefixLen")
+        public int linkLocalIPv6PrefixLen;
+        @JsonProperty("Ports")
+        public Map<String, List<Port>> ports;
+        @JsonProperty("SandboxKey")
+        public String sandboxKey;
+        @JsonProperty("SecondaryIPAddresses")
+        public Object secondaryIPAddresses;
+        @JsonProperty("SecondaryIPv6Addresses")
+        public Object secondaryIPv6Addresses;
+        @JsonProperty("EndpointID")
+        public String endpointID;
+        @JsonProperty("Gateway")
+        public String gateway;
+        @JsonProperty("GlobalIPv6Address")
+        public String globalIPv6Address;
+        @JsonProperty("GlobalIPv6PrefixLen")
+        public int globalIPv6PrefixLen;
+        @JsonProperty("IPAddress")
+        public String iPAddress;
+        @JsonProperty("IPPrefixLen")
+        public int iPPrefixLen;
+        @JsonProperty("IPv6Gateway")
+        public String iPv6Gateway;
+        @JsonProperty("MacAddress")
+        public String macAddress;
+        @JsonProperty("Networks")
+        public Map<String, Network> networks;
+    }
+    
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    public static class Port {
+        @JsonProperty("HostIp")
+        public String hostIp;
+        @JsonProperty("HostPort")
+        public String hostPort;
+    }
+    
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    public static class RestartPolicy {
+        @JsonProperty("Name")
+        public String name;
+        @JsonProperty("MaximumRetryCount")
+        public int maximumRetryCount;
+    }
+    
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    public static class State {
+        @JsonProperty("Status")
+        public String status;
+        @JsonProperty("Running")
+        public boolean running;
+        @JsonProperty("Paused")
+        public boolean paused;
+        @JsonProperty("Restarting")
+        public boolean restarting;
+        @JsonProperty("OOMKilled")
+        public boolean oOMKilled;
+        @JsonProperty("Dead")
+        public boolean dead;
+        @JsonProperty("Pid")
+        public int pid;
+        @JsonProperty("ExitCode")
+        public int exitCode;
+        @JsonProperty("Error")
+        public String error;
+        @JsonProperty("StartedAt")
+        public String startedAt;
+        @JsonProperty("FinishedAt")
+        public String finishedAt;
     }
 }

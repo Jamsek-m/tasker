@@ -4,11 +4,13 @@ import com.kumuluz.ee.rest.beans.QueryFilter;
 import com.kumuluz.ee.rest.beans.QueryParameters;
 import com.kumuluz.ee.rest.enums.FilterOperation;
 import com.kumuluz.ee.rest.utils.JPAUtils;
+import com.mjamsek.tasker.entities.docker.DockerContainerInfo;
 import com.mjamsek.tasker.entities.dto.ServiceRequest;
 import com.mjamsek.tasker.entities.dto.ServiceToken;
 import com.mjamsek.tasker.entities.exceptions.*;
 import com.mjamsek.tasker.entities.persistence.service.*;
 import com.mjamsek.tasker.services.DockerDaemonService;
+import com.mjamsek.tasker.services.DockerService;
 import com.mjamsek.tasker.services.ServicesService;
 import com.mjamsek.tasker.utils.HttpClient;
 import com.mjamsek.tasker.utils.RandomStringGenerator;
@@ -31,6 +33,9 @@ public class ServicesServiceImpl implements ServicesService {
     
     @Inject
     private DockerDaemonService dockerDaemonService;
+    
+    @Inject
+    private DockerService dockerService;
     
     @Override
     public List<Service> getServices(QueryParameters queryParameters) {
@@ -91,7 +96,7 @@ public class ServicesServiceImpl implements ServicesService {
         service.setDescription(dto.getDescription());
         service.setVersion(dto.getVersion());
         service.setActive(true);
-    
+        
         if (dto.isDeployed()) {
             ServiceUrl url = new ServiceUrl();
             url.setUrl(dto.getServiceUrl().getUrl());
@@ -199,5 +204,31 @@ public class ServicesServiceImpl implements ServicesService {
         } catch (Exception e) {
             em.getTransaction().rollback();
         }
+    }
+    
+    @Override
+    public DockerContainerInfo getServiceContainer(long serviceId) {
+        Service service = getServiceById(serviceId);
+        if (service == null) {
+            throw new EntityNotFoundException("Service not found!");
+        }
+        
+        return dockerService.getContainerInfo(
+            service.getDeployment().getContainerId(),
+            service.getDeployment().getDockerDaemon()
+        );
+    }
+    
+    @Override
+    public String getRawServiceContainer(long serviceId) {
+        Service service = getServiceById(serviceId);
+        if (service == null) {
+            throw new EntityNotFoundException("Service not found!");
+        }
+    
+        return dockerService.getRawContainerInfo(
+            service.getDeployment().getContainerId(),
+            service.getDeployment().getDockerDaemon()
+        );
     }
 }
