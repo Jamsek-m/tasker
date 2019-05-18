@@ -11,9 +11,10 @@ import {
     faClipboard,
     faArrowRight,
     faQuestionCircle,
-    faBolt, faSearch, faArrowLeft
+    faBolt, faSearch, faArrowLeft, faExclamationTriangle, faPencilAlt
 } from "@fortawesome/free-solid-svg-icons";
 import {faDocker} from "@fortawesome/free-brands-svg-icons";
+import {faCopy as farCopy} from "@fortawesome/free-regular-svg-icons";
 
 @NgModule({
     imports: [
@@ -41,7 +42,10 @@ export class IconsModule {
             faDocker,
             faBolt,
             faSearch,
-            faArrowLeft
+            faArrowLeft,
+            faExclamationTriangle,
+            faPencilAlt,
+            farCopy
         ];
         icons.forEach(icon => library.add(icon));
     }

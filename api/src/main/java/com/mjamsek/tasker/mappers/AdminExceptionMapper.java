@@ -15,7 +15,9 @@ public class AdminExceptionMapper implements ExceptionMapper<TaskerException> {
         HashMap<String, String> response = new HashMap<>();
         response.put("message", exception.getMessage());
         
-        if (exception instanceof DockerException) {
+        if (exception instanceof DockerContainerNotFoundException) {
+            return Response.status(Response.Status.NOT_FOUND).entity(response).build();
+        } else if (exception instanceof DockerException) {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(response).build();
         } else if (exception instanceof UnauthorizedException) {
             return Response.status(Response.Status.UNAUTHORIZED).entity(response).build();

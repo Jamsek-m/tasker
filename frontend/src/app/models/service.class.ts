@@ -49,6 +49,32 @@ export class Service {
         service.healthCheck.fixes = [];
         return service;
     }
+
+    public static recreate(data: any): Service {
+        const service = Object.assign(new Service(), data) as Service;
+        service.setStates();
+        if (!service.serviceUrl) {
+            service.serviceUrl = new ServiceUrl();
+        }
+        if (!service.healthCheck) {
+            service.healthCheck = new ServiceHealthCheck();
+        }
+        if (!service.deployment) {
+            service.deployment = new ServiceDeployment();
+        }
+        if (!service.deployment.dockerDaemon) {
+            service.deployment.dockerDaemon = new DockerDaemon();
+        }
+        service.healthCheck.fixes = [];
+        return service;
+    }
+
+    public setStates(): Service {
+        this.isDeployed = !!this.serviceUrl;
+        this.isDockerized = !!this.deployment;
+        this.hasHealthcheck = !!this.healthCheck;
+        return this;
+    }
 }
 
 export class ServiceValidation {

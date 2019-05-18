@@ -1,23 +1,39 @@
 @import "../../../styles/variables";
 
-.back-btn {
+.links {
     margin-bottom: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 
-    &.back-2 {
-        margin-bottom: 0;
-        margin-top: 20px;
-    }
-    span {
+    .links-btn {
         cursor: pointer;
+
+        fa-icon {
+            margin-right: 8px;
+        }
+        &.links-btn-secondary {
+            margin-right: 20px;
+        }
     }
 }
+.back-2 {
+    button {
+        fa-icon {
+            margin-right: 8px;
+        }
+    }
+}
+
 .description {
     font-style: italic;
 }
+
 h4 {
     margin-top: 60px;
     margin-bottom: 20px;
 }
+
 .health-status {
     text-transform: uppercase;
     font-weight: 600;
@@ -26,16 +42,20 @@ h4 {
     &.status-healthy {
         color: $health-healthy;
     }
+
     &.status-bad {
         color: $health-bad;
     }
+
     &.status-checking {
         color: $health-checking;
     }
+
     &.status-undef {
         color: $health-undef;
     }
 }
+
 .actions {
     padding-bottom: 50px;
     display: flex;
@@ -45,13 +65,16 @@ h4 {
     .btn {
         width: 100px;
     }
+
     .with-marg {
         margin-right: 10px;
     }
+
     tasker-spiner {
         margin-left: 10px;
     }
 }
+
 .data-row {
     padding: 5px 0;
 
@@ -60,17 +83,25 @@ h4 {
         display: inline-block;
         margin-right: 5px;
     }
+
     .row-value {
         margin-right: 5px;
         white-space: nowrap;
     }
 }
+
 .container-info {
 
 }
+
 .container-state {
     text-transform: uppercase;
 }
+
 .daemon-link {
     cursor: pointer;
+}
+
+.container-warning {
+    color: $red;
 }

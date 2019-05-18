@@ -45,6 +45,13 @@ public class ServicesResource {
         return Response.ok(service).build();
     }
     
+    @PUT
+    @Path("/{serviceId}")
+    public Response updateService(@PathParam("serviceId") long serviceId, ServiceRequest service) {
+        Service updatedService = servicesService.updateService(service, serviceId);
+        return Response.ok(updatedService).build();
+    }
+    
     @GET
     @Path("/{serviceId}/container")
     public Response getContainerInfo(@PathParam("serviceId") long serviceId,

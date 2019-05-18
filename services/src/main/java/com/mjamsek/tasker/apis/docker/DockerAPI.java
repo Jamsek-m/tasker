@@ -1,7 +1,9 @@
-package com.mjamsek.tasker.apis;
+package com.mjamsek.tasker.apis.docker;
 
 import com.mjamsek.tasker.entities.docker.DockerContainerInfo;
 import com.mjamsek.tasker.entities.docker.DockerCreateContainer;
+import org.eclipse.microprofile.rest.client.annotation.RegisterProvider;
+import org.eclipse.microprofile.rest.client.annotation.RegisterProviders;
 import org.eclipse.microprofile.rest.client.inject.RegisterRestClient;
 
 import javax.enterprise.context.Dependent;
@@ -11,6 +13,10 @@ import java.util.List;
 
 @RegisterRestClient
 @Dependent
+@RegisterProviders({
+    @RegisterProvider(DockerAPIExceptionMapper.class),
+    @RegisterProvider(DockerAPINoResponseExceptionMapper.class)
+})
 public interface DockerAPI {
     
     @Path("/containers/json")

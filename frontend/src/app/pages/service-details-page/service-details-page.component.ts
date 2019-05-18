@@ -7,6 +7,9 @@ import {DockerService} from "../../services/docker.service";
 import {MessageService} from "../../services/message.service";
 import {DockerState} from "../../models/docker-state.class";
 import {BsModalRef} from "ngx-bootstrap";
+import {BaseError} from "../../errors/base.error";
+import {NotFoundError} from "../../errors/not-found.error";
+import {NavigationUtil} from "../../utils/navigation.util";
 
 @Component({
     selector: "tasker-service-details-page",
@@ -20,6 +23,7 @@ export class ServiceDetailsPageComponent implements OnInit {
     public blockActions = false;
     public status: "bad" | "healthy" | "checking" | "undef";
     public containerInfo: any = null;
+    public containerNotExists = false;
 
     constructor(private router: Router,
                 private activatedRoute: ActivatedRoute,
@@ -95,6 +99,15 @@ export class ServiceDetailsPageComponent implements OnInit {
         this.router.navigate(["/"]);
     }
 
+    public edit(): void {
+        this.router.navigate(["/service", this.service.id, "edit"]);
+    }
+
+    public createNewVersion(): void {
+        NavigationUtil.routeData = this.service;
+        this.router.navigate(["/service/new-version"]);
+    }
+
     public checkHealth(): void {
         if (this.status === "undef") {
             return;
@@ -140,7 +153,9 @@ export class ServiceDetailsPageComponent implements OnInit {
             (service: Service) => {
                 this.service = service;
                 this.checkHealth();
-                this.getContainerState();
+                if (this.service.deployment) {
+                    this.getContainerState();
+                }
             },
             (err: HttpErrorResponse) => {
                 this.router.navigate(["/404"]);
@@ -153,8 +168,13 @@ export class ServiceDetailsPageComponent implements OnInit {
             (state: DockerState) => {
                 this.containerState = state;
             },
-            (err) => {
-                console.error(err);
+            (err: BaseError) => {
+                if (err instanceof NotFoundError) {
+                    this.blockActions = true;
+                    this.containerNotExists = true;
+                } else {
+                    console.error(err);
+                }
             }
         );
     }

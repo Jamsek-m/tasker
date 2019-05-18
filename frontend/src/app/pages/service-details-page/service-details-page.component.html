@@ -1,11 +1,20 @@
 <div>
-    <div class="back-btn">
-        <span (click)="back()">
+    <div class="links">
+        <button class="btn btn-sm btn-outline-primary links-btn" (click)="back()">
             <fa-icon [icon]="['fas', 'arrow-left']"></fa-icon> Back
+        </button>
+
+        <span>
+            <button class="btn btn-sm btn-outline-primary links-btn links-btn-secondary" (click)="createNewVersion()">
+                <fa-icon [icon]="['far', 'copy']"></fa-icon> New version
+            </button>
+            <button class="btn btn-sm btn-primary links-btn" (click)="edit()">
+                <fa-icon [icon]="['fas', 'pencil-alt']"></fa-icon> Edit
+            </button>
         </span>
     </div>
 
-    <h2>{{service.name}}</h2>
+    <h2>{{service.name}}@{{service.version}}</h2>
     <p class="description">{{service.description}}</p>
 
     <h4>
@@ -21,8 +30,16 @@
             </div>
             <div class="data-row">
                 <span class="row-title">API base url:</span>
-                <span class="row-value">{{service.serviceUrl.url + '/' + service.serviceUrl.version}}</span>
-                <tasker-clipboard [data]="service.serviceUrl.url + '/' + service.serviceUrl.version"></tasker-clipboard>
+                <span class="row-value">{{
+                    service.serviceUrl.urlVersioning ?
+                        service.serviceUrl.url + '/' + service.serviceUrl.version :
+                        service.serviceUrl.url
+                    }}</span>
+                <tasker-clipboard [data]="
+                    service.serviceUrl.urlVersioning ?
+                        service.serviceUrl.url + '/' + service.serviceUrl.version :
+                        service.serviceUrl.url">
+                </tasker-clipboard>
             </div>
         </div>
         <ng-template #noDeployment>
@@ -59,7 +76,12 @@
     </h4>
     <div>
         <div *ngIf="service.deployment; else noDocker">
-            <h5>Container</h5>
+            <h5>
+                Container
+                <span *ngIf="containerNotExists" tooltip="Container does not exist!" class="container-warning">
+                    <fa-icon [icon]="['fas', 'exclamation-triangle']"></fa-icon>
+                </span>
+            </h5>
             <div class="data-row">
                 <span class="row-title">Name:</span>
                 <span class="row-value">{{service.deployment.containerName}}</span>
@@ -73,10 +95,6 @@
                 <span class="row-title">Id:</span>
                 <span class="row-value">{{service.deployment.containerId}}</span>
                 <tasker-clipboard [data]="service.deployment.containerId"></tasker-clipboard>
-            </div>
-            <div class="data-row">
-                <span class="row-title">Version:</span>
-                <span class="row-value">{{service.deployment.version}}</span>
             </div>
             <div class="data-row">
                 <span class="row-title">Daemon:</span>
@@ -122,9 +140,9 @@
         <tasker-json-view [data]="containerInfo"></tasker-json-view>
     </div>
 
-    <div class="back-btn back-2">
-        <span (click)="back()">
+    <div class="back-2">
+        <button class="btn btn-sm btn-outline-primary" (click)="back()">
             <fa-icon [icon]="['fas', 'arrow-left']"></fa-icon> Back
-        </span>
+        </button>
     </div>
 </div>

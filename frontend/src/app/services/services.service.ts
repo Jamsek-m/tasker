@@ -46,7 +46,9 @@ export class ServicesService {
 
     public getService(serviceId: number): Observable<Service> {
         const url = `${this.v2Api}/${serviceId}`;
-        return this.http.get(url).pipe(map(res => res as Service));
+        return this.http.get(url).pipe(
+            map(res => res as Service)
+        );
     }
 
     public doHealthCheck(serviceId: number): Observable<HealthCheckResponse> {
@@ -124,6 +126,25 @@ export class ServicesService {
     public createService(service: Service): Observable<Service> {
         const data = JSON.stringify(service);
         return this.http.post(this.v2Api, data).pipe(
+            map(res => res as Service),
+            catchError((err: HttpErrorResponse) => {
+                if (err.status === 409) {
+                    return throwError(new ConflictError(err.error.message));
+                } else if (err.status === 422) {
+                    return throwError(new ValidationError(err.error.message));
+                } else if (err.status === 500) {
+                    return throwError(new InternalServerError(err.error.message));
+                } else {
+                    return throwError(new UnknownError());
+                }
+            })
+        );
+    }
+
+    public updateService(service: Service): Observable<Service> {
+        const url = `${this.v2Api}/${service.id}`;
+        const data = JSON.stringify(service);
+        return this.http.put(url, data).pipe(
             map(res => res as Service),
             catchError((err: HttpErrorResponse) => {
                 if (err.status === 409) {

@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ServiceAddPageComponent } from './service-add-page.component';
+import { ServiceFormPageComponent } from './service-form-page.component';
 
-describe('ServiceAddPageComponent', () => {
-  let component: ServiceAddPageComponent;
-  let fixture: ComponentFixture<ServiceAddPageComponent>;
+describe('ServiceFormPageComponent', () => {
+  let component: ServiceFormPageComponent;
+  let fixture: ComponentFixture<ServiceFormPageComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ ServiceAddPageComponent ]
+      declarations: [ ServiceFormPageComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(ServiceAddPageComponent);
+    fixture = TestBed.createComponent(ServiceFormPageComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

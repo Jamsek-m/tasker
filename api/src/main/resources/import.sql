@@ -8,6 +8,7 @@ INSERT INTO docker_daemons(id, name, url) VALUES (2, 'DEBUG', 'http://192.168.1.
 insert into deployments(id, container_name, container_id, version, docker_daemon_id) VALUES (1, 'kontejner', '123', '1.5.4', 1);
 insert into deployments(id, container_name, container_id, version, docker_daemon_id) values(2, 'tasker', 'd45d677ac120bd3d90073365951854a46ef042d2b6792286e994d2c765b19a8c', '1.0.0', 2);
 INSERT INTO DEPLOYMENTS (ID, CONTAINER_ID, CONTAINER_NAME, VERSION, DOCKER_DAEMON_ID) VALUES (3, 'e885a53516983c50ad4f797534967ffe1bc30490d6650849ade8a8731174fe27', 'tasker-test', null, 1);
+INSERT INTO DEPLOYMENTS (ID, CONTAINER_ID, CONTAINER_NAME, VERSION, DOCKER_DAEMON_ID) VALUES (4, 'e885a5351dfgdfgdfg4967ffe1bc30490d6650849ade8a8731174fe27', 'non-existing-container', null, 2);
 
 insert into service_healthchecks(id, health_url) values (1, 'http://localhost:8080/health');
 insert into service_healthchecks(id, health_url) values (2, 'http://localhost:4200/health');
@@ -16,7 +17,7 @@ insert into service_urls(id, url, version, url_versioning) VALUES (1, 'http://lo
 insert into service_urls(id, url, version, url_versioning) VALUES (2, 'https://tasker.mjamsek.com', 'v2', true );
 insert into services(description, version, name, health_check_id, url_id, active, deployment_id) VALUES ( 'Stari tasker', '1.0.0', 'tasker', 3, 2, true, 2);
 insert into services(description, version, name, health_check_id, url_id, active, deployment_id) VALUES ( 'File upload', '1.0.0', 'lozigorbox', 1, 1, true, 1);
-insert into services(description, version, name, health_check_id, url_id, active) VALUES ( 'File upload', 'v2', 'lozigorbox-2', 1, 1, true );
+insert into services(description, version, name, health_check_id, url_id, active, deployment_id) VALUES ( 'File upload', '2.1.0', 'lozigorbox-2', 1, 1, true, 4);
 insert into services(description, version, name, health_check_id, url_id, active) VALUES ( 'File upload', '1.2.3', 'lozigorbox-3', 2, 1, true );
 
 insert into services(description, version, name, active) VALUES ( 'File upload', '1.0.0', 'lozigorbox-4', true );

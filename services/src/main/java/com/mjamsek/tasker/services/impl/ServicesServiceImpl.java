@@ -137,21 +137,73 @@ public class ServicesServiceImpl implements ServicesService {
     }
     
     @Override
-    public Service updateService(Service dto, long serviceId) {
+    public Service updateService(ServiceRequest dto, long serviceId) {
         Service service = getServiceById(serviceId);
         if (service == null) {
             throw new EntityNotFoundException("Service with given id doesn't exist!");
         }
         
-        service.setVersion(dto.getVersion());
         service.setDescription(dto.getDescription());
-        if (service.getHealthCheck() != null) {
-            service.getHealthCheck().setHealthUrl(dto.getHealthCheck().getHealthUrl());
+        
+        if (dto.isDeployed()) {
+            if (service.getServiceUrl() != null) {
+                service.getServiceUrl().setUrl(dto.getServiceUrl().getUrl());
+                service.getServiceUrl().setUrlVersioning(dto.getServiceUrl().isUrlVersioning());
+                service.getServiceUrl().setVersion(dto.getServiceUrl().getVersion());
+            } else {
+                ServiceUrl serviceUrl = new ServiceUrl();
+                serviceUrl.setVersion(dto.getServiceUrl().getVersion());
+                serviceUrl.setUrl(dto.getServiceUrl().getUrl());
+                serviceUrl.setUrlVersioning(dto.getServiceUrl().isUrlVersioning());
+                service.setServiceUrl(serviceUrl);
+            }
         } else {
-            service.setHealthCheck(dto.getHealthCheck());
+            service.setServiceUrl(null);
         }
         
-        return null;
+        if (dto.isDockerized()) {
+    
+            DockerDaemon daemon = dockerDaemonService.getDaemon(dto.getDeployment().getDockerDaemon().getName());
+            if (daemon == null) {
+                throw new ValidationException("Invalid daemon name!");
+            }
+            
+            if (service.getDeployment() != null) {
+                service.getDeployment().setContainerId(dto.getDeployment().getContainerId());
+                service.getDeployment().setDockerDaemon(daemon);
+                service.getDeployment().setContainerName(dto.getDeployment().getContainerName());
+            } else {
+                ServiceDeployment serviceDeployment = new ServiceDeployment();
+                serviceDeployment.setContainerName(dto.getDeployment().getContainerName());
+                serviceDeployment.setContainerId(dto.getDeployment().getContainerId());
+                serviceDeployment.setDockerDaemon(daemon);
+                service.setDeployment(serviceDeployment);
+            }
+        } else {
+            service.setDeployment(null);
+        }
+        
+        if (dto.isHasHealthcheck()) {
+            if (service.getHealthCheck() != null) {
+                service.getHealthCheck().setHealthUrl(dto.getHealthCheck().getHealthUrl());
+            } else {
+                ServiceHealthCheck serviceHealthCheck = new ServiceHealthCheck();
+                serviceHealthCheck.setHealthUrl(dto.getHealthCheck().getHealthUrl());
+                service.setHealthCheck(serviceHealthCheck);
+            }
+        } else {
+            service.setHealthCheck(null);
+        }
+    
+        try {
+            em.getTransaction().begin();
+            em.merge(service);
+            em.getTransaction().commit();
+            return service;
+        } catch (Exception e) {
+            em.getTransaction().rollback();
+            throw new TaskerException("Error saving entity!");
+        }
     }
     
     @Override

@@ -23,7 +23,7 @@ public interface ServicesService {
     
     Service createService(ServiceRequest dto);
     
-    Service updateService(Service dto, long serviceId);
+    Service updateService(ServiceRequest dto, long serviceId);
     
     ServiceToken generateServiceToken(long serviceId);
     

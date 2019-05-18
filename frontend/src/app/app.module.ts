@@ -28,15 +28,14 @@ import {PaginationLimitComponent} from "./components/pagination-limit/pagination
 import {HttpApiInterceptor} from "./services/http.interceptor";
 import {HealthOverviewComponent} from "./components/health-overview/health-overview.component";
 import {ServiceDetailsPageComponent} from "./pages/service-details-page/service-details-page.component";
-import {ServiceAddPageComponent} from "./pages/service-add-page/service-add-page.component";
-import {ServiceEditPageComponent} from "./pages/service-edit-page/service-edit-page.component";
+import {ServiceFormPageComponent} from "./pages/service-form-page/service-form-page.component";
 import {ConfirmationDialogComponent} from "./components/confirmation-dialog/confirmation-dialog.component";
 import {ClipboardComponent} from "./components/clipboard/clipboard.component";
 import {JsonViewComponent} from "./components/json-view/json-view.component";
 import {NgJsonEditorModule} from "ang-jsoneditor";
-import { HelpComponent } from './components/help/help.component';
-import { ServiceFormSummaryComponent } from './pages/service-add-page/service-form-summary/service-form-summary.component';
-import { SpinerComponent } from './components/spiner/spiner.component';
+import {HelpComponent} from "./components/help/help.component";
+import {ServiceFormSummaryComponent} from "./pages/service-form-page/service-form-summary/service-form-summary.component";
+import {SpinerComponent} from "./components/spiner/spiner.component";
 
 
 @NgModule({
@@ -58,8 +57,7 @@ import { SpinerComponent } from './components/spiner/spiner.component';
         UserProfilePageComponent,
         HealthOverviewComponent,
         ServiceDetailsPageComponent,
-        ServiceAddPageComponent,
-        ServiceEditPageComponent,
+        ServiceFormPageComponent,
         ConfirmationDialogComponent,
         ClipboardComponent,
         JsonViewComponent,

@@ -1,6 +1,6 @@
 package com.mjamsek.tasker.services.impl;
 
-import com.mjamsek.tasker.apis.DockerAPI;
+import com.mjamsek.tasker.apis.docker.DockerAPI;
 import com.mjamsek.tasker.entities.docker.DockerContainerInfo;
 import com.mjamsek.tasker.entities.docker.DockerCreateContainer;
 import com.mjamsek.tasker.entities.exceptions.DockerException;
@@ -19,12 +19,9 @@ import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
 import java.io.File;
 import java.io.FileWriter;
-import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 @ApplicationScoped

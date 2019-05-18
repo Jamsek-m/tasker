@@ -10,6 +10,7 @@
                             help="Unique service name. Only alphanumeric characters, underscore and dash allowed."></tasker-help>
                     </label>
                     <input required type="text" id="name" name="name" class="form-control"
+                        [readOnly]="mode === 'edit'"
                         [ngClass]="{'is-invalid': validation.name}" [(ngModel)]="service.name"/>
                     <div class="invalid-feedback" *ngIf="validation.name">
                         {{validation.name}}
@@ -21,6 +22,7 @@
                         <tasker-help help="Service version."></tasker-help>
                     </label>
                     <input type="text" id="version" name="version" class="form-control" required
+                        [readOnly]="mode === 'edit'" [placeholder]="editVersionPlaceholder ? editVersionPlaceholder : ''"
                         [ngClass]="{'is-invalid': validation.version}" [(ngModel)]="service.version"/>
                     <div class="invalid-feedback" *ngIf="validation.version">
                         {{validation.version}}
@@ -105,6 +107,7 @@
                     </label>
                     <select class="custom-select" id="daemon" name="daemon" required
                         [ngClass]="{'is-invalid': validation.dockerDaemon}"
+                        [compareWith]="compareDaemonsFn"
                         [(ngModel)]="service.deployment.dockerDaemon">
                         <option *ngFor="let daemon of daemons" [ngValue]="daemon">{{daemon.name}}</option>
                     </select>
