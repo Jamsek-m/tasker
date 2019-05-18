@@ -3,3 +3,18 @@
 .param-name {
     font-weight: 600;
 }
+.api-entry-container {
+    margin-bottom: 40px;
+
+    &:last-child {
+        margin-bottom: 0;
+    }
+}
+.general {
+    margin-top: 60px;
+}
+.actions {
+    h4 {
+        margin: 20px 0;
+    }
+}

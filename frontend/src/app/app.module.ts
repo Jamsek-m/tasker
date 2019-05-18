@@ -36,6 +36,7 @@ import {NgJsonEditorModule} from "ang-jsoneditor";
 import {HelpComponent} from "./components/help/help.component";
 import {ServiceFormSummaryComponent} from "./pages/service-form-page/service-form-summary/service-form-summary.component";
 import {SpinerComponent} from "./components/spiner/spiner.component";
+import { DocsApiEntryComponent } from './docs/docs-api-entry/docs-api-entry.component';
 
 
 @NgModule({
@@ -63,7 +64,8 @@ import {SpinerComponent} from "./components/spiner/spiner.component";
         JsonViewComponent,
         HelpComponent,
         ServiceFormSummaryComponent,
-        SpinerComponent
+        SpinerComponent,
+        DocsApiEntryComponent
     ],
     imports: [
         BrowserModule,

@@ -1,0 +1,31 @@
+@import "../../../styles/variables";
+
+
+.desc {
+    font-style: italic;
+}
+
+.responses {
+    margin-left: 20px;
+}
+
+.method-get {
+    background-color: $health-healthy;
+    color: $white;
+}
+.method-post {
+    background-color: $health-checking;
+    color: $white;
+}
+.method-delete {
+    background-color: $health-bad;
+    color: $white;
+}
+.method-put {
+    background-color: $orange;
+    color: $white;
+}
+.method-patch {
+    background-color: $light-grey;
+    color: $black;
+}

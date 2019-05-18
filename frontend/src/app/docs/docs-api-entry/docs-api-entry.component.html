@@ -1,0 +1,14 @@
+<div>
+    <h5>{{api.name}}</h5>
+    <p class="desc">{{api.description}}</p>
+    <p>
+        <span class="badge badge-primary method-{{api.method | lowercase}}">{{api.method}}</span>
+        {{api.path}}
+    </p>
+    <div class="responses">
+        <div *ngFor="let response of api.responses">
+            <strong>{{response.status}}</strong>
+            <p class="desc">{{response.description}}</p>
+        </div>
+    </div>
+</div>
