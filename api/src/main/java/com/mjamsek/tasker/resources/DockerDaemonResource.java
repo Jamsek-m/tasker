@@ -4,6 +4,7 @@ import com.kumuluz.ee.rest.beans.QueryParameters;
 import com.mjamsek.tasker.entities.persistence.service.DockerDaemon;
 import com.mjamsek.tasker.http.HttpHeader;
 import com.mjamsek.tasker.services.DockerDaemonService;
+import com.mjamsek.tasker.services.LogService;
 
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;

@@ -9,10 +9,12 @@ import com.mjamsek.tasker.entities.docker.DockerState;
 import com.mjamsek.tasker.entities.dto.ServiceRequest;
 import com.mjamsek.tasker.entities.dto.ServiceToken;
 import com.mjamsek.tasker.entities.exceptions.*;
+import com.mjamsek.tasker.entities.persistence.admin.LogSeverity;
 import com.mjamsek.tasker.entities.persistence.service.*;
 import com.mjamsek.tasker.mappers.DockerMapper;
 import com.mjamsek.tasker.services.DockerDaemonService;
 import com.mjamsek.tasker.services.DockerService;
+import com.mjamsek.tasker.services.LogService;
 import com.mjamsek.tasker.services.ServicesService;
 import com.mjamsek.tasker.utils.HttpClient;
 import com.mjamsek.tasker.utils.RandomStringGenerator;
@@ -38,6 +40,9 @@ public class ServicesServiceImpl implements ServicesService {
     
     @Inject
     private DockerService dockerService;
+    
+    @Inject
+    private LogService logService;
     
     @Override
     public List<Service> getServices(QueryParameters queryParameters) {
@@ -129,9 +134,11 @@ public class ServicesServiceImpl implements ServicesService {
             em.getTransaction().begin();
             em.persist(service);
             em.getTransaction().commit();
+            logService.log(LogSeverity.INFO, "Service '" + service.getName() + "' was created.");
             return service;
         } catch (Exception e) {
             em.getTransaction().rollback();
+            logService.log(LogSeverity.ERROR, "Error saving service '" + service.getName() + "'!");
             throw new TaskerException("Error saving entity!");
         }
     }
@@ -199,9 +206,11 @@ public class ServicesServiceImpl implements ServicesService {
             em.getTransaction().begin();
             em.merge(service);
             em.getTransaction().commit();
+            logService.log(LogSeverity.INFO, "Service '" + service.getName() + "' was updated.");
             return service;
         } catch (Exception e) {
             em.getTransaction().rollback();
+            logService.log(LogSeverity.ERROR, "Error saving service '" + service.getName() + "'!");
             throw new TaskerException("Error saving entity!");
         }
     }
@@ -253,8 +262,10 @@ public class ServicesServiceImpl implements ServicesService {
             service.setActive(false);
             em.merge(service);
             em.getTransaction().commit();
+            logService.log(LogSeverity.INFO, "Service '" + service.getName() + "' was deactivated.");
         } catch (Exception e) {
             em.getTransaction().rollback();
+            logService.log(LogSeverity.ERROR, "Error deactivating service '" + service.getName() + "'!");
         }
     }
     
@@ -297,6 +308,7 @@ public class ServicesServiceImpl implements ServicesService {
             service.getDeployment().getContainerId(),
             service.getDeployment().getDockerDaemon()
         );
+        logService.log(LogSeverity.INFO, "Service's container (" + service.getName() + ") was recreated.");
     }
     
     @Override

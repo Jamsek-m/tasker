@@ -5,15 +5,17 @@ import com.kumuluz.ee.rest.utils.JPAUtils;
 import com.mjamsek.tasker.entities.exceptions.ConflictException;
 import com.mjamsek.tasker.entities.exceptions.EntityNotFoundException;
 import com.mjamsek.tasker.entities.exceptions.ValidationException;
+import com.mjamsek.tasker.entities.persistence.admin.LogSeverity;
 import com.mjamsek.tasker.entities.persistence.service.DockerDaemon;
 import com.mjamsek.tasker.services.DockerDaemonService;
+import com.mjamsek.tasker.services.LogService;
 
 import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
-import javax.transaction.Transactional;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -23,6 +25,9 @@ public class DockerDaemonServiceImpl implements DockerDaemonService {
     
     @PersistenceContext(unitName = "main-jpa-unit")
     private EntityManager em;
+    
+    @Inject
+    private LogService logService;
     
     @Override
     public List<DockerDaemon> getDaemons(QueryParameters queryParameters) {
@@ -83,9 +88,11 @@ public class DockerDaemonServiceImpl implements DockerDaemonService {
             em.getTransaction().begin();
             em.persist(newDaemon);
             em.getTransaction().commit();
+            logService.log(LogSeverity.INFO, "Daemon '" + newDaemon.getName() + "' was created.");
             return newDaemon;
         } catch (Exception e) {
             em.getTransaction().rollback();
+            logService.log(LogSeverity.ERROR, "Error saving daemon '" + newDaemon.getName() + "'!");
             return null;
         }
     }
@@ -101,9 +108,11 @@ public class DockerDaemonServiceImpl implements DockerDaemonService {
             em.getTransaction().begin();
             em.merge(existingDaemon);
             em.getTransaction().commit();
+            logService.log(LogSeverity.INFO, "Daemon '" + existingDaemon.getName() + "' was updated.");
             return existingDaemon;
         } catch (Exception e) {
             em.getTransaction().rollback();
+            logService.log(LogSeverity.ERROR, "Error updating daemon '" + existingDaemon.getName() + "'!");
             return null;
         }
     }
@@ -118,8 +127,10 @@ public class DockerDaemonServiceImpl implements DockerDaemonService {
             em.getTransaction().begin();
             em.remove(existingDaemon);
             em.getTransaction().commit();
+            logService.log(LogSeverity.INFO, "Daemon '" + existingDaemon.getName() + "' was deleted.");
         } catch (Exception e) {
             em.getTransaction().rollback();
+            logService.log(LogSeverity.ERROR, "Error deleting daemon '" + existingDaemon.getName() + "'!");
         }
     }
 }

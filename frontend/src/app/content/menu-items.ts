@@ -14,11 +14,6 @@ export const menuItems: MenuItem[] = [
         label: "Docs",
         url: "/docs",
         external: false
-    },
-    {
-        label: "Jenkins",
-        url: "https://jenkins.mjamsek.com",
-        external: true
     }
 ];
 
