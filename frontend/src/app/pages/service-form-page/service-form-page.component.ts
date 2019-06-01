@@ -28,10 +28,10 @@ export class ServiceFormPageComponent implements OnInit, AfterViewInit {
     private serviceId: number;
     public editVersionPlaceholder: string;
 
-    @ViewChild("formSummary")
+    @ViewChild("formSummary", {static: false})
     public formSummary: ElementRef<HTMLDivElement>;
 
-    @ViewChild("formSummaryContainer")
+    @ViewChild("formSummaryContainer", {static: false})
     public formSummaryContainer: ElementRef<HTMLDivElement>;
 
     public sticky: number;

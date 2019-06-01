@@ -24,10 +24,10 @@ export class ServiceListPageComponent implements OnInit {
     public query = "";
     public serviceQueryObservable: Observable<Service[]>;
 
-    @ViewChild("expireModal")
+    @ViewChild("expireModal", {static: false})
     private expireModal: TemplateRef<any>;
 
-    @ViewChild("detailsModal")
+    @ViewChild("detailsModal", {static: false})
     private detailsModal: TemplateRef<any>;
 
     constructor(private router: Router, private servicesService: ServicesService, private modalService: BsModalService) {
