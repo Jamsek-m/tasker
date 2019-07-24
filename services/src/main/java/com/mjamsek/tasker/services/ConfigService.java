@@ -14,4 +14,6 @@ public interface ConfigService {
     
     void addConfiguration(ConfigEntry configEntry);
     
+    void deleteConfiguration(long configId);
+    
 }

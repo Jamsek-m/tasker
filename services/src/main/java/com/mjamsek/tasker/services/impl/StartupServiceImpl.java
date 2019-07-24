@@ -68,9 +68,10 @@ public class StartupServiceImpl implements StartupService {
         try (Connection conn = dataSource.getConnection()) {
             
             PreparedStatement createConfigStatement = conn
-                .prepareStatement("INSERT INTO configuration(config_key, config_value) VALUES (?, ?)");
+                .prepareStatement("INSERT INTO configuration(config_key, config_value, user_defined) VALUES (?, ?, ?)");
             createConfigStatement.setString(1, "TASKER_ENABLED_REGISTRATION");
             createConfigStatement.setString(2, "false");
+            createConfigStatement.setBoolean(3, false);
             createConfigStatement.execute();
     
             PreparedStatement addAdminUserStatement = conn

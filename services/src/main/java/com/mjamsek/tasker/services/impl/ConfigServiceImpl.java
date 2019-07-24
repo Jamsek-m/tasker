@@ -56,6 +56,7 @@ public class ConfigServiceImpl implements ConfigService {
     
     @Override
     public void addConfiguration(ConfigEntry configEntry) {
+        configEntry.setUserDefined(true);
         try {
             em.getTransaction().begin();
             em.persist(configEntry);
@@ -65,6 +66,21 @@ public class ConfigServiceImpl implements ConfigService {
             exc.printStackTrace();
             logService.log(LogSeverity.ERROR, "Error adding new configuration");
             em.getTransaction().rollback();
+        }
+    }
+    
+    @Override
+    public void deleteConfiguration(long configId) {
+        ConfigEntry configEntry = em.find(ConfigEntry.class, configId);
+        if (configEntry != null && configEntry.isUserDefined()) {
+            try {
+                em.getTransaction().begin();
+                em.remove(configEntry);
+                em.getTransaction().commit();
+            } catch (Exception exc) {
+                exc.printStackTrace();
+                em.getTransaction().rollback();
+            }
         }
     }
 }

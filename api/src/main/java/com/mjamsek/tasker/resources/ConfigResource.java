@@ -47,4 +47,12 @@ public class ConfigResource {
         return Response.ok().build();
     }
     
+    @DELETE
+    @Path("/{id}")
+    @SecureResource
+    public Response removeConfig(@PathParam("id") long id) {
+        configService.deleteConfiguration(id);
+        return Response.noContent().build();
+    }
+    
 }
