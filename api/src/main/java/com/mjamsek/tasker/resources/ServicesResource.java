@@ -1,6 +1,8 @@
 package com.mjamsek.tasker.resources;
 
 import com.kumuluz.ee.rest.beans.QueryParameters;
+import com.mjamsek.tasker.auth.SecureResource;
+import com.mjamsek.tasker.auth.SecureResourceOrToken;
 import com.mjamsek.tasker.entities.docker.DockerContainerInfo;
 import com.mjamsek.tasker.entities.docker.DockerState;
 import com.mjamsek.tasker.entities.dto.ServiceRequest;
@@ -31,6 +33,7 @@ public class ServicesResource {
     protected UriInfo uriInfo;
     
     @GET
+    @SecureResource
     public Response getServices() {
         QueryParameters query = QueryParameters.query(uriInfo.getRequestUri().getQuery()).build();
         List<Service> services = servicesService.getServices(query);
@@ -40,6 +43,7 @@ public class ServicesResource {
     
     @GET
     @Path("/{serviceId}")
+    @SecureResource
     public Response getService(@PathParam("serviceId") String serviceIdOrName) {
         Service service = servicesService.getServiceByIdOrName(serviceIdOrName);
         return Response.ok(service).build();
@@ -47,6 +51,7 @@ public class ServicesResource {
     
     @PUT
     @Path("/{serviceId}")
+    @SecureResource
     public Response updateService(@PathParam("serviceId") long serviceId, ServiceRequest service) {
         Service updatedService = servicesService.updateService(service, serviceId);
         return Response.ok(updatedService).build();
@@ -54,6 +59,7 @@ public class ServicesResource {
     
     @GET
     @Path("/{serviceId}/container")
+    @SecureResourceOrToken
     public Response getContainerInfo(@PathParam("serviceId") long serviceId,
                                      @QueryParam("raw") @DefaultValue("false") boolean raw) {
         if (raw) {
@@ -67,6 +73,7 @@ public class ServicesResource {
     
     @GET
     @Path("/{serviceId}/container/state")
+    @SecureResourceOrToken
     public Response getContainerStatus(@PathParam("serviceId") long serviceId) {
         DockerState state = servicesService.getContainerState(serviceId);
         return Response.ok(state).build();
@@ -74,6 +81,7 @@ public class ServicesResource {
     
     @POST
     @Path("/{serviceId}/container/start")
+    @SecureResourceOrToken
     public Response startContainer(@PathParam("serviceId") long serviceId) {
         servicesService.startContainer(serviceId);
         return Response.ok().build();
@@ -81,6 +89,7 @@ public class ServicesResource {
     
     @DELETE
     @Path("/{serviceId}/container/stop")
+    @SecureResourceOrToken
     public Response stopContainer(@PathParam("serviceId") long serviceId) {
         servicesService.stopContainer(serviceId);
         return Response.ok().build();
@@ -88,12 +97,14 @@ public class ServicesResource {
     
     @PUT
     @Path("/{serviceId}/container/recreate")
+    @SecureResourceOrToken
     public Response recreateContainer(@PathParam("serviceId") long serviceId) {
         servicesService.recreateContainer(serviceId);
         return Response.ok().build();
     }
     
     @POST
+    @SecureResource
     public Response createService(ServiceRequest service) {
         Service created = servicesService.createService(service);
         return Response.status(Response.Status.CREATED).entity(created).build();
@@ -101,13 +112,15 @@ public class ServicesResource {
     
     @GET
     @Path("/{serviceId}/health")
-    public Response getService(@PathParam("serviceId") long serviceId) {
+    @SecureResourceOrToken
+    public Response getServiceHealth(@PathParam("serviceId") long serviceId) {
         servicesService.doHealthCheck(serviceId);
         return Response.ok().build();
     }
     
     @PATCH
     @Path("/{serviceId}/token")
+    @SecureResource
     public Response generateServiceToken(@PathParam("serviceId") long serviceId) {
         ServiceToken token = servicesService.generateServiceToken(serviceId);
         return Response.status(Response.Status.CREATED).entity(token).build();
@@ -115,6 +128,7 @@ public class ServicesResource {
     
     @DELETE
     @Path("/{serviceId}")
+    @SecureResource
     public Response deleteService(@PathParam("serviceId") long serviceId) {
         servicesService.deleteService(serviceId);
         return Response.noContent().build();

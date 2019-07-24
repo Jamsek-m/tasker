@@ -160,4 +160,14 @@ export class ServicesService {
         );
     }
 
+    public generateServiceToken(serviceId: number): Observable<Service.Token> {
+        const url = `${this.v2Api}/${serviceId}/token`;
+        return this.http.patch(url, null).pipe(map(res => res as Service.Token));
+    }
+
+    public removeService(serviceId: number): Observable<void> {
+        const url = `${this.v2Api}/${serviceId}`;
+        return this.http.delete(url).pipe(map(res => null));
+    }
+
 }

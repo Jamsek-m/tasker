@@ -36,7 +36,9 @@ import {NgJsonEditorModule} from "ang-jsoneditor";
 import {HelpComponent} from "./components/help/help.component";
 import {ServiceFormSummaryComponent} from "./pages/service-form-page/service-form-summary/service-form-summary.component";
 import {SpinerComponent} from "./components/spiner/spiner.component";
-import { DocsApiEntryComponent } from './docs/docs-api-entry/docs-api-entry.component';
+import {DocsApiEntryComponent} from "./docs/docs-api-entry/docs-api-entry.component";
+import {TokenGenerationModalComponent} from "./components/token-generation-modal/token-generation-modal.component";
+import {NoopAnimationsModule} from "@angular/platform-browser/animations";
 
 
 @NgModule({
@@ -65,12 +67,14 @@ import { DocsApiEntryComponent } from './docs/docs-api-entry/docs-api-entry.comp
         HelpComponent,
         ServiceFormSummaryComponent,
         SpinerComponent,
-        DocsApiEntryComponent
+        DocsApiEntryComponent,
+        TokenGenerationModalComponent
     ],
     imports: [
         BrowserModule,
         FormsModule,
         HttpClientModule,
+        NoopAnimationsModule,
         AppRoutingModule,
         BootstrapModule,
         IconsModule,
@@ -80,7 +84,8 @@ import { DocsApiEntryComponent } from './docs/docs-api-entry/docs-api-entry.comp
         {provide: HTTP_INTERCEPTORS, useClass: HttpApiInterceptor, multi: true}
     ],
     entryComponents: [
-        ConfirmationDialogComponent
+        ConfirmationDialogComponent,
+        TokenGenerationModalComponent
     ],
     bootstrap: [AppComponent]
 })

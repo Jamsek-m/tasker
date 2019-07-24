@@ -5,7 +5,9 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "services", indexes = @Index(name = "NAME_UNIQ_INDEX", columnList = "name,version", unique = true))
+@Table(name = "services", indexes = {
+    @Index(name = "NAME_UNIQ_INDEX", columnList = "name,version", unique = true)
+})
 @NamedQueries({
     @NamedQuery(name = Service.FIND_BY_NAME, query = "SELECT s FROM Service s WHERE s.name = :name")
 })

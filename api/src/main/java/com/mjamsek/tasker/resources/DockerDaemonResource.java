@@ -1,10 +1,10 @@
 package com.mjamsek.tasker.resources;
 
 import com.kumuluz.ee.rest.beans.QueryParameters;
+import com.mjamsek.tasker.auth.SecureResource;
 import com.mjamsek.tasker.entities.persistence.service.DockerDaemon;
 import com.mjamsek.tasker.http.HttpHeader;
 import com.mjamsek.tasker.services.DockerDaemonService;
-import com.mjamsek.tasker.services.LogService;
 
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
@@ -28,6 +28,7 @@ public class DockerDaemonResource {
     private DockerDaemonService dockerDaemonService;
     
     @GET
+    @SecureResource
     public Response getDaemons() {
         QueryParameters query = QueryParameters.query(uriInfo.getRequestUri().getQuery()).build();
         List<DockerDaemon> daemons = dockerDaemonService.getDaemons(query);
@@ -37,24 +38,28 @@ public class DockerDaemonResource {
     
     @GET
     @Path("/{daemonId}")
+    @SecureResource
     public Response getDaemon(@PathParam("daemonId") long daemonId) {
         return Response.ok(dockerDaemonService.getDaemon(daemonId)).build();
     }
     
     @POST
+    @SecureResource
     public Response saveDaemon(DockerDaemon daemon) {
         return Response.status(Response.Status.CREATED).entity(dockerDaemonService.saveDaemon(daemon)).build();
     }
     
     @PUT
     @Path("/{daemonId}")
+    @SecureResource
     public Response updateDaemon(@PathParam("daemonId") long daemonId, DockerDaemon daemon) {
         return Response.ok(dockerDaemonService.updateDaemon(daemon, daemonId)).build();
     }
     
     @DELETE
     @Path("/{daemonId}")
-    public Response get(@PathParam("daemonId") long daemonId) {
+    @SecureResource
+    public Response deleteDaemon(@PathParam("daemonId") long daemonId) {
         dockerDaemonService.deleteDaemon(daemonId);
         return Response.noContent().build();
     }

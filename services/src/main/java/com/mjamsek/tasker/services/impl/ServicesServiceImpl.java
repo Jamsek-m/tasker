@@ -221,15 +221,18 @@ public class ServicesServiceImpl implements ServicesService {
         if (service == null) {
             throw new ServiceNotFoundException(serviceId);
         }
-        String token = RandomStringGenerator.generate(30);
+        
+        String token = RandomStringGenerator.generate(32);
         
         try {
             em.getTransaction().begin();
             service.setToken(BCrypt.hashpw(token, BCrypt.gensalt()));
             em.merge(service);
             em.getTransaction().commit();
+            logService.log(LogSeverity.INFO, "Token for service '" + service.getName() + "' was generated.");
         } catch (Exception e) {
             em.getTransaction().rollback();
+            logService.log(LogSeverity.ERROR, "Error generating token for service '" + service.getName() + "'!");
             return null;
         }
         return new ServiceToken(token);
@@ -334,8 +337,10 @@ public class ServicesServiceImpl implements ServicesService {
             em.getTransaction().begin();
             em.merge(service);
             em.getTransaction().commit();
+            logService.log(LogSeverity.INFO, "Container for service '" + service.getName() + "' was recreated.");
         } catch (Exception e) {
             em.getTransaction().rollback();
+            logService.log(LogSeverity.ERROR, "Error recreating container for service '" + service.getName() + "'!");
         }
     }
     

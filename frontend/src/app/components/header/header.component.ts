@@ -12,11 +12,19 @@ export class HeaderComponent implements OnInit {
 
     public navbarOpened = false;
     public menuItems: MenuItem[] = menuItems;
+    public isAuthorized = false;
 
-    constructor(private router: Router, private authService: AuthService) {
+    constructor(private router: Router,
+                private authService: AuthService) {
     }
 
     ngOnInit() {
+        this.checkAuth();
+        this.authService.getAuthEvent().subscribe(
+            () => {
+                this.checkAuth();
+            }
+        );
     }
 
     public toggleNavbar() {
@@ -30,6 +38,14 @@ export class HeaderComponent implements OnInit {
             },
             (err) => {
                 console.error(err);
+            }
+        );
+    }
+
+    private checkAuth(): void {
+        this.authService.checkAuthorization().subscribe(
+            (isAuthorized: boolean) => {
+                this.isAuthorized = isAuthorized;
             }
         );
     }

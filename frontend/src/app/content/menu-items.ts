@@ -3,12 +3,14 @@ export const menuItems: MenuItem[] = [
     {
         label: "Logs",
         url: "/logs",
-        external: false
+        external: false,
+        requireAuth: true
     },
     {
         label: "Config",
         url: "/config",
-        external: false
+        external: false,
+        requireAuth: true
     },
     {
         label: "Docs",
@@ -22,4 +24,5 @@ export interface MenuItem {
     label: string;
     url: string;
     external: boolean;
+    requireAuth?: boolean;
 }

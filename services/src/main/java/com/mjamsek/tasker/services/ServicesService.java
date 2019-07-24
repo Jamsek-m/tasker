@@ -17,6 +17,11 @@ public interface ServicesService {
     
     Service getServiceByName(String name);
     
+    /**
+     *
+     * @param serviceId
+     * @return Service if found, null otherwise
+     */
     Service getServiceById(long serviceId);
     
     Service getServiceByIdOrName(String idOrName);

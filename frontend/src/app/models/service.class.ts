@@ -77,6 +77,12 @@ export class Service {
     }
 }
 
+export namespace Service {
+    export class Token {
+        public token: string;
+    }
+}
+
 export class ServiceValidation {
     public name: string;
     public version: string;

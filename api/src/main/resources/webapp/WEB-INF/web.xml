@@ -7,6 +7,10 @@
         <error-code>404</error-code>
         <location>/</location>
     </error-page>
+    
+    <listener>
+        <listener-class>com.mjamsek.tasker.StartupContextListener</listener-class>
+    </listener>
 
     <filter>
         <filter-name>SecurityHeadersFilter</filter-name>

@@ -1,5 +1,6 @@
 package com.mjamsek.tasker.resources;
 
+import com.mjamsek.tasker.auth.SecureResource;
 import com.mjamsek.tasker.entities.docker.DockerContainerInfo;
 import com.mjamsek.tasker.services.DockerService;
 
@@ -20,6 +21,7 @@ public class DockerResource {
     private DockerService dockerService;
     
     @GET
+    @SecureResource
     public Response queryContainersByName(@QueryParam("name") String name, @QueryParam("daemonId") long daemonId) {
         List<DockerContainerInfo> containers = dockerService.queryContainersByName(name, daemonId);
         return Response.ok(containers).build();

@@ -22,6 +22,9 @@ public class ServerConfig {
     @ConfigValue("health.servlet.mapping")
     private String healthUrl;
     
+    @ConfigValue("datasources")
+    private DatasourceConfig[] datasources;
+    
     public String getName() {
         return name;
     }
@@ -60,5 +63,62 @@ public class ServerConfig {
     
     public void setHealthUrl(String healthUrl) {
         this.healthUrl = healthUrl;
+    }
+    
+    public Boolean getProd() {
+        return prod;
+    }
+    
+    public void setProd(Boolean prod) {
+        this.prod = prod;
+    }
+    
+    public DatasourceConfig[] getDatasources() {
+        return datasources;
+    }
+    
+    public void setDatasources(DatasourceConfig[] datasources) {
+        this.datasources = datasources;
+    }
+    
+    public static class DatasourceConfig {
+        @ConfigValue("connection-url")
+        private String connectionUrl;
+        private String username;
+        private String password;
+        @ConfigValue("jndi-name")
+        private String jndiName;
+    
+        public String getConnectionUrl() {
+            return connectionUrl;
+        }
+    
+        public void setConnectionUrl(String connectionUrl) {
+            this.connectionUrl = connectionUrl;
+        }
+    
+        public String getUsername() {
+            return username;
+        }
+    
+        public void setUsername(String username) {
+            this.username = username;
+        }
+    
+        public String getPassword() {
+            return password;
+        }
+    
+        public void setPassword(String password) {
+            this.password = password;
+        }
+    
+        public String getJndiName() {
+            return jndiName;
+        }
+    
+        public void setJndiName(String jndiName) {
+            this.jndiName = jndiName;
+        }
     }
 }

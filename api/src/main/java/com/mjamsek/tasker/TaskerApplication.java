@@ -13,4 +13,5 @@ import javax.ws.rs.core.Application;
     // supportedHeaders = "X-Tasker-Key, X-Tasker-Name, Access-Control-Allow-Credentials"
 )
 public class TaskerApplication extends Application {
+
 }

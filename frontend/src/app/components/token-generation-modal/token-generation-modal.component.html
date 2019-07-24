@@ -1,0 +1,19 @@
+<div class="modal-body text-center">
+    <ng-container *ngIf="!tokenGenerated; else gotToken">
+        <div>
+            <p>Are you sure you want to generate new token?<br/>Previously issued token will be invalid.</p>
+            <div>
+                <button class="btn btn-primary mr-2" (click)="close()">Cancel</button>
+                <button class="btn btn-outline-danger" (click)="generateToken()">Generate</button>
+            </div>
+        </div>
+    </ng-container>
+
+    <ng-template #gotToken>
+        <p>Token generated!</p>
+        <p>
+            <span class="mr-2">{{generatedToken.token}}</span>
+            <tasker-clipboard [data]="generatedToken.token"></tasker-clipboard>
+        </p>
+    </ng-template>
+</div>

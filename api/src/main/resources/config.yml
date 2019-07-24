@@ -24,3 +24,6 @@ kumuluzee:
 tasker:
   session:
     duration: 3600
+  admin:
+    username: admin
+    password: admin

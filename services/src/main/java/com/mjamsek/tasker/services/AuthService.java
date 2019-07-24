@@ -15,6 +15,8 @@ public interface AuthService {
     
     void validateAuthorization(boolean refreshToken);
     
+    void validateAuthorizationOrToken();
+    
     User getCurrentUser();
     
 }

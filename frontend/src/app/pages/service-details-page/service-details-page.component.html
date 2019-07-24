@@ -5,6 +5,12 @@
         </button>
 
         <span>
+            <button class="btn btn-sm btn-outline-danger links-btn links-btn-secondary" (click)="removeService()">
+                <fa-icon [icon]="['far', 'trash-alt']"></fa-icon> Delete service
+            </button>
+            <button class="btn btn-sm btn-outline-secondary links-btn links-btn-secondary" (click)="openTokenModal()">
+                <fa-icon [icon]="['fas', 'lock']"></fa-icon> Generate token
+            </button>
             <button class="btn btn-sm btn-outline-primary links-btn links-btn-secondary" (click)="createNewVersion()">
                 <fa-icon [icon]="['far', 'copy']"></fa-icon> New version
             </button>
@@ -89,7 +95,8 @@
             </div>
             <div class="data-row" *ngIf="containerState && containerState.status !== ''">
                 <span class="row-title">Status:</span>
-                <span class="row-value container-state">{{containerState.status}}</span>
+                <span class="row-value container-state" *ngIf="!containerError">{{containerState.status}}</span>
+                <span class="container-error" *ngIf="containerError">{{containerError}}</span>
             </div>
             <div class="data-row">
                 <span class="row-title">Id:</span>

@@ -7,9 +7,11 @@
 
     <div class="collapse navbar-collapse" [ngClass]="{'show': navbarOpened}">
         <div class="navbar-nav mr-auto">
-            <tasker-header-link *ngFor="let item of menuItems" [item]="item"></tasker-header-link>
+            <tasker-header-link *ngFor="let item of menuItems"
+                [isAuthorized]="isAuthorized"
+                [item]="item"></tasker-header-link>
         </div>
-        <a class="profile-link" [routerLink]="['/profile']">Profile</a>
-        <a class="logout-link" (click)="logout()">Logout</a>
+        <a class="profile-link" *ngIf="isAuthorized" [routerLink]="['/profile']">Profile</a>
+        <a class="logout-link" *ngIf="isAuthorized" (click)="logout()">Logout</a>
     </div>
 </nav>

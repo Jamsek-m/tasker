@@ -11,6 +11,9 @@ export class HeaderLinkComponent implements OnInit {
     @Input()
     public item: MenuItem;
 
+    @Input()
+    public isAuthorized: boolean;
+
     constructor() {
     }
 

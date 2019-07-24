@@ -10,6 +10,7 @@ import {BsModalRef} from "ngx-bootstrap";
 import {BaseError} from "../../errors/base.error";
 import {NotFoundError} from "../../errors/not-found.error";
 import {NavigationUtil} from "../../utils/navigation.util";
+import {TokenGenerationModalComponent} from "../../components/token-generation-modal/token-generation-modal.component";
 
 @Component({
     selector: "tasker-service-details-page",
@@ -24,6 +25,7 @@ export class ServiceDetailsPageComponent implements OnInit {
     public status: "bad" | "healthy" | "checking" | "undef";
     public containerInfo: any = null;
     public containerNotExists = false;
+    public containerError: string = null;
 
     constructor(private router: Router,
                 private activatedRoute: ActivatedRoute,
@@ -108,6 +110,13 @@ export class ServiceDetailsPageComponent implements OnInit {
         this.router.navigate(["/service/new-version"]);
     }
 
+    public openTokenModal(): void {
+        const initialState = {
+            service: this.service
+        };
+        this.messageService.openModal(TokenGenerationModalComponent, {initialState});
+    }
+
     public checkHealth(): void {
         if (this.status === "undef") {
             return;
@@ -147,6 +156,20 @@ export class ServiceDetailsPageComponent implements OnInit {
         this.router.navigate(["/config"]);
     }
 
+    public removeService(): void {
+        this.messageService.openConfirmationDialog("Are you sure you want to delete this service?", {
+            onConfirmation: (ref: BsModalRef) => {
+                ref.hide();
+                this.servicesService.removeService(this.service.id).subscribe(
+                    () => {
+                        this.messageService.openToastNotification("Success!", "Service was deleted!", "ok");
+                        this.router.navigate(["/"]);
+                    }
+                );
+            }
+        }, {confirmIsDestructive: true});
+    }
+
     private getService() {
         const id = this.activatedRoute.snapshot.params["id"];
         this.servicesService.getService(id).subscribe(
@@ -174,6 +197,7 @@ export class ServiceDetailsPageComponent implements OnInit {
                     this.containerNotExists = true;
                 } else {
                     console.error(err);
+                    this.containerError = "Error checking container state! Docker daemon may be unavailable.";
                 }
             }
         );

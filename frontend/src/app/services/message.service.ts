@@ -1,5 +1,5 @@
 import {Injectable} from "@angular/core";
-import {BsModalRef, BsModalService} from "ngx-bootstrap";
+import {BsModalRef, BsModalService, ModalOptions} from "ngx-bootstrap";
 import {ConfirmationDialogComponent} from "../components/confirmation-dialog/confirmation-dialog.component";
 import {ToastaService, ToastOptions} from "ngx-toasta";
 
@@ -27,6 +27,10 @@ export class MessageService {
 
     constructor(private modalService: BsModalService, private toastService: ToastaService) {
 
+    }
+
+    public openModal(modalComponent: any, config?: ModalOptions): void {
+        this.modalService.show(modalComponent, config);
     }
 
     public openConfirmationDialog(question: string, events?: ConfirmationDialogEvents, options?: ConfirmationDialogOptions): void {

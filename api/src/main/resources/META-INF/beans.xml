@@ -4,5 +4,6 @@
        bean-discovery-mode="annotated">
     <interceptors>
         <class>com.mjamsek.tasker.auth.SecureResourceInterceptor</class>
+        <class>com.mjamsek.tasker.auth.SecureResourceOrTokenInterceptor</class>
     </interceptors>
 </beans>
