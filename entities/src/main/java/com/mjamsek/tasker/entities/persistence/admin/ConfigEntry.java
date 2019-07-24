@@ -23,6 +23,9 @@ public class ConfigEntry {
     @Column(name = "config_value")
     private String value;
     
+    @Column(name = "user_defined")
+    private boolean userDefined;
+    
     public long getId() {
         return id;
     }
@@ -45,5 +48,13 @@ public class ConfigEntry {
     
     public void setValue(String value) {
         this.value = value;
+    }
+    
+    public boolean isUserDefined() {
+        return userDefined;
+    }
+    
+    public void setUserDefined(boolean userDefined) {
+        this.userDefined = userDefined;
     }
 }

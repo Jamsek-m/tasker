@@ -22,13 +22,17 @@ export class ConfigService {
     }
 
     public addConfiguration(config: ConfigEntry): Observable<void> {
-        return this.http.post(this.apiUrl, JSON.stringify(config)).pipe(map(() => Observable.create()));
+        return this.http.post(this.apiUrl, JSON.stringify(config)).pipe(map(() => null));
     }
 
     public updateConfiguration(config: ConfigEntry): Observable<void> {
         const url = `${this.apiUrl}/${config.id}`;
-        return this.http.put(url, JSON.stringify(config)).pipe(map(() => Observable.create()));
+        return this.http.put(url, JSON.stringify(config)).pipe(map(() => null));
     }
 
+    public deleteConfiguration(configId: number): Observable<void> {
+        const url = `${this.apiUrl}/${configId}`;
+        return this.http.delete(url).pipe(map(() => null));
+    }
 
 }

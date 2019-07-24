@@ -29,7 +29,7 @@ export class TokenService {
 
     public expireToken(tokenId: number): Observable<void> {
         const url = `${this.apiUrl}/${tokenId}/expire`;
-        return this.http.delete(url).pipe(map(() => Observable.create()));
+        return this.http.delete(url).pipe(map(() => null));
     }
 
     public saveToken(token: Token): Observable<TokenKeyDTO> {

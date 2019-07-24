@@ -42,6 +42,22 @@ export class ConfigurationPageComponent implements OnInit {
         );
     }
 
+    public removeConfig(line: ConfigLine) {
+        this.messageService.openConfirmationDialog("Are you sure you want to remove config?", {
+            onConfirmation: (ref) => {
+                ref.hide();
+                this.configService.deleteConfiguration(line.config.id).subscribe(
+                    () => {
+                        this.getConfiguration();
+                    },
+                    (err) => {
+                        console.error(err);
+                    }
+                );
+            }
+        }, {confirmIsDestructive: true});
+    }
+
     public updateDaemon(line: DaemonLine) {
         this.dockerDaemonService.updateDaemon(line.daemon).subscribe(
             () => {
