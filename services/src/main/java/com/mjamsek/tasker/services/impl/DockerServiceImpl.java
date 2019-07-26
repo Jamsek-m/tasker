@@ -1,16 +1,19 @@
 package com.mjamsek.tasker.services.impl;
 
+import com.kumuluz.ee.rest.beans.QueryParameters;
 import com.mjamsek.tasker.apis.docker.DockerAPI;
 import com.mjamsek.tasker.entities.docker.DockerContainerInfo;
 import com.mjamsek.tasker.entities.docker.DockerCreateContainer;
 import com.mjamsek.tasker.entities.exceptions.DockerException;
 import com.mjamsek.tasker.entities.exceptions.EntityNotFoundException;
+import com.mjamsek.tasker.entities.exceptions.FailedHealthCheckException;
 import com.mjamsek.tasker.entities.exceptions.TaskerException;
 import com.mjamsek.tasker.entities.persistence.service.DockerDaemon;
 import com.mjamsek.tasker.mappers.DockerMapper;
 import com.mjamsek.tasker.services.DockerDaemonService;
 import com.mjamsek.tasker.services.DockerService;
 import com.mjamsek.tasker.utils.DateUtil;
+import com.mjamsek.tasker.utils.HttpClient;
 import org.eclipse.microprofile.rest.client.RestClientBuilder;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -29,6 +32,30 @@ public class DockerServiceImpl implements DockerService {
     
     @Inject
     private DockerDaemonService dockerDaemonService;
+    
+    @Override
+    public void checkDaemonAvailability() {
+        List<DockerDaemon> daemons = dockerDaemonService.getDaemons(new QueryParameters());
+    
+        daemons.forEach(daemon -> {
+            try {
+                URI daemonUri = new URI(daemon.getUrl());
+                DockerAPI dockerAPI = RestClientBuilder.newBuilder().baseUri(daemonUri).build(DockerAPI.class);
+                Response response = dockerAPI.checkAvailability();
+                if (response.getStatus() >= 400) {
+                    throw new FailedHealthCheckException(daemon.getName());
+                }
+            } catch (URISyntaxException e) {
+                throw new TaskerException("Invalid daemon url!");
+            } catch (WebApplicationException e) {
+                if (e.getResponse().getStatus() == 404) {
+                    throw new FailedHealthCheckException(daemon.getName());
+                } else {
+                    throw new DockerException("Failed to connect to daemon!");
+                }
+            }
+        });
+    }
     
     @Override
     public List<DockerContainerInfo> queryContainersByName(String name, long daemonId) {

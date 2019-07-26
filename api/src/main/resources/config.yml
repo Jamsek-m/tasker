@@ -9,11 +9,15 @@ kumuluzee:
     base-url: http://localhost:8080
   health:
     servlet:
-      mapping: /health
+      mapping: /health/
       enabled: true
     checks:
       data-source-health-check:
+        type: liveness
         jndi-name: jdbc/mainDB
+      disk-space-health-check:
+        threshold: 100000000
+        type: liveness
   datasources:
     - jndi-name: jdbc/mainDB
       connection-url: jdbc:h2:file:./data/data

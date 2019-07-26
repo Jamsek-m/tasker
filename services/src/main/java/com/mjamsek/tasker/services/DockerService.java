@@ -2,11 +2,14 @@ package com.mjamsek.tasker.services;
 
 import com.mjamsek.tasker.entities.docker.DockerContainerInfo;
 import com.mjamsek.tasker.entities.docker.DockerCreateContainer;
+import com.mjamsek.tasker.entities.exceptions.FailedHealthCheckException;
 import com.mjamsek.tasker.entities.persistence.service.DockerDaemon;
 
 import java.util.List;
 
 public interface DockerService {
+    
+    void checkDaemonAvailability() throws FailedHealthCheckException;
     
     List<DockerContainerInfo> queryContainersByName(String name, long daemonId);
     

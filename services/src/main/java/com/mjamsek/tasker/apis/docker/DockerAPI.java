@@ -19,8 +19,12 @@ import java.util.List;
 })
 public interface DockerAPI {
     
-    @Path("/containers/json")
     @GET
+    @Path("/info")
+    Response checkAvailability();
+    
+    @GET
+    @Path("/containers/json")
     List<DockerContainerInfo> queryContainersByName(
         @QueryParam("filters") String filters,
         @QueryParam("all") boolean all
