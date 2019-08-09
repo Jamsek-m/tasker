@@ -1,8 +1,7 @@
-import {Injectable} from "@angular/core";
+import {Inject, Injectable} from "@angular/core";
 import {HttpClient, HttpErrorResponse} from "@angular/common/http";
 import {DockerDaemon} from "../models/docker-daemon";
-import {Observable, of, throwError} from "rxjs";
-import {environment} from "../../environments/environment";
+import {Observable, throwError} from "rxjs";
 import {Service} from "../models/service.class";
 import {DockerState} from "../models/docker-state.class";
 import {catchError, map} from "rxjs/operators";
@@ -10,22 +9,21 @@ import {DockerPartialInfo} from "../models/docker-partial-info.interface";
 import {InternalServerError} from "../errors/server.error";
 import {UnknownError} from "../errors/unknown.error";
 import {NotFoundError} from "../errors/not-found.error";
-
+import {API_URL} from "../injectables";
 
 @Injectable({
     providedIn: "root"
 })
 export class DockerService {
 
-    private apiUrl = `${environment.apiUrl}/docker`;
-    private serviceApiUrl = `${environment.apiUrl}/services`;
-
-    constructor(private http: HttpClient) {
+    constructor(
+        @Inject(API_URL) private apiUrl: string,
+        private http: HttpClient) {
 
     }
 
     public searchContainerByName(name: string, daemon: DockerDaemon): Observable<DockerPartialInfo[]> {
-        return this.http.get(this.apiUrl, {
+        return this.http.get(`${this.apiUrl}/docker`, {
             params: {
                 name,
                 daemonId: daemon.id.toString(10)
@@ -43,7 +41,7 @@ export class DockerService {
     }
 
     public getContainerInfo(service: Service): Observable<any> {
-        const url = `${this.serviceApiUrl}/${service.id}/container`;
+        const url = `${this.apiUrl}/services/${service.id}/container`;
         return this.http.get(url, {
             params: {
                 raw: "true"
@@ -63,7 +61,7 @@ export class DockerService {
     }
 
     public getContainerState(service: Service): Observable<DockerState> {
-        const url = `${this.serviceApiUrl}/${service.id}/container/state`;
+        const url = `${this.apiUrl}/services/${service.id}/container/state`;
         return this.http.get(url).pipe(
             map(res => res as DockerState),
             catchError((err: HttpErrorResponse) => {
@@ -79,7 +77,7 @@ export class DockerService {
     }
 
     public startContainer(service: Service): Observable<void> {
-        const url = `${this.serviceApiUrl}/${service.id}/container/start`;
+        const url = `${this.apiUrl}/services/${service.id}/container/start`;
         return this.http.post(url, null).pipe(
             map(() => null),
             catchError((err: HttpErrorResponse) => {
@@ -95,7 +93,7 @@ export class DockerService {
     }
 
     public stopContainer(service: Service): Observable<void> {
-        const url = `${this.serviceApiUrl}/${service.id}/container/stop`;
+        const url = `${this.apiUrl}/services/${service.id}/container/stop`;
         return this.http.delete(url).pipe(
             map(() => null),
             catchError((err: HttpErrorResponse) => {
@@ -111,7 +109,7 @@ export class DockerService {
     }
 
     public recreateContainer(service: Service): Observable<void> {
-        const url = `${this.serviceApiUrl}/${service.id}/container/recreate`;
+        const url = `${this.apiUrl}/services/${service.id}/container/recreate`;
         return this.http.put(url, null).pipe(
             map(() => null),
             catchError((err: HttpErrorResponse) => {

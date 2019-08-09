@@ -1,6 +1,5 @@
-import {Injectable} from "@angular/core";
+import {Inject, Injectable} from "@angular/core";
 import {HttpClient, HttpErrorResponse} from "@angular/common/http";
-import {environment} from "../../environments/environment";
 import {Observable, of, throwError} from "rxjs";
 import {Service, ServiceValidation} from "../models/service.class";
 import {ServiceDTO} from "../models/service.dto";
@@ -11,6 +10,7 @@ import {ConflictError} from "../errors/conflict.error";
 import {ValidationError} from "../errors/validation.error";
 import {UnknownError} from "../errors/unknown.error";
 import {InternalServerError} from "../errors/server.error";
+import {API_URL} from "../injectables";
 
 export enum HealthCheckResponse {
     OK,
@@ -23,14 +23,14 @@ export enum HealthCheckResponse {
 })
 export class ServicesService {
 
-    private v2Api = `${environment.apiUrl}/services`;
-
-    constructor(private http: HttpClient) {
+    constructor(
+        @Inject(API_URL) private apiUrl: string,
+        private http: HttpClient) {
 
     }
 
     public getServices(limit: number, offset: number): Observable<ServiceDTO> {
-        const url = `${this.v2Api}?offset=${offset}&limit=${limit}`;
+        const url = `${this.apiUrl}/services?offset=${offset}&limit=${limit}`;
         return this.http.get(url, {observe: "response"}).pipe(map(res => {
             const dto = new ServiceDTO();
             dto.totalCount = parseInt(res.headers.get("X-Total-Count"), 10);
@@ -40,19 +40,19 @@ export class ServicesService {
     }
 
     public queryServicesByName(name: string): Observable<Service[]> {
-        const url = `${this.v2Api}?filter=name:LIKEIC:%${name}%&limit=5`;
+        const url = `${this.apiUrl}/services?filter=name:LIKEIC:%${name}%&limit=5`;
         return this.http.get(url).pipe(map(res => res as Service[]));
     }
 
     public getService(serviceId: number): Observable<Service> {
-        const url = `${this.v2Api}/${serviceId}`;
+        const url = `${this.apiUrl}/services/${serviceId}`;
         return this.http.get(url).pipe(
             map(res => res as Service)
         );
     }
 
     public doHealthCheck(serviceId: number): Observable<HealthCheckResponse> {
-        const url = `${this.v2Api}/${serviceId}/health`;
+        const url = `${this.apiUrl}/services/${serviceId}/health`;
         return this.http.get(url, {observe: "response"}).pipe(
             map(() => HealthCheckResponse.OK),
             catchError((err: HttpErrorResponse) => {
@@ -125,7 +125,7 @@ export class ServicesService {
 
     public createService(service: Service): Observable<Service> {
         const data = JSON.stringify(service);
-        return this.http.post(this.v2Api, data).pipe(
+        return this.http.post(`${this.apiUrl}/services`, data).pipe(
             map(res => res as Service),
             catchError((err: HttpErrorResponse) => {
                 if (err.status === 409) {
@@ -142,7 +142,7 @@ export class ServicesService {
     }
 
     public updateService(service: Service): Observable<Service> {
-        const url = `${this.v2Api}/${service.id}`;
+        const url = `${this.apiUrl}/services/${service.id}`;
         const data = JSON.stringify(service);
         return this.http.put(url, data).pipe(
             map(res => res as Service),
@@ -161,12 +161,12 @@ export class ServicesService {
     }
 
     public generateServiceToken(serviceId: number): Observable<Service.Token> {
-        const url = `${this.v2Api}/${serviceId}/token`;
+        const url = `${this.apiUrl}/services/${serviceId}/token`;
         return this.http.patch(url, null).pipe(map(res => res as Service.Token));
     }
 
     public removeService(serviceId: number): Observable<void> {
-        const url = `${this.v2Api}/${serviceId}`;
+        const url = `${this.apiUrl}/services/${serviceId}`;
         return this.http.delete(url).pipe(map(res => null));
     }
 

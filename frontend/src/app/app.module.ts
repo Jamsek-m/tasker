@@ -39,6 +39,8 @@ import {SpinerComponent} from "./components/spiner/spiner.component";
 import {DocsApiEntryComponent} from "./docs/docs-api-entry/docs-api-entry.component";
 import {TokenGenerationModalComponent} from "./components/token-generation-modal/token-generation-modal.component";
 import {NoopAnimationsModule} from "@angular/platform-browser/animations";
+import {API_URL, BASE_URL} from "./injectables";
+import {environment} from "../environments/environment";
 
 
 @NgModule({
@@ -81,7 +83,9 @@ import {NoopAnimationsModule} from "@angular/platform-browser/animations";
         NgJsonEditorModule
     ],
     providers: [
-        {provide: HTTP_INTERCEPTORS, useClass: HttpApiInterceptor, multi: true}
+        {provide: HTTP_INTERCEPTORS, useClass: HttpApiInterceptor, multi: true},
+        {provide: API_URL, useValue: environment.baseUrl + "/" + environment.apiVersion},
+        {provide: BASE_URL, useValue: environment.baseUrl}
     ],
     entryComponents: [
         ConfirmationDialogComponent,

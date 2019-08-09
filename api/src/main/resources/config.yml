@@ -7,6 +7,11 @@ kumuluzee:
   server:
     show-server-info: false
     base-url: http://localhost:8080
+  cors-filter:
+    servlet:
+      allow-origin: "*"
+      supported-methods: "GET, POST, PUT, PATCH, DELETE, OPTIONS, HEAD"
+      exposed-headers: "X-Total-Count, Access-Control-Allow-Credentials"
   health:
     servlet:
       mapping: /health/

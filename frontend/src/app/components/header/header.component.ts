@@ -2,6 +2,7 @@ import {Component, OnInit} from "@angular/core";
 import {MenuItem, menuItems} from "../../content/menu-items";
 import {Router} from "@angular/router";
 import {AuthService} from "../../services/auth.service";
+import {ActionsService} from "../../services/actions.service";
 
 @Component({
     selector: "tasker-header",
@@ -15,11 +16,13 @@ export class HeaderComponent implements OnInit {
     public isAuthorized = false;
 
     constructor(private router: Router,
-                private authService: AuthService) {
+                private authService: AuthService,
+                private actionService: ActionsService) {
     }
 
     ngOnInit() {
         this.checkAuth();
+        this.checkNotifications();
         this.authService.getAuthEvent().subscribe(
             () => {
                 this.checkAuth();
@@ -46,6 +49,14 @@ export class HeaderComponent implements OnInit {
         this.authService.checkAuthorization().subscribe(
             (isAuthorized: boolean) => {
                 this.isAuthorized = isAuthorized;
+            }
+        );
+    }
+
+    private checkNotifications(): void {
+        this.actionService.checkServerReadiness().subscribe(
+            () => {
+
             }
         );
     }

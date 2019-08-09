@@ -1,24 +1,25 @@
-import {Injectable} from "@angular/core";
+import {Inject, Injectable} from "@angular/core";
 import {HttpClient} from "@angular/common/http";
-import {environment} from "../../environments/environment";
 import {Observable} from "rxjs";
 import {LogEntry} from "../models/log-entry.class";
 import {map} from "rxjs/operators";
 import {LogsDTO} from "../models/logsDTO";
+import {API_URL} from "../injectables";
 
 @Injectable({
     providedIn: "root"
 })
 export class LogsService {
 
-    private apiUrl = `${environment.apiUrl}/logs`;
-
-    constructor(private http: HttpClient) {
+    constructor(
+        @Inject(API_URL) private apiUrl: string,
+        private http: HttpClient
+    ) {
 
     }
 
     public getLogs(limit: number, offset: number, dateFilter?: string): Observable<LogsDTO> {
-        let url = `${this.apiUrl}?limit=${limit}&offset=${offset}&order=logDate DESC`;
+        let url = `${this.apiUrl}/logs?limit=${limit}&offset=${offset}&order=logDate DESC`;
         if (dateFilter) {
             url += `&filter=logDate:GTE:'${dateFilter}'`;
         }

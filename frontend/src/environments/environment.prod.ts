@@ -1,4 +1,7 @@
-export const environment = {
+import {TaskerEnvironment} from "./env.model";
+
+export const environment: TaskerEnvironment = {
     production: true,
-    apiUrl: "/v2"
+    baseUrl: "",
+    apiVersion: "v2"
 };

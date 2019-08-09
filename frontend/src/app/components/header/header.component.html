@@ -11,6 +11,9 @@
                 [isAuthorized]="isAuthorized"
                 [item]="item"></tasker-header-link>
         </div>
+        <button class="btn btn-primary">
+            <span class="badge badge-light">7</span>
+        </button>
         <a class="profile-link" *ngIf="isAuthorized" [routerLink]="['/profile']">Profile</a>
         <a class="logout-link" *ngIf="isAuthorized" (click)="logout()">Logout</a>
     </div>
