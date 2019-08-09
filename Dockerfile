@@ -1,14 +1,12 @@
-FROM openjdk:8-jre-alpine
+FROM openjdk:11-jre-slim
 
 ENV JAVA_ENV=PRODUCTION
 ENV KUMULUZEE_ENV_NAME=prod
 ENV KUMULUZEE_ENV_PROD=true
-ENV KUMULUZEE_DATASOURCES0_CONNECTIONURL=not_set
-ENV KUMULUZEE_DATASOURCES0_USERNAME=not_set
-ENV KUMULUZEE_DATASOURCES0_PASSWORD=not_set
 
 RUN mkdir /app
-RUN mkdir /app/h2
+RUN mkdir /app/data
+RUN mkdir /app/init
 
 WORKDIR /app
 

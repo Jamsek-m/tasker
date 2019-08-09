@@ -11,6 +11,7 @@ import {ValidationError} from "../errors/validation.error";
 import {UnknownError} from "../errors/unknown.error";
 import {InternalServerError} from "../errors/server.error";
 import {API_URL} from "../injectables";
+import {UrlUtil} from "../utils/url.util";
 
 export enum HealthCheckResponse {
     OK,
@@ -84,12 +85,9 @@ export class ServicesService {
             validation.validEntity = false;
             validation.name = "Name must not be empty!";
         }
-        if (entity.hasHealthcheck && entity.healthCheck.healthUrl) {
-            if (!urlRegex.test(entity.healthCheck.healthUrl)) {
-                validation.validEntity = false;
-                validation.healthUrl = "Must be valid URL!";
-            }
-        } else if (entity.hasHealthcheck && !entity.healthCheck.healthUrl) {
+
+        entity.healthCheck.healthUrl = UrlUtil.buildUrl(entity.healthCheck.healthUrl);
+        if (entity.hasHealthcheck && !entity.healthCheck.healthUrl) {
             validation.validEntity = false;
             validation.healthUrl = "Healthcheck url must not be empty!";
         }
@@ -97,13 +95,9 @@ export class ServicesService {
             validation.validEntity = false;
             validation.ApiVersion = "API version must not be empty!";
         }
-        console.log(`validating service url: >${entity.serviceUrl.url}<. Does url contain common part: ${urlRegex.test(entity.serviceUrl.url)}`);
-        if (entity.isDeployed && entity.serviceUrl.url) {
-            if (!urlRegex.test(entity.serviceUrl.url)) {
-                validation.validEntity = false;
-                validation.url = "Must be valid URL!";
-            }
-        } else if (entity.isDeployed && !entity.serviceUrl.url) {
+
+        entity.serviceUrl.url = UrlUtil.buildUrl(entity.serviceUrl.url);
+        if (entity.isDeployed && !entity.serviceUrl.url) {
             validation.validEntity = false;
             validation.url = "Base URL must not be empty!";
         }
