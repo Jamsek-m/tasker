@@ -69,7 +69,6 @@ export class ServicesService {
         const validation = new ServiceValidation();
 
         StringUtil.trimAllProperties(entity);
-        const urlRegex = /^https?:\/\//g;
 
         const nameRegex = /[^a-z0-9_\-]/g;
         if (nameRegex.test(entity.name)) {
@@ -91,7 +90,7 @@ export class ServicesService {
             validation.validEntity = false;
             validation.healthUrl = "Healthcheck url must not be empty!";
         }
-        if (entity.isDeployed && !entity.serviceUrl.version) {
+        if (entity.isDeployed && entity.serviceUrl.urlVersioning && !entity.serviceUrl.version) {
             validation.validEntity = false;
             validation.ApiVersion = "API version must not be empty!";
         }
