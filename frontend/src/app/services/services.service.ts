@@ -68,7 +68,7 @@ export class ServicesService {
         const validation = new ServiceValidation();
 
         StringUtil.trimAllProperties(entity);
-        const urlRegex = /^https?:\/\/.+/g;
+        const urlRegex = /^https?:\/\//g;
 
         const nameRegex = /[^a-z0-9_\-]/g;
         if (nameRegex.test(entity.name)) {
