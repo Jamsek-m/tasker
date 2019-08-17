@@ -24,7 +24,7 @@ public class StartupServiceImpl implements StartupService {
     
     private static final Logger LOG = LogManager.getLogger(StartupServiceImpl.class.getName());
     
-    private static final String doneFileName = "init/done.txt";
+    private static final String doneFileName = "data/done.txt";
     private static final String structureFileName = "sql/structure.sql";
     private static final String dataFileName = "sql/data.sql";
     

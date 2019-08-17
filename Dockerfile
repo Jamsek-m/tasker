@@ -6,7 +6,6 @@ ENV KUMULUZEE_ENV_PROD=true
 
 RUN mkdir /app
 RUN mkdir /app/data
-RUN mkdir /app/init
 
 WORKDIR /app
 
