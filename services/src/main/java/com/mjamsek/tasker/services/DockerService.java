@@ -1,30 +1,30 @@
 package com.mjamsek.tasker.services;
 
-import com.mjamsek.tasker.entities.docker.DockerContainerInfo;
-import com.mjamsek.tasker.entities.docker.DockerCreateContainer;
 import com.mjamsek.tasker.entities.exceptions.FailedHealthCheckException;
-import com.mjamsek.tasker.entities.persistence.service.DockerDaemon;
+import com.mjamsek.tasker.entities.persistence.service.DockerEndpointEntity;
+import com.mjamsek.tasker.lib.v1.integration.docker.DockerContainerInfo;
+import com.mjamsek.tasker.lib.v1.integration.docker.DockerCreateContainer;
 
 import java.util.List;
 
 public interface DockerService {
     
-    void checkDaemonAvailability() throws FailedHealthCheckException;
+    void checkEndpointAvailability() throws FailedHealthCheckException;
     
-    List<DockerContainerInfo> queryContainersByName(String name, long daemonId);
+    List<DockerContainerInfo> queryContainersByName(String name, String endpointId);
     
-    String getRawContainerInfo(String containerId, DockerDaemon daemon);
+    String getRawContainerInfo(String containerId, DockerEndpointEntity endpoint);
     
-    DockerContainerInfo getContainerInfo(String containerId, DockerDaemon daemon);
+    DockerContainerInfo getContainerInfo(String containerId, DockerEndpointEntity endpoint);
     
-    void startContainer(String containerId, DockerDaemon daemon);
+    void startContainer(String containerId, DockerEndpointEntity endpoint);
     
-    void stopContainer(String containerId, DockerDaemon daemon);
+    void stopContainer(String containerId, DockerEndpointEntity endpoint);
     
-    void deleteContainer(String containerId, DockerDaemon daemon);
+    void deleteContainer(String containerId, DockerEndpointEntity endpoint);
     
-    String createContainer(String containerName, DockerDaemon daemon, DockerCreateContainer data);
+    String createContainer(String containerName, DockerEndpointEntity endpoint, DockerCreateContainer data);
     
-    String recreateContainer(String containerId, DockerDaemon daemon);
-
+    String recreateContainer(String containerId, DockerEndpointEntity endpoint);
+    
 }

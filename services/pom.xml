@@ -5,18 +5,22 @@
     <parent>
         <artifactId>tasker</artifactId>
         <groupId>com.mjamsek.tasker</groupId>
-        <version>2.0.0</version>
+        <version>1.0.0-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>services</artifactId>
-    <version>2.0.0</version>
 
     <dependencies>
         <dependency>
             <groupId>com.mjamsek.tasker</groupId>
             <artifactId>entities</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.mjamsek.tasker</groupId>
+            <artifactId>lib</artifactId>
+        </dependency>
+
         <dependency>
             <groupId>com.kumuluz.ee</groupId>
             <artifactId>kumuluzee-cdi-weld</artifactId>

@@ -20,7 +20,7 @@ public class DockerDaemonHealthCheck implements HealthCheck {
     @Override
     public HealthCheckResponse call() {
         try {
-            dockerService.checkDaemonAvailability();
+            dockerService.checkEndpointAvailability();
         } catch (Exception exc) {
             return HealthCheckResponse.named(HEALTHCHECK_NAME).down().build();
         }

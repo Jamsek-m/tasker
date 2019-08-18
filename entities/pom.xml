@@ -5,14 +5,18 @@
     <parent>
         <artifactId>tasker</artifactId>
         <groupId>com.mjamsek.tasker</groupId>
-        <version>2.0.0</version>
+        <version>1.0.0-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>entities</artifactId>
-    <version>2.0.0</version>
 
     <dependencies>
+        <dependency>
+            <groupId>com.mjamsek.tasker</groupId>
+            <artifactId>lib</artifactId>
+        </dependency>
+
         <dependency>
             <groupId>com.kumuluz.ee</groupId>
             <artifactId>kumuluzee-jpa-hibernate</artifactId>
@@ -23,7 +27,7 @@
         </dependency>
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
-            <artifactId>jackson-annotations</artifactId>
+            <artifactId>jackson-databind</artifactId>
         </dependency>
     </dependencies>
 

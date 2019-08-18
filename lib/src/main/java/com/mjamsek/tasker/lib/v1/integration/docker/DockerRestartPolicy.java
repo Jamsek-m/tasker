@@ -1,0 +1,12 @@
+package com.mjamsek.tasker.lib.v1.integration.docker;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+@JsonIgnoreProperties(ignoreUnknown = true)
+public class DockerRestartPolicy {
+    @JsonProperty("Name")
+    public String name;
+    @JsonProperty("MaximumRetryCount")
+    public int maximumRetryCount;
+}

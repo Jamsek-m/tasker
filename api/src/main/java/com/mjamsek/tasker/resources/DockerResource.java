@@ -1,7 +1,8 @@
 package com.mjamsek.tasker.resources;
 
 import com.mjamsek.tasker.auth.SecureResource;
-import com.mjamsek.tasker.entities.docker.DockerContainerInfo;
+import com.mjamsek.tasker.lib.v1.common.HttpHeader;
+import com.mjamsek.tasker.lib.v1.integration.docker.DockerContainerInfo;
 import com.mjamsek.tasker.services.DockerService;
 
 import javax.enterprise.context.RequestScoped;
@@ -22,8 +23,8 @@ public class DockerResource {
     
     @GET
     @SecureResource
-    public Response queryContainersByName(@QueryParam("name") String name, @QueryParam("daemonId") long daemonId) {
-        List<DockerContainerInfo> containers = dockerService.queryContainersByName(name, daemonId);
-        return Response.ok(containers).build();
+    public Response queryContainersByName(@QueryParam("name") String name, @QueryParam("daemonId") String endpointId) {
+        List<DockerContainerInfo> containers = dockerService.queryContainersByName(name, endpointId);
+        return Response.ok(containers).header(HttpHeader.X_TOTAL_COUNT, containers.size()).build();
     }
 }

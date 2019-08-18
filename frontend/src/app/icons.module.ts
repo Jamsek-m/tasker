@@ -1,6 +1,5 @@
 import {NgModule} from "@angular/core";
-import {FontAwesomeModule} from "@fortawesome/angular-fontawesome";
-import {library} from "@fortawesome/fontawesome-svg-core";
+import {FontAwesomeModule, FaIconLibrary} from "@fortawesome/angular-fontawesome";
 import {
     faPlus,
     faTimes,
@@ -30,9 +29,8 @@ import {
 export class IconsModule {
 
     // fas - free solid, far - free regular, fab - free brands
-
-    constructor() {
-        const icons = [
+    constructor(library: FaIconLibrary) {
+        library.addIcons(
             faPlus,
             faTimes,
             faCopy,
@@ -51,7 +49,6 @@ export class IconsModule {
             farCopy,
             faLock,
             farTrashAlt
-        ];
-        icons.forEach(icon => library.add(icon));
+        );
     }
 }

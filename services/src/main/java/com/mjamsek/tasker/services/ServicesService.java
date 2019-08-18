@@ -1,11 +1,11 @@
 package com.mjamsek.tasker.services;
 
 import com.kumuluz.ee.rest.beans.QueryParameters;
-import com.mjamsek.tasker.entities.docker.DockerContainerInfo;
-import com.mjamsek.tasker.entities.docker.DockerState;
-import com.mjamsek.tasker.entities.dto.ServiceRequest;
 import com.mjamsek.tasker.entities.dto.ServiceToken;
-import com.mjamsek.tasker.entities.persistence.service.Service;
+import com.mjamsek.tasker.entities.persistence.service.ServiceEntity;
+import com.mjamsek.tasker.lib.v1.Service;
+import com.mjamsek.tasker.lib.v1.integration.docker.DockerContainerInfo;
+import com.mjamsek.tasker.lib.v1.integration.docker.DockerState;
 
 import java.util.List;
 
@@ -15,37 +15,38 @@ public interface ServicesService {
     
     long getServicesCount(QueryParameters queryParameters);
     
-    Service getServiceByName(String name);
+    Service getService(String serviceId);
+    
+    ServiceEntity getServiceByName(String name);
     
     /**
-     *
      * @param serviceId
      * @return Service if found, null otherwise
      */
-    Service getServiceById(long serviceId);
+    ServiceEntity getServiceById(String serviceId);
     
     Service getServiceByIdOrName(String idOrName);
     
-    Service createService(ServiceRequest dto);
+    Service createService(Service service);
     
-    Service updateService(ServiceRequest dto, long serviceId);
+    Service updateService(Service service, String serviceId);
     
-    ServiceToken generateServiceToken(long serviceId);
+    ServiceToken generateServiceToken(String serviceId);
     
-    void doHealthCheck(long serviceId);
+    void doHealthCheck(String serviceId);
     
-    void deleteService(long serviceId);
+    void deleteService(String serviceId);
     
-    DockerContainerInfo getServiceContainer(long serviceId);
+    DockerContainerInfo getServiceContainer(String serviceId);
     
-    String getRawServiceContainer(long serviceId);
+    String getRawServiceContainer(String serviceId);
     
-    DockerState getContainerState(long serviceId);
+    DockerState getContainerState(String serviceId);
     
-    void startContainer(long serviceId);
+    void startContainer(String serviceId);
     
-    void stopContainer(long serviceId);
+    void stopContainer(String serviceId);
     
-    void recreateContainer(long serviceId);
+    void recreateContainer(String serviceId);
     
 }

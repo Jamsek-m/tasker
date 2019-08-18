@@ -3,9 +3,9 @@ package com.mjamsek.tasker.resources;
 import com.mjamsek.tasker.auth.NoAuthRefresh;
 import com.mjamsek.tasker.auth.SecureResource;
 import com.mjamsek.tasker.entities.dto.User;
-import com.mjamsek.tasker.entities.persistence.admin.ConfigEntry;
-import com.mjamsek.tasker.entities.persistence.admin.LogSeverity;
-import com.mjamsek.tasker.http.HttpHeader;
+import com.mjamsek.tasker.lib.v1.ConfigEntry;
+import com.mjamsek.tasker.lib.v1.common.HttpHeader;
+import com.mjamsek.tasker.lib.v1.enums.LogSeverity;
 import com.mjamsek.tasker.services.AuthService;
 import com.mjamsek.tasker.services.ConfigService;
 import com.mjamsek.tasker.services.LogService;
@@ -81,7 +81,7 @@ public class AuthResource {
     @Path("/new-user")
     public Response createNewUser(User dto) {
         ConfigEntry config = configService.getConfig("TASKER_ENABLED_REGISTRATION");
-        boolean enabled = Boolean.valueOf(config.getValue());
+        boolean enabled = Boolean.parseBoolean(config.getValue());
         if (enabled) {
             boolean created = userService.createUser(dto);
             if (created) {

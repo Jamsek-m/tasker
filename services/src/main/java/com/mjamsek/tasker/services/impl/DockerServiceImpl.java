@@ -2,18 +2,18 @@ package com.mjamsek.tasker.services.impl;
 
 import com.kumuluz.ee.rest.beans.QueryParameters;
 import com.mjamsek.tasker.apis.docker.DockerAPI;
-import com.mjamsek.tasker.entities.docker.DockerContainerInfo;
-import com.mjamsek.tasker.entities.docker.DockerCreateContainer;
 import com.mjamsek.tasker.entities.exceptions.DockerException;
 import com.mjamsek.tasker.entities.exceptions.EntityNotFoundException;
 import com.mjamsek.tasker.entities.exceptions.FailedHealthCheckException;
 import com.mjamsek.tasker.entities.exceptions.TaskerException;
-import com.mjamsek.tasker.entities.persistence.service.DockerDaemon;
+import com.mjamsek.tasker.entities.persistence.service.DockerEndpointEntity;
+import com.mjamsek.tasker.lib.v1.DockerEndpoint;
+import com.mjamsek.tasker.lib.v1.integration.docker.DockerContainerInfo;
+import com.mjamsek.tasker.lib.v1.integration.docker.DockerCreateContainer;
 import com.mjamsek.tasker.mappers.DockerMapper;
-import com.mjamsek.tasker.services.DockerDaemonService;
+import com.mjamsek.tasker.services.DockerEndpointService;
 import com.mjamsek.tasker.services.DockerService;
 import com.mjamsek.tasker.utils.DateUtil;
-import com.mjamsek.tasker.utils.HttpClient;
 import org.eclipse.microprofile.rest.client.RestClientBuilder;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -31,25 +31,25 @@ import java.util.List;
 public class DockerServiceImpl implements DockerService {
     
     @Inject
-    private DockerDaemonService dockerDaemonService;
+    private DockerEndpointService dockerEndpointService;
     
     @Override
-    public void checkDaemonAvailability() {
-        List<DockerDaemon> daemons = dockerDaemonService.getDaemons(new QueryParameters());
-    
-        daemons.forEach(daemon -> {
+    public void checkEndpointAvailability() {
+        List<DockerEndpoint> endpoints = dockerEndpointService.getEndpoints(new QueryParameters());
+        
+        endpoints.forEach(endpoint -> {
             try {
-                URI daemonUri = new URI(daemon.getUrl());
-                DockerAPI dockerAPI = RestClientBuilder.newBuilder().baseUri(daemonUri).build(DockerAPI.class);
+                URI endpointUri = new URI(endpoint.getUrl());
+                DockerAPI dockerAPI = RestClientBuilder.newBuilder().baseUri(endpointUri).build(DockerAPI.class);
                 Response response = dockerAPI.checkAvailability();
                 if (response.getStatus() >= 400) {
-                    throw new FailedHealthCheckException(daemon.getName());
+                    throw new FailedHealthCheckException(endpoint.getName());
                 }
             } catch (URISyntaxException e) {
                 throw new TaskerException("Invalid daemon url!");
             } catch (WebApplicationException e) {
                 if (e.getResponse().getStatus() == 404) {
-                    throw new FailedHealthCheckException(daemon.getName());
+                    throw new FailedHealthCheckException(endpoint.getName());
                 } else {
                     throw new DockerException("Failed to connect to daemon!");
                 }
@@ -58,16 +58,16 @@ public class DockerServiceImpl implements DockerService {
     }
     
     @Override
-    public List<DockerContainerInfo> queryContainersByName(String name, long daemonId) {
-        DockerDaemon daemon = dockerDaemonService.getDaemon(daemonId);
+    public List<DockerContainerInfo> queryContainersByName(String name, String endpointId) {
+        DockerEndpointEntity dockerEndpoint = dockerEndpointService.getDockerEndpoint(endpointId);
         
         if (name.isEmpty()) {
             return new ArrayList<>();
         }
         
-        if (daemon != null) {
+        if (dockerEndpoint != null) {
             try {
-                URI daemonUri = new URI(daemon.getUrl());
+                URI daemonUri = new URI(dockerEndpoint.getUrl());
                 DockerAPI dockerAPI = RestClientBuilder.newBuilder().baseUri(daemonUri).build(DockerAPI.class);
                 
                 String filtersParam = "%7B\"name\":[\"" + name + "\"]%7D";
@@ -83,10 +83,10 @@ public class DockerServiceImpl implements DockerService {
     }
     
     @Override
-    public String getRawContainerInfo(String containerId, DockerDaemon daemon) {
+    public String getRawContainerInfo(String containerId, DockerEndpointEntity endpoint) {
         try {
-            URI daemonUri = new URI(daemon.getUrl());
-            DockerAPI dockerAPI = RestClientBuilder.newBuilder().baseUri(daemonUri).build(DockerAPI.class);
+            URI endpointUri = new URI(endpoint.getUrl());
+            DockerAPI dockerAPI = RestClientBuilder.newBuilder().baseUri(endpointUri).build(DockerAPI.class);
             
             return dockerAPI.getRawContainerInfo(containerId);
         } catch (URISyntaxException e) {
@@ -101,10 +101,10 @@ public class DockerServiceImpl implements DockerService {
     }
     
     @Override
-    public DockerContainerInfo getContainerInfo(String containerId, DockerDaemon daemon) {
+    public DockerContainerInfo getContainerInfo(String containerId, DockerEndpointEntity endpoint) {
         try {
-            URI daemonUri = new URI(daemon.getUrl());
-            DockerAPI dockerAPI = RestClientBuilder.newBuilder().baseUri(daemonUri).build(DockerAPI.class);
+            URI endpointUri = new URI(endpoint.getUrl());
+            DockerAPI dockerAPI = RestClientBuilder.newBuilder().baseUri(endpointUri).build(DockerAPI.class);
             
             return dockerAPI.getContainerInfo(containerId);
         } catch (URISyntaxException e) {
@@ -119,10 +119,11 @@ public class DockerServiceImpl implements DockerService {
     }
     
     @Override
-    public void startContainer(String containerId, DockerDaemon daemon) {
+    public void startContainer(String containerId, DockerEndpointEntity endpoint) {
         try {
-            URI daemonUri = new URI(daemon.getUrl());
-            DockerAPI dockerAPI = RestClientBuilder.newBuilder().baseUri(daemonUri).build(DockerAPI.class);
+            URI endpointUri = new URI(endpoint.getUrl());
+            DockerAPI dockerAPI = RestClientBuilder.newBuilder().baseUri(endpointUri).build(DockerAPI.class);
+            
             dockerAPI.startContainer(containerId);
         } catch (URISyntaxException e) {
             throw new TaskerException("Invalid daemon url!");
@@ -137,10 +138,11 @@ public class DockerServiceImpl implements DockerService {
     }
     
     @Override
-    public void stopContainer(String containerId, DockerDaemon daemon) {
+    public void stopContainer(String containerId, DockerEndpointEntity endpoint) {
         try {
-            URI daemonUri = new URI(daemon.getUrl());
-            DockerAPI dockerAPI = RestClientBuilder.newBuilder().baseUri(daemonUri).build(DockerAPI.class);
+            URI endpointUri = new URI(endpoint.getUrl());
+            DockerAPI dockerAPI = RestClientBuilder.newBuilder().baseUri(endpointUri).build(DockerAPI.class);
+            
             dockerAPI.stopContainer(containerId);
         } catch (URISyntaxException e) {
             throw new TaskerException("Invalid daemon url!");
@@ -155,10 +157,11 @@ public class DockerServiceImpl implements DockerService {
     }
     
     @Override
-    public void deleteContainer(String containerId, DockerDaemon daemon) {
+    public void deleteContainer(String containerId, DockerEndpointEntity endpoint) {
         try {
-            URI daemonUri = new URI(daemon.getUrl());
-            DockerAPI dockerAPI = RestClientBuilder.newBuilder().baseUri(daemonUri).build(DockerAPI.class);
+            URI endpointUri = new URI(endpoint.getUrl());
+            DockerAPI dockerAPI = RestClientBuilder.newBuilder().baseUri(endpointUri).build(DockerAPI.class);
+            
             dockerAPI.deleteContainer(containerId, true);
         } catch (URISyntaxException e) {
             throw new TaskerException("Invalid daemon url!");
@@ -173,10 +176,10 @@ public class DockerServiceImpl implements DockerService {
     }
     
     @Override
-    public String createContainer(String containerName, DockerDaemon daemon, DockerCreateContainer data) {
+    public String createContainer(String containerName, DockerEndpointEntity endpoint, DockerCreateContainer data) {
         try {
-            URI daemonUri = new URI(daemon.getUrl());
-            DockerAPI dockerAPI = RestClientBuilder.newBuilder().baseUri(daemonUri).build(DockerAPI.class);
+            URI endpointUri = new URI(endpoint.getUrl());
+            DockerAPI dockerAPI = RestClientBuilder.newBuilder().baseUri(endpointUri).build(DockerAPI.class);
             DockerCreateContainer.Response resp = dockerAPI.createContainer(containerName, data);
             return resp.id;
         } catch (URISyntaxException e) {
@@ -187,12 +190,12 @@ public class DockerServiceImpl implements DockerService {
     }
     
     @Override
-    public String recreateContainer(String containerId, DockerDaemon daemon) {
-        DockerContainerInfo containerInfo = getContainerInfo(containerId, daemon);
-        this.createBackupFile(containerId, daemon, containerInfo.name);
+    public String recreateContainer(String containerId, DockerEndpointEntity endpoint) {
+        DockerContainerInfo containerInfo = getContainerInfo(containerId, endpoint);
+        this.createBackupFile(containerId, endpoint, containerInfo.name);
         
-        stopContainer(containerId, daemon);
-        deleteContainer(containerId, daemon);
+        stopContainer(containerId, endpoint);
+        deleteContainer(containerId, endpoint);
         
         DockerCreateContainer createRequest = DockerMapper.fromInfoToCreate(containerInfo);
         
@@ -200,13 +203,13 @@ public class DockerServiceImpl implements DockerService {
             containerInfo.name = containerInfo.name.substring(1);
         }
         
-        String newId = createContainer(containerInfo.name, daemon, createRequest);
-        startContainer(newId, daemon);
+        String newId = createContainer(containerInfo.name, endpoint, createRequest);
+        startContainer(newId, endpoint);
         return newId;
     }
     
-    private void createBackupFile(String containerId, DockerDaemon daemon, String containerName) {
-        String backupData = getRawContainerInfo(containerId, daemon);
+    private void createBackupFile(String containerId, DockerEndpointEntity endpoint, String containerName) {
+        String backupData = getRawContainerInfo(containerId, endpoint);
         
         if (containerName.startsWith("/")) {
             containerName = containerName.substring(1);

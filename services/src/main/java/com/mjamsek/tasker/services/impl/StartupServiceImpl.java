@@ -68,17 +68,18 @@ public class StartupServiceImpl implements StartupService {
         try (Connection conn = dataSource.getConnection()) {
             
             PreparedStatement createConfigStatement = conn
-                .prepareStatement("INSERT INTO configuration(config_key, config_value, user_defined) VALUES (?, ?, ?)");
-            createConfigStatement.setString(1, "TASKER_ENABLED_REGISTRATION");
-            createConfigStatement.setString(2, "false");
-            createConfigStatement.setBoolean(3, false);
+                .prepareStatement("INSERT INTO configuration(id, config_key, config_value) VALUES (?, ?, ?)");
+            createConfigStatement.setString(1, "795b4157-5714-4856-ad9c-448985cf5023");
+            createConfigStatement.setString(2, "TASKER_ENABLED_REGISTRATION");
+            createConfigStatement.setString(3, "false");
             createConfigStatement.execute();
     
             PreparedStatement addAdminUserStatement = conn
-                .prepareStatement("INSERT INTO users(password, username) VALUES (?, ?)");
+                .prepareStatement("INSERT INTO users(id, password, username) VALUES (?, ?, ?)");
             String password = BCrypt.hashpw(ConfigurationUtil.getInstance().get("tasker.admin.password").get(), BCrypt.gensalt());
-            addAdminUserStatement.setString(1, password);
-            addAdminUserStatement.setString(2, ConfigurationUtil.getInstance().get("tasker.admin.username").get());
+            addAdminUserStatement.setInt(1, 1);
+            addAdminUserStatement.setString(2, password);
+            addAdminUserStatement.setString(3, ConfigurationUtil.getInstance().get("tasker.admin.username").get());
             addAdminUserStatement.execute();
             
         } catch (SQLException e) {

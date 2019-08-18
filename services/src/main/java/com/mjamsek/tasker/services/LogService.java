@@ -1,8 +1,8 @@
 package com.mjamsek.tasker.services;
 
 import com.kumuluz.ee.rest.beans.QueryParameters;
-import com.mjamsek.tasker.entities.persistence.admin.LogEntry;
-import com.mjamsek.tasker.entities.persistence.admin.LogSeverity;
+import com.mjamsek.tasker.lib.v1.LogEntry;
+import com.mjamsek.tasker.lib.v1.enums.LogSeverity;
 
 import java.util.List;
 

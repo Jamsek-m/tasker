@@ -1,7 +1,7 @@
 package com.mjamsek.tasker.apis.docker;
 
-import com.mjamsek.tasker.entities.docker.DockerContainerInfo;
-import com.mjamsek.tasker.entities.docker.DockerCreateContainer;
+import com.mjamsek.tasker.lib.v1.integration.docker.DockerContainerInfo;
+import com.mjamsek.tasker.lib.v1.integration.docker.DockerCreateContainer;
 import org.eclipse.microprofile.rest.client.annotation.RegisterProvider;
 import org.eclipse.microprofile.rest.client.annotation.RegisterProviders;
 import org.eclipse.microprofile.rest.client.inject.RegisterRestClient;

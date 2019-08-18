@@ -1,6 +1,7 @@
 package com.mjamsek.tasker.services;
 
-import com.mjamsek.tasker.entities.persistence.admin.ConfigEntry;
+import com.kumuluz.ee.rest.beans.QueryParameters;
+import com.mjamsek.tasker.lib.v1.ConfigEntry;
 
 import java.util.List;
 
@@ -8,12 +9,14 @@ public interface ConfigService {
     
     ConfigEntry getConfig(String key);
     
-    List<ConfigEntry> getConfiguration();
+    List<ConfigEntry> getConfiguration(QueryParameters queryParameters);
     
-    void updateConfiguration(ConfigEntry configEntry);
+    long getConfigurationCount(QueryParameters queryParameters);
+    
+    void updateConfiguration(ConfigEntry configEntry, String entryId);
     
     void addConfiguration(ConfigEntry configEntry);
     
-    void deleteConfiguration(long configId);
+    void deleteConfiguration(String configId);
     
 }

@@ -1,14 +1,19 @@
 package com.mjamsek.tasker.resources;
 
+import com.kumuluz.ee.rest.beans.QueryParameters;
 import com.mjamsek.tasker.auth.SecureResource;
-import com.mjamsek.tasker.entities.persistence.admin.ConfigEntry;
+import com.mjamsek.tasker.lib.v1.ConfigEntry;
+import com.mjamsek.tasker.lib.v1.common.HttpHeader;
 import com.mjamsek.tasker.services.ConfigService;
 
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.ws.rs.*;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriInfo;
+import java.util.List;
 
 @RequestScoped
 @Path("/config")
@@ -16,13 +21,19 @@ import javax.ws.rs.core.Response;
 @Consumes(MediaType.APPLICATION_JSON)
 public class ConfigResource {
     
+    @Context
+    protected UriInfo uriInfo;
+    
     @Inject
     private ConfigService configService;
     
     @GET
     @SecureResource
     public Response getConfiguration() {
-        return Response.ok(configService.getConfiguration()).build();
+        QueryParameters query = QueryParameters.query(uriInfo.getRequestUri().getQuery()).build();
+        List<ConfigEntry> configEntries = configService.getConfiguration(query);
+        long configEntriesCount = configService.getConfigurationCount(query);
+        return Response.ok(configEntries).header(HttpHeader.X_TOTAL_COUNT, configEntriesCount).build();
     }
     
     @GET
@@ -42,15 +53,15 @@ public class ConfigResource {
     @PUT
     @Path("/{id}")
     @SecureResource
-    public Response updateConfig(@PathParam("id") long id, ConfigEntry configEntry) {
-        configService.updateConfiguration(configEntry);
+    public Response updateConfig(@PathParam("id") String id, ConfigEntry configEntry) {
+        configService.updateConfiguration(configEntry, id);
         return Response.ok().build();
     }
     
     @DELETE
     @Path("/{id}")
     @SecureResource
-    public Response removeConfig(@PathParam("id") long id) {
+    public Response removeConfig(@PathParam("id") String id) {
         configService.deleteConfiguration(id);
         return Response.noContent().build();
     }

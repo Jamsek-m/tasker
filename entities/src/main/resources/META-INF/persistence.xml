@@ -4,16 +4,16 @@
 
         <non-jta-data-source>jdbc/mainDB</non-jta-data-source>
 
-        <class>com.mjamsek.tasker.entities.persistence.service.Service</class>
-        <class>com.mjamsek.tasker.entities.persistence.service.ServiceUrl</class>
-        <class>com.mjamsek.tasker.entities.persistence.service.ServiceHealthCheck</class>
-        <class>com.mjamsek.tasker.entities.persistence.service.ServiceHealthCheckFix</class>
-        <class>com.mjamsek.tasker.entities.persistence.admin.ConfigEntry</class>
-        <class>com.mjamsek.tasker.entities.persistence.admin.LogEntry</class>
+        <class>com.mjamsek.tasker.entities.persistence.admin.LogEntryEntity</class>
+        <class>com.mjamsek.tasker.entities.persistence.admin.ConfigEntryEntity</class>
         <class>com.mjamsek.tasker.entities.persistence.auth.LoginSession</class>
         <class>com.mjamsek.tasker.entities.persistence.auth.UserEntity</class>
-        <class>com.mjamsek.tasker.entities.persistence.service.DockerDaemon</class>
-        <class>com.mjamsek.tasker.entities.persistence.service.ServiceDeployment</class>
+        <class>com.mjamsek.tasker.entities.persistence.service.ServiceEntity</class>
+        <class>com.mjamsek.tasker.entities.persistence.service.ApiServiceEntity</class>
+        <class>com.mjamsek.tasker.entities.persistence.service.ClientAppServiceEntity</class>
+        <class>com.mjamsek.tasker.entities.persistence.service.WebAppServiceEntity</class>
+        <class>com.mjamsek.tasker.entities.persistence.service.ServiceDeploymentEntity</class>
+        <class>com.mjamsek.tasker.entities.persistence.service.DockerEndpointEntity</class>
 
         <properties>
             <property name="hibernate.dialect" value="org.hibernate.dialect.H2Dialect"/>

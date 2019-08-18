@@ -7,7 +7,7 @@ import {TaskerEnvironment} from "./env.model";
 export const environment: TaskerEnvironment = {
     production: false,
     baseUrl: "http://localhost:8080",
-    apiVersion: "v2",
+    apiVersion: "v1",
 };
 
 /*

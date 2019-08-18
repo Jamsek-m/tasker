@@ -1,8 +1,8 @@
 package com.mjamsek.tasker.mappers;
 
-import com.mjamsek.tasker.entities.docker.DockerContainerInfo;
-import com.mjamsek.tasker.entities.docker.DockerCreateContainer;
-import com.mjamsek.tasker.entities.docker.DockerState;
+import com.mjamsek.tasker.lib.v1.integration.docker.DockerContainerInfo;
+import com.mjamsek.tasker.lib.v1.integration.docker.DockerCreateContainer;
+import com.mjamsek.tasker.lib.v1.integration.docker.DockerState;
 
 import java.util.ArrayList;
 import java.util.HashMap;

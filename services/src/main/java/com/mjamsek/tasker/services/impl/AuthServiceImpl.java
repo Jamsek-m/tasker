@@ -10,7 +10,7 @@ import com.mjamsek.tasker.entities.exceptions.EntityNotFoundException;
 import com.mjamsek.tasker.entities.exceptions.UnauthorizedException;
 import com.mjamsek.tasker.entities.persistence.auth.LoginSession;
 import com.mjamsek.tasker.entities.persistence.auth.UserEntity;
-import com.mjamsek.tasker.entities.persistence.service.Service;
+import com.mjamsek.tasker.entities.persistence.service.ServiceEntity;
 import com.mjamsek.tasker.mappers.UserMapper;
 import com.mjamsek.tasker.services.AuthService;
 import com.mjamsek.tasker.services.ServicesService;
@@ -112,14 +112,14 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public void validateAuthorizationOrToken() {
         if (this.request.getHeader(SecurityConstants.TASKER_KEY_HEADER) != null) {
-            long serviceId = UrlParserUtil.parseServiceId(this.request.getRequestURI());
+            String serviceId = UrlParserUtil.parseServiceId(this.request.getRequestURI());
             String accessToken = this.request.getHeader(SecurityConstants.TASKER_KEY_HEADER);
             
-            Service service = servicesService.getServiceById(serviceId);
+            ServiceEntity service = servicesService.getServiceById(serviceId);
             
             if (service != null) {
                 
-                if (!BCrypt.checkpw(accessToken, service.getToken())) {
+                if (!BCrypt.checkpw(accessToken, "service.getToken()")) {
                     throw new UnauthorizedException("Invalid credentials!");
                 }
             } else {

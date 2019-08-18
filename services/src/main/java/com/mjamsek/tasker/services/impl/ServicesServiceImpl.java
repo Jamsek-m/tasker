@@ -4,21 +4,20 @@ import com.kumuluz.ee.rest.beans.QueryFilter;
 import com.kumuluz.ee.rest.beans.QueryParameters;
 import com.kumuluz.ee.rest.enums.FilterOperation;
 import com.kumuluz.ee.rest.utils.JPAUtils;
-import com.mjamsek.tasker.entities.docker.DockerContainerInfo;
-import com.mjamsek.tasker.entities.docker.DockerState;
-import com.mjamsek.tasker.entities.dto.ServiceRequest;
 import com.mjamsek.tasker.entities.dto.ServiceToken;
 import com.mjamsek.tasker.entities.exceptions.*;
-import com.mjamsek.tasker.entities.persistence.admin.LogSeverity;
-import com.mjamsek.tasker.entities.persistence.service.*;
+import com.mjamsek.tasker.entities.persistence.service.ApiServiceEntity;
+import com.mjamsek.tasker.entities.persistence.service.ServiceEntity;
+import com.mjamsek.tasker.entities.persistence.service.WebAppServiceEntity;
+import com.mjamsek.tasker.lib.v1.Service;
+import com.mjamsek.tasker.lib.v1.ServiceDeployment;
+import com.mjamsek.tasker.lib.v1.enums.LogSeverity;
+import com.mjamsek.tasker.lib.v1.integration.docker.DockerContainerInfo;
+import com.mjamsek.tasker.lib.v1.integration.docker.DockerState;
 import com.mjamsek.tasker.mappers.DockerMapper;
-import com.mjamsek.tasker.services.DockerDaemonService;
-import com.mjamsek.tasker.services.DockerService;
-import com.mjamsek.tasker.services.LogService;
-import com.mjamsek.tasker.services.ServicesService;
+import com.mjamsek.tasker.mappers.ServiceMapper;
+import com.mjamsek.tasker.services.*;
 import com.mjamsek.tasker.utils.HttpClient;
-import com.mjamsek.tasker.utils.RandomStringGenerator;
-import org.mindrot.jbcrypt.BCrypt;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -28,6 +27,9 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import javax.ws.rs.core.Response;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 @ApplicationScoped
 public class ServicesServiceImpl implements ServicesService {
@@ -36,29 +38,39 @@ public class ServicesServiceImpl implements ServicesService {
     private EntityManager em;
     
     @Inject
-    private DockerDaemonService dockerDaemonService;
-    
-    @Inject
     private DockerService dockerService;
     
     @Inject
     private LogService logService;
     
+    @Inject
+    private Validator validator;
+    
     @Override
     public List<Service> getServices(QueryParameters queryParameters) {
         queryParameters.getFilters().add(new QueryFilter("active", FilterOperation.EQ, "true"));
-        return JPAUtils.queryEntities(em, Service.class, queryParameters);
+        return JPAUtils
+            .queryEntities(em, ServiceEntity.class, queryParameters)
+            .stream()
+            .map(ServiceMapper::fromEntity)
+            .collect(Collectors.toList());
     }
     
     @Override
     public long getServicesCount(QueryParameters queryParameters) {
         queryParameters.getFilters().add(new QueryFilter("active", FilterOperation.EQ, "true"));
-        return JPAUtils.queryEntitiesCount(em, Service.class, queryParameters);
+        return JPAUtils.queryEntitiesCount(em, ServiceEntity.class, queryParameters);
     }
     
     @Override
-    public Service getServiceByName(String name) {
-        TypedQuery<Service> query = em.createNamedQuery(Service.FIND_BY_NAME, Service.class);
+    public Service getService(String serviceId) {
+        ServiceEntity entity = this.getServiceById(serviceId);
+        return null;
+    }
+    
+    @Override
+    public ServiceEntity getServiceByName(String name) {
+        TypedQuery<ServiceEntity> query = em.createNamedQuery(ServiceEntity.FIND_BY_NAME, ServiceEntity.class);
         query.setParameter("name", name);
         try {
             return query.getSingleResult();
@@ -68,74 +80,54 @@ public class ServicesServiceImpl implements ServicesService {
     }
     
     @Override
-    public Service getServiceById(long serviceId) {
-        return em.find(Service.class, serviceId);
+    public ServiceEntity getServiceById(String serviceId) {
+        return em.find(ServiceEntity.class, serviceId);
     }
     
     @Override
     public Service getServiceByIdOrName(String idOrName) {
-        Service service;
-        try {
-            long serviceId = Long.parseLong(idOrName);
-            service = getServiceById(serviceId);
-            if (service == null) {
-                throw new ServiceNotFoundException(serviceId);
-            }
-        } catch (NumberFormatException exc) {
-            service = getServiceByName(idOrName);
-            if (service == null) {
-                throw new ServiceNotFoundException(idOrName);
-            }
+        ServiceEntity entity;
+        Pattern pattern = Pattern.compile("^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$");
+        Matcher matcher = pattern.matcher(idOrName);
+        if (matcher.find()) {
+            entity = this.getServiceById(idOrName);
+        } else {
+            entity = this.getServiceByName(idOrName);
         }
-        return service;
+        return ServiceMapper.fromEntity(entity);
     }
     
     @Override
-    public Service createService(ServiceRequest dto) {
+    public Service createService(Service service) {
         
-        Service existing = this.getServiceByName(dto.getName());
-        if (existing != null && dto.getVersion().equals(existing.getVersion())) {
+        validator.assertNotNull(service);
+        
+        validator.assertNotBlank(service.getName(), "name");
+        validator.assertNotBlank(service.getVersion(), "version");
+        validator.assertNotNull(service.getType(), "type");
+        
+        if (service.getDeployment() != null) {
+            ServiceDeployment deployment = service.getDeployment();
+            validator.assertNotBlank(deployment.getContainerId(), "containerId", "service.deployment");
+            validator.assertNotBlank(deployment.getContainerName(), "containerName", "service.deployment");
+            validator.assertNotNull(deployment.getDockerEndpoint(), "dockerEndpoint", "service.deployment");
+            validator.assertNotBlank(deployment.getDockerEndpoint().getId(), "id", "service.deployment.dockerEndpoint");
+        }
+        
+        ServiceEntity existing = this.getExisting(service.getName(), service.getVersion());
+        if (existing != null && service.getVersion().equals(existing.getVersion())) {
             throw new ConflictException("Service with given name and version already exists!");
         }
         
-        Service service = new Service();
-        service.setName(dto.getName());
-        service.setDescription(dto.getDescription());
-        service.setVersion(dto.getVersion());
-        service.setActive(true);
-        
-        if (dto.isDeployed()) {
-            ServiceUrl url = new ServiceUrl();
-            url.setUrl(dto.getServiceUrl().getUrl());
-            url.setUrlVersioning(dto.getServiceUrl().isUrlVersioning());
-            url.setVersion(dto.getServiceUrl().getVersion());
-            service.setServiceUrl(url);
-        }
-        
-        if (dto.isHasHealthcheck()) {
-            ServiceHealthCheck health = new ServiceHealthCheck();
-            health.setHealthUrl(dto.getHealthCheck().getHealthUrl());
-            service.setHealthCheck(health);
-        }
-        
-        if (dto.isDockerized()) {
-            ServiceDeployment deployment = new ServiceDeployment();
-            deployment.setContainerName(dto.getDeployment().getContainerName());
-            deployment.setContainerId(dto.getDeployment().getContainerId());
-            DockerDaemon daemon = dockerDaemonService.getDaemon(dto.getDeployment().getDockerDaemon().getName());
-            if (daemon == null) {
-                throw new ValidationException("Invalid daemon name!");
-            }
-            deployment.setDockerDaemon(daemon);
-            service.setDeployment(deployment);
-        }
+        ServiceEntity entity = ServiceMapper.toEntity(service);
+        entity.setActive(true);
         
         try {
             em.getTransaction().begin();
-            em.persist(service);
+            em.persist(entity);
             em.getTransaction().commit();
             logService.log(LogSeverity.INFO, "Service '" + service.getName() + "' was created.");
-            return service;
+            return ServiceMapper.fromEntity(entity);
         } catch (Exception e) {
             em.getTransaction().rollback();
             logService.log(LogSeverity.ERROR, "Error saving service '" + service.getName() + "'!");
@@ -144,65 +136,16 @@ public class ServicesServiceImpl implements ServicesService {
     }
     
     @Override
-    public Service updateService(ServiceRequest dto, long serviceId) {
-        Service service = getServiceById(serviceId);
-        if (service == null) {
+    public Service updateService(Service service, String serviceId) {
+        // TODO: update service implementation
+        ServiceEntity entity = getServiceById(serviceId);
+        if (entity == null) {
             throw new EntityNotFoundException("Service with given id doesn't exist!");
         }
         
-        service.setDescription(dto.getDescription());
-        
-        if (dto.isDeployed()) {
-            if (service.getServiceUrl() != null) {
-                service.getServiceUrl().setUrl(dto.getServiceUrl().getUrl());
-                service.getServiceUrl().setUrlVersioning(dto.getServiceUrl().isUrlVersioning());
-                service.getServiceUrl().setVersion(dto.getServiceUrl().getVersion());
-            } else {
-                ServiceUrl serviceUrl = new ServiceUrl();
-                serviceUrl.setVersion(dto.getServiceUrl().getVersion());
-                serviceUrl.setUrl(dto.getServiceUrl().getUrl());
-                serviceUrl.setUrlVersioning(dto.getServiceUrl().isUrlVersioning());
-                service.setServiceUrl(serviceUrl);
-            }
-        } else {
-            service.setServiceUrl(null);
-        }
-        
-        if (dto.isDockerized()) {
+        return null;
     
-            DockerDaemon daemon = dockerDaemonService.getDaemon(dto.getDeployment().getDockerDaemon().getName());
-            if (daemon == null) {
-                throw new ValidationException("Invalid daemon name!");
-            }
-            
-            if (service.getDeployment() != null) {
-                service.getDeployment().setContainerId(dto.getDeployment().getContainerId());
-                service.getDeployment().setDockerDaemon(daemon);
-                service.getDeployment().setContainerName(dto.getDeployment().getContainerName());
-            } else {
-                ServiceDeployment serviceDeployment = new ServiceDeployment();
-                serviceDeployment.setContainerName(dto.getDeployment().getContainerName());
-                serviceDeployment.setContainerId(dto.getDeployment().getContainerId());
-                serviceDeployment.setDockerDaemon(daemon);
-                service.setDeployment(serviceDeployment);
-            }
-        } else {
-            service.setDeployment(null);
-        }
-        
-        if (dto.isHasHealthcheck()) {
-            if (service.getHealthCheck() != null) {
-                service.getHealthCheck().setHealthUrl(dto.getHealthCheck().getHealthUrl());
-            } else {
-                ServiceHealthCheck serviceHealthCheck = new ServiceHealthCheck();
-                serviceHealthCheck.setHealthUrl(dto.getHealthCheck().getHealthUrl());
-                service.setHealthCheck(serviceHealthCheck);
-            }
-        } else {
-            service.setHealthCheck(null);
-        }
-    
-        try {
+        /*try {
             em.getTransaction().begin();
             em.merge(service);
             em.getTransaction().commit();
@@ -212,51 +155,43 @@ public class ServicesServiceImpl implements ServicesService {
             em.getTransaction().rollback();
             logService.log(LogSeverity.ERROR, "Error saving service '" + service.getName() + "'!");
             throw new TaskerException("Error saving entity!");
-        }
+        }*/
     }
     
     @Override
-    public ServiceToken generateServiceToken(long serviceId) {
-        Service service = getServiceById(serviceId);
-        if (service == null) {
-            throw new ServiceNotFoundException(serviceId);
-        }
-        
-        String token = RandomStringGenerator.generate(32);
-        
-        try {
-            em.getTransaction().begin();
-            service.setToken(BCrypt.hashpw(token, BCrypt.gensalt()));
-            em.merge(service);
-            em.getTransaction().commit();
-            logService.log(LogSeverity.INFO, "Token for service '" + service.getName() + "' was generated.");
-        } catch (Exception e) {
-            em.getTransaction().rollback();
-            logService.log(LogSeverity.ERROR, "Error generating token for service '" + service.getName() + "'!");
-            return null;
-        }
-        return new ServiceToken(token);
+    public ServiceToken generateServiceToken(String serviceId) {
+        return null;
     }
     
     @Override
-    public void doHealthCheck(long serviceId) {
-        Service service = getServiceById(serviceId);
-        if (service == null) {
+    public void doHealthCheck(String serviceId) {
+        ServiceEntity entity = getServiceById(serviceId);
+        if (entity == null) {
             throw new ServiceNotFoundException(serviceId);
         }
-        ServiceHealthCheck healthCheck = service.getHealthCheck();
-        if (healthCheck == null) {
+        
+        String healthcheckUrl;
+        if (entity instanceof ApiServiceEntity) {
+            healthcheckUrl = ((ApiServiceEntity) entity).getHealthcheckUrl();
+        } else if (entity instanceof WebAppServiceEntity) {
+            healthcheckUrl = ((WebAppServiceEntity) entity).getHealthcheckUrl();
+        } else {
             throw new MissingHealthCheckException();
         }
-        Response response = HttpClient.get(healthCheck.getHealthUrl());
+        
+        if (healthcheckUrl == null) {
+            throw new MissingHealthCheckException();
+        }
+        
+        Response response = HttpClient.get(healthcheckUrl);
         if (response.getStatus() >= 400) {
-            throw new FailedHealthCheckException(service.getName());
+            throw new FailedHealthCheckException(entity.getName());
         }
     }
     
     @Override
-    public void deleteService(long serviceId) {
-        Service service = getServiceById(serviceId);
+    public void deleteService(String serviceId) {
+        ServiceEntity service = getServiceById(serviceId);
         if (service == null) {
             throw new ServiceNotFoundException(serviceId);
         }
@@ -273,62 +208,62 @@ public class ServicesServiceImpl implements ServicesService {
     }
     
     @Override
-    public DockerContainerInfo getServiceContainer(long serviceId) {
-        Service service = getDeployedService(serviceId);
+    public DockerContainerInfo getServiceContainer(String serviceId) {
+        ServiceEntity service = getDeployedService(serviceId);
         
         return dockerService.getContainerInfo(
             service.getDeployment().getContainerId(),
-            service.getDeployment().getDockerDaemon()
+            service.getDeployment().getDockerEndpoint()
         );
     }
     
     @Override
-    public String getRawServiceContainer(long serviceId) {
-        Service service = getDeployedService(serviceId);
+    public String getRawServiceContainer(String serviceId) {
+        ServiceEntity service = getDeployedService(serviceId);
         
         return dockerService.getRawContainerInfo(
             service.getDeployment().getContainerId(),
-            service.getDeployment().getDockerDaemon()
+            service.getDeployment().getDockerEndpoint()
         );
     }
     
     @Override
-    public DockerState getContainerState(long serviceId) {
-        Service service = getDeployedService(serviceId);
+    public DockerState getContainerState(String serviceId) {
+        ServiceEntity service = getDeployedService(serviceId);
         
         DockerContainerInfo containerInfo = dockerService.getContainerInfo(
             service.getDeployment().getContainerId(),
-            service.getDeployment().getDockerDaemon()
+            service.getDeployment().getDockerEndpoint()
         );
         
         return DockerMapper.fromInfoToState(containerInfo);
     }
     
     @Override
-    public void startContainer(long serviceId) {
-        Service service = getDeployedService(serviceId);
+    public void startContainer(String serviceId) {
+        ServiceEntity service = getDeployedService(serviceId);
         dockerService.startContainer(
             service.getDeployment().getContainerId(),
-            service.getDeployment().getDockerDaemon()
+            service.getDeployment().getDockerEndpoint()
         );
         logService.log(LogSeverity.INFO, "Service's container (" + service.getName() + ") was recreated.");
     }
     
     @Override
-    public void stopContainer(long serviceId) {
-        Service service = getDeployedService(serviceId);
+    public void stopContainer(String serviceId) {
+        ServiceEntity service = getDeployedService(serviceId);
         dockerService.stopContainer(
             service.getDeployment().getContainerId(),
-            service.getDeployment().getDockerDaemon()
+            service.getDeployment().getDockerEndpoint()
         );
     }
     
     @Override
-    public void recreateContainer(long serviceId) {
-        Service service = getDeployedService(serviceId);
+    public void recreateContainer(String serviceId) {
+        ServiceEntity service = getDeployedService(serviceId);
         String newContainerId = dockerService.recreateContainer(
             service.getDeployment().getContainerId(),
-            service.getDeployment().getDockerDaemon()
+            service.getDeployment().getDockerEndpoint()
         );
         
         service.getDeployment().setContainerId(newContainerId);
@@ -344,8 +279,16 @@ public class ServicesServiceImpl implements ServicesService {
         }
     }
     
-    private Service getDeployedService(long serviceId) {
-        Service service = getServiceById(serviceId);
+    private ServiceEntity getExisting(String name, String version) {
+        TypedQuery<ServiceEntity> query = em.createNamedQuery(ServiceEntity.FIND_BY_NAME_AND_VERSION, ServiceEntity.class);
+        query.setParameter("name", name);
+        query.setParameter("version", version);
+        List<ServiceEntity> entities = query.getResultList();
+        return entities.size() > 0 ? entities.get(0) : null;
+    }
+    
+    private ServiceEntity getDeployedService(String serviceId) {
+        ServiceEntity service = getServiceById(serviceId);
         if (service == null) {
             throw new EntityNotFoundException("Service not found!");
         }

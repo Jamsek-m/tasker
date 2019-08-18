@@ -5,18 +5,18 @@ import java.util.regex.Pattern;
 
 public class UrlParserUtil {
     
-    public static long parseServiceId(String url) {
+    public static String parseServiceId(String url) {
         Pattern pattern = Pattern.compile("/.+/services/(\\d+)/.+");
         Matcher matcher = pattern.matcher(url);
         if (matcher.find()) {
             String result = matcher.group(1);
             try {
-                return Long.parseLong(result);
+                return result;
             } catch (NumberFormatException e) {
-                return -1;
+                return null;
             }
         }
-        return -1;
+        return null;
     }
     
 }
