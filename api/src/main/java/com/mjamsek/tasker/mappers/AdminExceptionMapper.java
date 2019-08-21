@@ -1,6 +1,7 @@
 package com.mjamsek.tasker.mappers;
 
-import com.mjamsek.tasker.entities.exceptions.*;
+import com.mjamsek.tasker.entities.exceptions.ValidationException;
+import com.mjamsek.tasker.lib.v1.exceptions.*;
 
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.ExceptionMapper;

@@ -6,14 +6,13 @@
 
         <class>com.mjamsek.tasker.entities.persistence.admin.LogEntryEntity</class>
         <class>com.mjamsek.tasker.entities.persistence.admin.ConfigEntryEntity</class>
-        <class>com.mjamsek.tasker.entities.persistence.auth.LoginSession</class>
-        <class>com.mjamsek.tasker.entities.persistence.auth.UserEntity</class>
         <class>com.mjamsek.tasker.entities.persistence.service.ServiceEntity</class>
         <class>com.mjamsek.tasker.entities.persistence.service.ApiServiceEntity</class>
         <class>com.mjamsek.tasker.entities.persistence.service.ClientAppServiceEntity</class>
         <class>com.mjamsek.tasker.entities.persistence.service.WebAppServiceEntity</class>
         <class>com.mjamsek.tasker.entities.persistence.service.ServiceDeploymentEntity</class>
         <class>com.mjamsek.tasker.entities.persistence.service.DockerEndpointEntity</class>
+        <class>com.mjamsek.tasker.entities.persistence.DomainEntity</class>
 
         <properties>
             <property name="hibernate.dialect" value="org.hibernate.dialect.H2Dialect"/>

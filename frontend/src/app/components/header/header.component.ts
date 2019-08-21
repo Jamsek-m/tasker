@@ -21,13 +21,8 @@ export class HeaderComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.checkAuth();
+        this.isAuthorized = this.authService.isAuthenticated();
         this.checkNotifications();
-        this.authService.getAuthEvent().subscribe(
-            () => {
-                this.checkAuth();
-            }
-        );
     }
 
     public toggleNavbar() {
@@ -35,22 +30,21 @@ export class HeaderComponent implements OnInit {
     }
 
     public logout() {
-        this.authService.logoutUser().subscribe(
-            () => {
-                this.router.navigate(["/login"]);
-            },
-            (err) => {
-                console.error(err);
-            }
-        );
+        this.authService.logout();
     }
 
-    private checkAuth(): void {
-        this.authService.checkAuthorization().subscribe(
-            (isAuthorized: boolean) => {
-                this.isAuthorized = isAuthorized;
-            }
-        );
+    public login() {
+        this.authService.login();
+    }
+
+    public hasRole(menuItem: MenuItem): boolean {
+        if (!menuItem.requiredRoles) {
+            return true;
+        }
+
+        return menuItem.requiredRoles.filter(role => {
+            return this.authService.hasRealmRole(role);
+        }).length > 0;
     }
 
     private checkNotifications(): void {

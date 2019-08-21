@@ -29,7 +29,7 @@
             <tbody>
                 <tr *ngFor="let log of logs">
                     <td class="tb-name">{{log.severity}}</td>
-                    <td class="tb-expired">{{log.logDate | date: "dd.MM.yyyy HH:mm:ss"}}</td>
+                    <td class="tb-expired">{{log.timestamp | date: "dd.MM.yyyy HH:mm:ss"}}</td>
                     <td class="tb-actions">{{log.message}}</td>
                 </tr>
             </tbody>

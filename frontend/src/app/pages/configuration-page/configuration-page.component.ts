@@ -1,8 +1,8 @@
 import {Component, OnInit} from "@angular/core";
 import {ConfigService} from "../../services/config.service";
-import {ConfigEntry} from "../../models/config-entry.class";
-import {DockerDaemonService} from "../../services/docker-daemon.service";
-import {DockerDaemon} from "../../models/docker-daemon";
+import {ConfigEntry} from "../../models/config-entry.model";
+import {DockerEndpointsService} from "../../services/docker-endpoints.service";
+import {DockerEndpoint} from "../../models/docker-endpoint.model";
 import {MessageService} from "../../services/message.service";
 
 @Component({
@@ -12,27 +12,27 @@ import {MessageService} from "../../services/message.service";
 })
 export class ConfigurationPageComponent implements OnInit {
 
-    public configs: ConfigLine[];
+    public configs: SettingsLine<ConfigEntry>[];
     public newConfig: ConfigEntry;
-    public daemons: DaemonLine[];
-    public newDaemon: DockerDaemon;
+    public endpoints: SettingsLine<DockerEndpoint>[];
+    public newEndpoint: DockerEndpoint;
 
     constructor(private configService: ConfigService,
                 private messageService: MessageService,
-                private dockerDaemonService: DockerDaemonService) {
+                private dockerEndpointsService: DockerEndpointsService) {
     }
 
     ngOnInit() {
         this.newConfig = new ConfigEntry();
-        this.newDaemon = new DockerDaemon();
+        this.newEndpoint = new DockerEndpoint();
         this.configs = [];
-        this.daemons = [];
-        this.getConfiguration();
-        this.getDaemons();
+        this.endpoints = [];
+        // this.getConfiguration();
+        this.getEndpoints();
     }
 
-    public updateConfig(line: ConfigLine) {
-        this.configService.updateConfiguration(line.config).subscribe(
+    public updateConfig(line: SettingsLine<ConfigEntry>) {
+        this.configService.updateConfiguration(line.entity).subscribe(
             () => {
                 this.getConfiguration();
             },
@@ -42,11 +42,11 @@ export class ConfigurationPageComponent implements OnInit {
         );
     }
 
-    public removeConfig(line: ConfigLine) {
+    public removeConfig(line: SettingsLine<ConfigEntry>) {
         this.messageService.openConfirmationDialog("Are you sure you want to remove config?", {
             onConfirmation: (ref) => {
                 ref.hide();
-                this.configService.deleteConfiguration(line.config.id).subscribe(
+                this.configService.deleteConfiguration(line.entity.id).subscribe(
                     () => {
                         this.getConfiguration();
                     },
@@ -58,10 +58,10 @@ export class ConfigurationPageComponent implements OnInit {
         }, {confirmIsDestructive: true});
     }
 
-    public updateDaemon(line: DaemonLine) {
-        this.dockerDaemonService.updateDaemon(line.daemon).subscribe(
+    public updateEndpoint(line: SettingsLine<DockerEndpoint>) {
+        this.dockerEndpointsService.updateEndpoint(line.entity).subscribe(
             () => {
-                this.getDaemons();
+                this.getEndpoints();
             },
             (err) => {
                 console.error(err);
@@ -73,8 +73,8 @@ export class ConfigurationPageComponent implements OnInit {
         this.getConfiguration();
     }
 
-    public resetDaemons() {
-        this.getDaemons();
+    public resetEndpoints() {
+        this.getEndpoints();
     }
 
     public addConfiguration() {
@@ -89,11 +89,11 @@ export class ConfigurationPageComponent implements OnInit {
         );
     }
 
-    public addDaemon() {
-        this.dockerDaemonService.addDaemon(this.newDaemon).subscribe(
+    public addEndpoint() {
+        this.dockerEndpointsService.addEndpoint(this.newEndpoint).subscribe(
             () => {
-                this.newDaemon = new DockerDaemon();
-                this.getDaemons();
+                this.newEndpoint = new DockerEndpoint();
+                this.getEndpoints();
             },
             (err) => {
                 console.error(err);
@@ -101,24 +101,24 @@ export class ConfigurationPageComponent implements OnInit {
         );
     }
 
-    public openDeleteDialog(daemon: DockerDaemon): void {
-        this.messageService.openConfirmationDialog("Are you sure you want to delete docker daemon?", {
+    public openDeleteDialog(endpoint: DockerEndpoint): void {
+        this.messageService.openConfirmationDialog("Are you sure you want to delete docker endpoint?", {
             onConfirmation: (ref) => {
                 ref.hide();
-                this.deleteDaemon(daemon);
+                this.deleteEndpoint(endpoint);
             }
         }, {confirmIsDestructive: true});
     }
 
-    private deleteDaemon(daemon: DockerDaemon): void {
-        this.dockerDaemonService.removeDaemon(daemon.id).subscribe(
+    private deleteEndpoint(endpoint: DockerEndpoint): void {
+        this.dockerEndpointsService.removeEndpoint(endpoint.id).subscribe(
             () => {
-                this.messageService.openToastNotification("Success!", "Docker daemon was removed", "ok");
-                this.getDaemons();
+                this.messageService.openToastNotification("Success!", "Docker endpoint was removed", "ok");
+                this.getEndpoints();
             },
             (err) => {
                 console.error(err);
-                this.messageService.openToastNotification("Error!", "Error removing docker daemon", "error", {duration: -1});
+                this.messageService.openToastNotification("Error!", "Error removing docker endpoint", "error", {duration: -1});
             }
         );
     }
@@ -127,10 +127,10 @@ export class ConfigurationPageComponent implements OnInit {
         this.configService.getConfiguration().subscribe(
             (config: ConfigEntry[]) => {
                 this.configs = config.map(conf => {
-                    const line = new ConfigLine();
-                    line.edited = false;
-                    line.config = conf;
-                    return line;
+                    return {
+                        edited: false,
+                        entity: conf
+                    };
                 });
             },
             (err) => {
@@ -139,14 +139,14 @@ export class ConfigurationPageComponent implements OnInit {
         );
     }
 
-    private getDaemons() {
-        this.dockerDaemonService.getDaemons().subscribe(
-            (daemons: DockerDaemon[]) => {
-                this.daemons = daemons.map(daemon => {
-                    const line = new DaemonLine();
-                    line.edited = false;
-                    line.daemon = daemon;
-                    return line;
+    private getEndpoints() {
+        this.dockerEndpointsService.getEndpoints().subscribe(
+            (endpoints: DockerEndpoint[]) => {
+                this.endpoints = endpoints.map(endpoint => {
+                    return {
+                        edited: false,
+                        entity: endpoint
+                    };
                 });
             },
             (err) => {
@@ -157,12 +157,7 @@ export class ConfigurationPageComponent implements OnInit {
 
 }
 
-class ConfigLine {
-    public edited: boolean;
-    public config: ConfigEntry;
-}
-
-class DaemonLine {
-    public edited: boolean;
-    public daemon: DockerDaemon;
+interface SettingsLine<T> {
+    edited: boolean;
+    entity: T;
 }

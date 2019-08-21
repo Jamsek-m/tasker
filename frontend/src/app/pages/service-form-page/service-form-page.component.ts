@@ -1,6 +1,6 @@
 import {AfterViewInit, Component, ElementRef, HostListener, OnInit, ViewChild} from "@angular/core";
-import {DockerDaemonService} from "../../services/docker-daemon.service";
-import {DockerDaemon} from "../../models/docker-daemon";
+import {DockerEndpointsService} from "../../services/docker-endpoints.service";
+import {DockerEndpoint} from "../../models/docker-endpoint.model";
 import {Service, ServiceValidation} from "../../models/service.class";
 import {DockerService} from "../../services/docker.service";
 import {Observable} from "rxjs";
@@ -20,7 +20,7 @@ import {NavigationUtil} from "../../utils/navigation.util";
 })
 export class ServiceFormPageComponent implements OnInit, AfterViewInit {
 
-    public daemons: DockerDaemon[] = [];
+    public daemons: DockerEndpoint[] = [];
     public service = Service.empty();
     public validation = new ServiceValidation();
     public dockerContainerNameObservable: Observable<any>;
@@ -36,7 +36,7 @@ export class ServiceFormPageComponent implements OnInit, AfterViewInit {
 
     public sticky: number;
 
-    constructor(private dockerDaemonService: DockerDaemonService,
+    constructor(private dockerDaemonService: DockerEndpointsService,
                 private router: Router,
                 private activatedRoute: ActivatedRoute,
                 private servicesService: ServicesService,
@@ -133,7 +133,7 @@ export class ServiceFormPageComponent implements OnInit, AfterViewInit {
         }, {confirmIsDestructive: true});
     }
 
-    public compareDaemonsFn(item1: DockerDaemon, item2: DockerDaemon): boolean {
+    public compareDaemonsFn(item1: DockerEndpoint, item2: DockerEndpoint): boolean {
         if (item1 && item2) {
             return item1.id === item2.id;
         }
@@ -164,8 +164,8 @@ export class ServiceFormPageComponent implements OnInit, AfterViewInit {
     }
 
     private initDaemons(): void {
-        this.dockerDaemonService.getDaemons().subscribe(
-            (list: DockerDaemon[]) => {
+        this.dockerDaemonService.getEndpoints().subscribe(
+            (list: DockerEndpoint[]) => {
                 this.daemons = list;
             },
             (err) => {

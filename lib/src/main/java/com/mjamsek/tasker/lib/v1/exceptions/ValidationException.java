@@ -3,7 +3,7 @@ package com.mjamsek.tasker.lib.v1.exceptions;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.mjamsek.tasker.lib.v1.common.HttpStatus;
 
-public class ValidationException extends RuntimeException {
+public class ValidationException extends TaskerException {
     
     private ValidationExceptionResponse response;
     

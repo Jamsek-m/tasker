@@ -1,11 +1,13 @@
 package com.mjamsek.tasker.resources;
 
 import com.kumuluz.ee.rest.beans.QueryParameters;
-import com.mjamsek.tasker.auth.SecureResource;
+import com.kumuluz.ee.security.annotations.Secure;
 import com.mjamsek.tasker.lib.v1.LogEntry;
+import com.mjamsek.tasker.lib.v1.common.AuthRole;
 import com.mjamsek.tasker.lib.v1.common.HttpHeader;
 import com.mjamsek.tasker.services.LogService;
 
+import javax.annotation.security.RolesAllowed;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
@@ -22,6 +24,7 @@ import java.util.List;
 @RequestScoped
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
+@Secure
 public class LogResource {
     
     @Inject
@@ -31,7 +34,7 @@ public class LogResource {
     protected UriInfo uriInfo;
     
     @GET
-    @SecureResource
+    @RolesAllowed({AuthRole.ADMIN})
     public Response getLogs() {
         QueryParameters query = QueryParameters.query(uriInfo.getRequestUri().getQuery()).build();
         List<LogEntry> logs = logService.getLogs(query);

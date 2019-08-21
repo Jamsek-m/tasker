@@ -1,6 +1,6 @@
 import {Inject, Injectable} from "@angular/core";
 import {HttpClient, HttpErrorResponse} from "@angular/common/http";
-import {DockerDaemon} from "../models/docker-daemon";
+import {DockerEndpoint} from "../models/docker-endpoint.model";
 import {Observable, throwError} from "rxjs";
 import {Service} from "../models/service.class";
 import {DockerState} from "../models/docker-state.class";
@@ -22,7 +22,7 @@ export class DockerService {
 
     }
 
-    public searchContainerByName(name: string, daemon: DockerDaemon): Observable<DockerPartialInfo[]> {
+    public searchContainerByName(name: string, daemon: DockerEndpoint): Observable<DockerPartialInfo[]> {
         return this.http.get(`${this.apiUrl}/docker`, {
             params: {
                 name,

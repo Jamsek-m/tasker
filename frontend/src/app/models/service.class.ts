@@ -1,4 +1,4 @@
-import {DockerDaemon} from "./docker-daemon";
+import {DockerEndpoint} from "./docker-endpoint.model";
 
 export class ServiceHealthCheck {
     public id: number;
@@ -18,7 +18,7 @@ export class ServiceDeployment {
     public containerId: string;
     public containerName: string;
     public version: string;
-    public dockerDaemon: DockerDaemon;
+    public dockerDaemon: DockerEndpoint;
 }
 
 export class Service {
@@ -45,7 +45,7 @@ export class Service {
         service.serviceUrl = new ServiceUrl();
         service.healthCheck = new ServiceHealthCheck();
         service.deployment = new ServiceDeployment();
-        service.deployment.dockerDaemon = new DockerDaemon();
+        service.deployment.dockerDaemon = new DockerEndpoint();
         service.healthCheck.fixes = [];
         return service;
     }
@@ -63,7 +63,7 @@ export class Service {
             service.deployment = new ServiceDeployment();
         }
         if (!service.deployment.dockerDaemon) {
-            service.deployment.dockerDaemon = new DockerDaemon();
+            service.deployment.dockerDaemon = new DockerEndpoint();
         }
         service.healthCheck.fixes = [];
         return service;

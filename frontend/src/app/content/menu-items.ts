@@ -1,16 +1,32 @@
+import {AuthRole} from "../models/enums/auth-role.enum";
 
 export const menuItems: MenuItem[] = [
+    {
+        label: "Services",
+        url: "/services",
+        external: false,
+        requireAuth: true
+    },
+    {
+        label: "Domains",
+        url: "/domains",
+        external: false,
+        requireAuth: true,
+        requiredRoles: [AuthRole.ADMIN]
+    },
     {
         label: "Logs",
         url: "/logs",
         external: false,
-        requireAuth: true
+        requireAuth: true,
+        requiredRoles: [AuthRole.ADMIN]
     },
     {
         label: "Config",
         url: "/config",
         external: false,
-        requireAuth: true
+        requireAuth: true,
+        requiredRoles: [AuthRole.ADMIN]
     },
     {
         label: "Docs",
@@ -25,4 +41,5 @@ export interface MenuItem {
     url: string;
     external: boolean;
     requireAuth?: boolean;
+    requiredRoles?: string[];
 }

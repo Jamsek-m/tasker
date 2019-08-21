@@ -1,6 +1,6 @@
 package com.mjamsek.tasker.apis.docker;
 
-import com.mjamsek.tasker.entities.exceptions.DockerContainerNotFoundException;
+import com.mjamsek.tasker.lib.v1.exceptions.DockerContainerNotFoundException;
 import org.eclipse.microprofile.rest.client.ext.ResponseExceptionMapper;
 
 import javax.ws.rs.core.MultivaluedMap;

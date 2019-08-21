@@ -1,4 +1,4 @@
-<span *ngIf="!item.requireAuth || (item.requireAuth && isAuthorized)">
+<span *ngIf="!item.requireAuth || (item.requireAuth && hasPermission)">
     <a *ngIf="item.external; else internalLink"
         [href]="item.url" rel="noreferrer noopener"
         class="nav-link" target="_blank">{{item.label}}</a>

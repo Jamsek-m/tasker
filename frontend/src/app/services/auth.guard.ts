@@ -10,17 +10,19 @@ import {map} from "rxjs/operators";
 })
 export class AuthGuard implements CanActivate {
 
-    constructor(private authService: AuthService, private router: Router) {
+    constructor(private auth: AuthService, private router: Router) {
 
     }
 
-    canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
-        return this.authService.checkAuthorization().pipe(map((authorized: boolean) => {
-            if (!authorized) {
-                this.router.navigate(["/login"], {queryParams: {return: state.url}});
-                return false;
-            }
+    public canActivate(
+        route: ActivatedRouteSnapshot,
+        state: RouterStateSnapshot
+    ): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
+        if (this.auth.isAuthenticated()) {
             return true;
-        }));
+        } else {
+            this.auth.redirectToLogin();
+            return false;
+        }
     }
 }

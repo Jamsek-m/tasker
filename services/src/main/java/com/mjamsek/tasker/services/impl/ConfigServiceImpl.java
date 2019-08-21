@@ -3,8 +3,8 @@ package com.mjamsek.tasker.services.impl;
 import com.kumuluz.ee.rest.beans.QueryParameters;
 import com.kumuluz.ee.rest.utils.JPAUtils;
 
-import com.mjamsek.tasker.entities.exceptions.ConflictException;
-import com.mjamsek.tasker.entities.exceptions.EntityNotFoundException;
+import com.mjamsek.tasker.lib.v1.exceptions.ConflictException;
+import com.mjamsek.tasker.lib.v1.exceptions.EntityNotFoundException;
 import com.mjamsek.tasker.entities.persistence.admin.ConfigEntryEntity;
 import com.mjamsek.tasker.lib.v1.ConfigEntry;
 import com.mjamsek.tasker.lib.v1.enums.LogSeverity;

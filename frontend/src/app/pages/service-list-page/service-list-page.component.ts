@@ -1,14 +1,11 @@
 import {Component, OnInit, TemplateRef, ViewChild} from "@angular/core";
 import {Router} from "@angular/router";
-import {TokenService} from "../../services/token.service";
-import {TokenDTO} from "../../models/token.dto";
-import {Token} from "../../models/token.class";
-import {BsModalRef, BsModalService, ModalOptions} from "ngx-bootstrap";
+import {BsModalService} from "ngx-bootstrap";
 import {Service} from "../../models/service.class";
 import {ServicesService} from "../../services/services.service";
-import {ServiceDTO} from "../../models/service.dto";
 import {Observable} from "rxjs";
 import {mergeMap} from "rxjs/operators";
+import {EntityList} from "../../models/common/dto.model";
 
 @Component({
     selector: "tasker-token-list-page",
@@ -44,9 +41,9 @@ export class ServiceListPageComponent implements OnInit {
 
     private getServices(): void {
         this.servicesService.getServices(this.limit, this.offset).subscribe(
-            (res: ServiceDTO) => {
-                this.totalServices = res.totalCount;
-                this.services = res.services;
+            (res: EntityList<Service>) => {
+                this.totalServices = res.count;
+                this.services = res.entities;
             },
             (err: any) => {
                 console.error(err);

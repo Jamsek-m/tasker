@@ -1,11 +1,14 @@
 package com.mjamsek.tasker.resources;
 
 import com.kumuluz.ee.rest.beans.QueryParameters;
-import com.mjamsek.tasker.auth.SecureResource;
+import com.kumuluz.ee.security.annotations.Secure;
 import com.mjamsek.tasker.lib.v1.DockerEndpoint;
+import com.mjamsek.tasker.lib.v1.common.AuthRole;
 import com.mjamsek.tasker.lib.v1.common.HttpHeader;
 import com.mjamsek.tasker.services.DockerEndpointService;
 
+import javax.annotation.security.PermitAll;
+import javax.annotation.security.RolesAllowed;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.ws.rs.*;
@@ -19,6 +22,7 @@ import java.util.List;
 @Path("/docker-endpoints")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
+@Secure
 public class DockerEndpointResource {
     
     @Context
@@ -28,7 +32,7 @@ public class DockerEndpointResource {
     private DockerEndpointService dockerEndpointService;
     
     @GET
-    @SecureResource
+    @PermitAll
     public Response getEndpoints() {
         QueryParameters query = QueryParameters.query(uriInfo.getRequestUri().getQuery()).build();
         List<DockerEndpoint> endpoints = dockerEndpointService.getEndpoints(query);
@@ -38,27 +42,27 @@ public class DockerEndpointResource {
     
     @GET
     @Path("/{endpointId}")
-    @SecureResource
+    @PermitAll
     public Response getEndpoint(@PathParam("endpointId") String endpointId) {
         return Response.ok(dockerEndpointService.getDockerEndpointByName(endpointId)).build();
     }
     
     @POST
-    @SecureResource
+    @RolesAllowed({AuthRole.ADMIN})
     public Response saveEndpoint(DockerEndpoint endpoint) {
         return Response.status(Response.Status.CREATED).entity(dockerEndpointService.saveEndpoint(endpoint)).build();
     }
     
     @PUT
     @Path("/{endpointId}")
-    @SecureResource
+    @RolesAllowed({AuthRole.ADMIN})
     public Response updateEndpoint(@PathParam("endpointId") String endpointId, DockerEndpoint endpoint) {
         return Response.ok(dockerEndpointService.updateEndpoint(endpoint, endpointId)).build();
     }
     
     @DELETE
     @Path("/{endpointId}")
-    @SecureResource
+    @RolesAllowed({AuthRole.ADMIN})
     public Response deleteEndpoint(@PathParam("endpointId") String endpointId) {
         dockerEndpointService.deleteEndpoint(endpointId);
         return Response.noContent().build();

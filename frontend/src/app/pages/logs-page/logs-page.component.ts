@@ -1,8 +1,8 @@
 import {Component, OnInit} from "@angular/core";
 import {LogsService} from "../../services/logs.service";
-import {LogEntry} from "../../models/log-entry.class";
+import {LogEntry} from "../../models/log-entry.model";
 import {HttpErrorResponse} from "@angular/common/http";
-import {LogsDTO} from "../../models/logsDTO";
+import {EntityList} from "../../models/common/dto.model";
 
 @Component({
     selector: "tasker-logs-page",
@@ -31,9 +31,9 @@ export class LogsPageComponent implements OnInit {
 
     public getLogs(dateFilter?: string): void {
         this.logsService.getLogs(this.limit, this.offset, dateFilter).subscribe(
-            (dto: LogsDTO) => {
-                this.logs = dto.logs;
-                this.totalLogs = dto.totalCount;
+            (list: EntityList<LogEntry>) => {
+                this.logs = list.entities;
+                this.totalLogs = list.count;
             },
             (err: HttpErrorResponse) => {
                 console.error(err);

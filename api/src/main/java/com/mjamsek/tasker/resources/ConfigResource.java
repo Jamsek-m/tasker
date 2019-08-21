@@ -1,11 +1,14 @@
 package com.mjamsek.tasker.resources;
 
 import com.kumuluz.ee.rest.beans.QueryParameters;
-import com.mjamsek.tasker.auth.SecureResource;
+import com.kumuluz.ee.security.annotations.Secure;
 import com.mjamsek.tasker.lib.v1.ConfigEntry;
+import com.mjamsek.tasker.lib.v1.common.AuthRole;
 import com.mjamsek.tasker.lib.v1.common.HttpHeader;
 import com.mjamsek.tasker.services.ConfigService;
 
+import javax.annotation.security.PermitAll;
+import javax.annotation.security.RolesAllowed;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.ws.rs.*;
@@ -19,6 +22,7 @@ import java.util.List;
 @Path("/config")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
+@Secure
 public class ConfigResource {
     
     @Context
@@ -28,7 +32,7 @@ public class ConfigResource {
     private ConfigService configService;
     
     @GET
-    @SecureResource
+    @PermitAll
     public Response getConfiguration() {
         QueryParameters query = QueryParameters.query(uriInfo.getRequestUri().getQuery()).build();
         List<ConfigEntry> configEntries = configService.getConfiguration(query);
@@ -38,13 +42,13 @@ public class ConfigResource {
     
     @GET
     @Path("/{key}")
-    @SecureResource
+    @PermitAll
     public Response getConfig(@PathParam("key") String key) {
         return Response.ok().entity(configService.getConfig(key)).build();
     }
     
     @POST
-    @SecureResource
+    @RolesAllowed({AuthRole.ADMIN})
     public Response addConfig(ConfigEntry configEntry) {
         configService.addConfiguration(configEntry);
         return Response.status(Response.Status.CREATED).build();
@@ -52,7 +56,7 @@ public class ConfigResource {
     
     @PUT
     @Path("/{id}")
-    @SecureResource
+    @RolesAllowed({AuthRole.ADMIN})
     public Response updateConfig(@PathParam("id") String id, ConfigEntry configEntry) {
         configService.updateConfiguration(configEntry, id);
         return Response.ok().build();
@@ -60,7 +64,7 @@ public class ConfigResource {
     
     @DELETE
     @Path("/{id}")
-    @SecureResource
+    @RolesAllowed({AuthRole.ADMIN})
     public Response removeConfig(@PathParam("id") String id) {
         configService.deleteConfiguration(id);
         return Response.noContent().build();

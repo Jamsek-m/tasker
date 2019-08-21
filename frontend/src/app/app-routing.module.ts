@@ -4,17 +4,19 @@ import {ServiceListPageComponent} from "./pages/service-list-page/service-list-p
 import {LoginPageComponent} from "./pages/login-page/login-page.component";
 import {Error404PageComponent} from "./pages/error404-page/error404-page.component";
 import {DocsPageComponent} from "./docs/docs-page.component";
-import {DocsTaskPageComponent} from "./docs/docs-task-page/docs-task-page.component";
-import {DocsPluginPageComponent} from "./docs/docs-plugin-page/docs-plugin-page.component";
 import {ConfigurationPageComponent} from "./pages/configuration-page/configuration-page.component";
 import {LogsPageComponent} from "./pages/logs-page/logs-page.component";
 import {AuthGuard} from "./services/auth.guard";
 import {UserProfilePageComponent} from "./pages/user-profile-page/user-profile-page.component";
 import {ServiceDetailsPageComponent} from "./pages/service-details-page/service-details-page.component";
 import {ServiceFormPageComponent} from "./pages/service-form-page/service-form-page.component";
+import {DashboardPageComponent} from "./pages/dashboard-page/dashboard-page.component";
+import {DomainListPageComponent} from "./pages/domain-list-page/domain-list-page.component";
 
 const routes: Routes = [
-    {path: "", pathMatch: "full", component: ServiceListPageComponent, canActivate: [AuthGuard]},
+    {path: "", pathMatch: "full", component: DashboardPageComponent},
+    {path: "domains", component: DomainListPageComponent},
+    {path: "services", component: ServiceListPageComponent, canActivate: [AuthGuard]},
     {path: "service/add", component: ServiceFormPageComponent, canActivate: [AuthGuard]},
     {path: "service/new-version", component: ServiceFormPageComponent, canActivate: [AuthGuard]},
     {path: "service/:id/edit", component: ServiceFormPageComponent, canActivate: [AuthGuard]},

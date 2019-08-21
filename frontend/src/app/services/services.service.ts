@@ -1,8 +1,7 @@
 import {Inject, Injectable} from "@angular/core";
-import {HttpClient, HttpErrorResponse} from "@angular/common/http";
+import {HttpClient, HttpErrorResponse, HttpResponse} from "@angular/common/http";
 import {Observable, of, throwError} from "rxjs";
 import {Service, ServiceValidation} from "../models/service.class";
-import {ServiceDTO} from "../models/service.dto";
 import {catchError, map} from "rxjs/operators";
 import {StringUtil} from "../utils/string.util";
 import {ObjectUtil} from "../utils/object.util";
@@ -12,6 +11,7 @@ import {UnknownError} from "../errors/unknown.error";
 import {InternalServerError} from "../errors/server.error";
 import {API_URL} from "../injectables";
 import {UrlUtil} from "../utils/url.util";
+import {EntityList} from "../models/common/dto.model";
 
 export enum HealthCheckResponse {
     OK,
@@ -30,14 +30,19 @@ export class ServicesService {
 
     }
 
-    public getServices(limit: number, offset: number): Observable<ServiceDTO> {
-        const url = `${this.apiUrl}/services?offset=${offset}&limit=${limit}`;
-        return this.http.get(url, {observe: "response"}).pipe(map(res => {
-            const dto = new ServiceDTO();
-            dto.totalCount = parseInt(res.headers.get("X-Total-Count"), 10);
-            dto.services = res.body as Service[];
-            return dto;
-        }));
+    public getServices(limit: number, offset: number): Observable<EntityList<Service>> {
+        const url = `${this.apiUrl}/services`;
+        const params = {
+            offset: offset.toString(10),
+            limit: limit.toString(10)
+        };
+        return this.http.get(url, {observe: "response", params}).pipe(
+            map((res: HttpResponse<Service[]>) => {
+                return {
+                    count: parseInt(res.headers.get("X-Total-Count"), 10),
+                    entities: res.body
+                };
+            }));
     }
 
     public queryServicesByName(name: string): Observable<Service[]> {

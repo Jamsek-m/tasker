@@ -8,6 +8,11 @@ export const environment: TaskerEnvironment = {
     production: false,
     baseUrl: "http://localhost:8080",
     apiVersion: "v1",
+    keycloak: {
+        realm: "mjamsek-test",
+        authServerUrl: "https://keycloak.mjamsek.com/auth",
+        resource: "tasker-public"
+    }
 };
 
 /*

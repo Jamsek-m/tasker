@@ -12,7 +12,7 @@ export class HeaderLinkComponent implements OnInit {
     public item: MenuItem;
 
     @Input()
-    public isAuthorized: boolean;
+    public hasPermission: boolean;
 
     constructor() {
     }

@@ -1,6 +1,6 @@
 package com.mjamsek.tasker.services;
 
-import com.mjamsek.tasker.entities.exceptions.FailedHealthCheckException;
+import com.mjamsek.tasker.lib.v1.exceptions.FailedHealthCheckException;
 import com.mjamsek.tasker.entities.persistence.service.DockerEndpointEntity;
 import com.mjamsek.tasker.lib.v1.integration.docker.DockerContainerInfo;
 import com.mjamsek.tasker.lib.v1.integration.docker.DockerCreateContainer;

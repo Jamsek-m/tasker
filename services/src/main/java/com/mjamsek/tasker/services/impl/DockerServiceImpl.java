@@ -2,10 +2,10 @@ package com.mjamsek.tasker.services.impl;
 
 import com.kumuluz.ee.rest.beans.QueryParameters;
 import com.mjamsek.tasker.apis.docker.DockerAPI;
-import com.mjamsek.tasker.entities.exceptions.DockerException;
-import com.mjamsek.tasker.entities.exceptions.EntityNotFoundException;
-import com.mjamsek.tasker.entities.exceptions.FailedHealthCheckException;
-import com.mjamsek.tasker.entities.exceptions.TaskerException;
+import com.mjamsek.tasker.lib.v1.exceptions.DockerException;
+import com.mjamsek.tasker.lib.v1.exceptions.EntityNotFoundException;
+import com.mjamsek.tasker.lib.v1.exceptions.FailedHealthCheckException;
+import com.mjamsek.tasker.lib.v1.exceptions.TaskerException;
 import com.mjamsek.tasker.entities.persistence.service.DockerEndpointEntity;
 import com.mjamsek.tasker.lib.v1.DockerEndpoint;
 import com.mjamsek.tasker.lib.v1.integration.docker.DockerContainerInfo;

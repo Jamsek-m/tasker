@@ -1,4 +1,5 @@
 <div class="page-wrapper">
+    <!--
     <div class="general-settings">
         <h1>Settings</h1>
 
@@ -33,38 +34,39 @@
             <button type="button" (click)="resetConfig()" class="btn btn-secondary">Reset</button>
         </div>
     </div>
-    <div class="daemons">
-        <h1>Docker Daemons</h1>
+    -->
+    <div class="endpoints">
+        <h1>Docker Endpoints</h1>
 
         <div>
-            <form (submit)="addDaemon()">
+            <form (submit)="addEndpoint()">
                 <div class="new-item">
-                    <input name="new-key" [(ngModel)]="newDaemon.name" class="form-control" placeholder="Name"/>
-                    <input name="new-value" [(ngModel)]="newDaemon.url" class="form-control" placeholder="Url"/>
+                    <input name="new-key" [(ngModel)]="newEndpoint.name" class="form-control" placeholder="Name"/>
+                    <input name="new-value" [(ngModel)]="newEndpoint.url" class="form-control" placeholder="Url"/>
                     <button type="submit" class="btn btn-outline-primary">Submit</button>
                 </div>
             </form>
         </div>
 
         <div class="forma">
-            <div *ngFor="let daemon of daemons; let i = index" class="forma-item">
-                <input name="key-{{i}}" [(ngModel)]="daemon.daemon.name" (ngModelChange)="daemon.edited = true"
-                    [ngClass]="{'edited': daemon.edited}" disabled="disabled" class="form-control"/>
+            <div *ngFor="let endpoint of endpoints; let i = index" class="forma-item">
+                <input name="key-{{i}}" [(ngModel)]="endpoint.entity.name" (ngModelChange)="endpoint.edited = true"
+                    [ngClass]="{'edited': endpoint.edited}" disabled="disabled" class="form-control"/>
 
                 <input name="value-{{i}}"
-                    [(ngModel)]="daemon.daemon.url"
-                    (ngModelChange)="daemon.edited = true"
-                    [ngClass]="{'edited': daemon.edited}" class="form-control"
+                    [(ngModel)]="endpoint.entity.url"
+                    (ngModelChange)="endpoint.edited = true"
+                    [ngClass]="{'edited': endpoint.edited}" class="form-control"
                 />
 
-                <span (click)="updateDaemon(daemon)" *ngIf="daemon.edited" class="checkmark">
+                <span (click)="updateEndpoint(endpoint)" *ngIf="endpoint.edited" class="checkmark">
                     <fa-icon [icon]="['fas', 'check']"></fa-icon>
                 </span>
-                <span class="cross" (click)="openDeleteDialog(daemon.daemon)">
+                <span class="cross" (click)="openDeleteDialog(endpoint.entity)">
                     <fa-icon [icon]="['fas', 'times']"></fa-icon>
                 </span>
             </div>
-            <button type="button" (click)="resetDaemons()" class="btn btn-secondary">Reset</button>
+            <button type="button" (click)="resetEndpoints()" class="btn btn-secondary">Reset</button>
         </div>
     </div>
 

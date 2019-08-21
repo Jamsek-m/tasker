@@ -39,8 +39,11 @@ import {SpinerComponent} from "./components/spiner/spiner.component";
 import {DocsApiEntryComponent} from "./docs/docs-api-entry/docs-api-entry.component";
 import {TokenGenerationModalComponent} from "./components/token-generation-modal/token-generation-modal.component";
 import {NoopAnimationsModule} from "@angular/platform-browser/animations";
-import {API_URL, BASE_URL} from "./injectables";
+import {API_URL, BASE_URL, KEYCLOAK_CONFIG} from "./injectables";
 import {environment} from "../environments/environment";
+import { DashboardPageComponent } from './pages/dashboard-page/dashboard-page.component';
+import {AuthInterceptor} from "./services/auth.interceptor";
+import { DomainListPageComponent } from './pages/domain-list-page/domain-list-page.component';
 
 
 @NgModule({
@@ -70,7 +73,9 @@ import {environment} from "../environments/environment";
         ServiceFormSummaryComponent,
         SpinerComponent,
         DocsApiEntryComponent,
-        TokenGenerationModalComponent
+        TokenGenerationModalComponent,
+        DashboardPageComponent,
+        DomainListPageComponent
     ],
     imports: [
         BrowserModule,
@@ -84,8 +89,10 @@ import {environment} from "../environments/environment";
     ],
     providers: [
         {provide: HTTP_INTERCEPTORS, useClass: HttpApiInterceptor, multi: true},
+        {provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true},
         {provide: API_URL, useValue: environment.baseUrl + "/" + environment.apiVersion},
-        {provide: BASE_URL, useValue: environment.baseUrl}
+        {provide: BASE_URL, useValue: environment.baseUrl},
+        {provide: KEYCLOAK_CONFIG, useValue: environment.keycloak}
     ],
     entryComponents: [
         ConfirmationDialogComponent,

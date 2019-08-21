@@ -2,7 +2,7 @@ import {Inject, Injectable} from "@angular/core";
 import {HttpClient} from "@angular/common/http";
 import {environment} from "../../environments/environment";
 import {Observable} from "rxjs";
-import {ConfigEntry} from "../models/config-entry.class";
+import {ConfigEntry} from "../models/config-entry.model";
 import {map} from "rxjs/operators";
 import {API_URL} from "../injectables";
 

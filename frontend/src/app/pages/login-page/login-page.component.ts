@@ -27,7 +27,7 @@ export class LoginPageComponent implements OnInit {
     public login($event: Event) {
         $event.preventDefault();
         this.error = false;
-        this.authService.loginUser(this.loginInfo).subscribe(
+        /*this.authService.loginUser(this.loginInfo).subscribe(
             () => {
                 this.router.navigateByUrl(this.returnUrl)
             },
@@ -35,7 +35,7 @@ export class LoginPageComponent implements OnInit {
                 console.error(err);
                 this.error = true;
             }
-        );
+        );*/
     }
 
 }

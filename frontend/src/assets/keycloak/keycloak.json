@@ -1,0 +1,8 @@
+{
+    "realm": "mjamsek-test",
+    "auth-server-url": "https://keycloak.mjamsek.com/auth",
+    "ssl-required": "external",
+    "resource": "tasker-public",
+    "public-client": true,
+    "confidential-port": 0
+}

@@ -1,14 +1,16 @@
 package com.mjamsek.tasker.resources;
 
 import com.kumuluz.ee.rest.beans.QueryParameters;
-import com.mjamsek.tasker.auth.SecureResource;
-import com.mjamsek.tasker.auth.SecureResourceOrToken;
+import com.kumuluz.ee.security.annotations.Secure;
 import com.mjamsek.tasker.lib.v1.Service;
+import com.mjamsek.tasker.lib.v1.common.AuthRole;
 import com.mjamsek.tasker.lib.v1.common.HttpHeader;
 import com.mjamsek.tasker.lib.v1.integration.docker.DockerContainerInfo;
 import com.mjamsek.tasker.lib.v1.integration.docker.DockerState;
 import com.mjamsek.tasker.services.ServicesService;
 
+import javax.annotation.security.PermitAll;
+import javax.annotation.security.RolesAllowed;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.ws.rs.*;
@@ -22,6 +24,7 @@ import java.util.List;
 @Path("/services")
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
+@Secure
 public class ServicesResource {
     
     @Inject
@@ -31,7 +34,7 @@ public class ServicesResource {
     protected UriInfo uriInfo;
     
     @GET
-    @SecureResource
+    @PermitAll
     public Response getServices() {
         QueryParameters query = QueryParameters.query(uriInfo.getRequestUri().getQuery()).build();
         List<Service> services = servicesService.getServices(query);
@@ -41,7 +44,7 @@ public class ServicesResource {
     
     @GET
     @Path("/{serviceId}")
-    @SecureResource
+    @PermitAll
     public Response getService(@PathParam("serviceId") String serviceIdOrName) {
         Service service = servicesService.getServiceByIdOrName(serviceIdOrName);
         return Response.ok(service).build();
@@ -49,7 +52,7 @@ public class ServicesResource {
     
     @PUT
     @Path("/{serviceId}")
-    @SecureResource
+    @RolesAllowed({AuthRole.DEVELOPER})
     public Response updateService(@PathParam("serviceId") String serviceId, Service service) {
         Service updatedService = servicesService.updateService(service, serviceId);
         return Response.ok(updatedService).build();
@@ -57,7 +60,7 @@ public class ServicesResource {
     
     @GET
     @Path("/{serviceId}/container")
-    @SecureResourceOrToken
+    @RolesAllowed({AuthRole.DEVELOPER})
     public Response getContainerInfo(@PathParam("serviceId") String serviceId,
                                      @QueryParam("raw") @DefaultValue("false") boolean raw) {
         if (raw) {
@@ -71,7 +74,7 @@ public class ServicesResource {
     
     @GET
     @Path("/{serviceId}/container/state")
-    @SecureResourceOrToken
+    @PermitAll
     public Response getContainerStatus(@PathParam("serviceId") String serviceId) {
         DockerState state = servicesService.getContainerState(serviceId);
         return Response.ok(state).build();
@@ -79,7 +82,7 @@ public class ServicesResource {
     
     @POST
     @Path("/{serviceId}/container/start")
-    @SecureResourceOrToken
+    @RolesAllowed({AuthRole.DEVELOPER})
     public Response startContainer(@PathParam("serviceId") String serviceId) {
         servicesService.startContainer(serviceId);
         return Response.ok().build();
@@ -87,7 +90,7 @@ public class ServicesResource {
     
     @DELETE
     @Path("/{serviceId}/container/stop")
-    @SecureResourceOrToken
+    @RolesAllowed({AuthRole.DEVELOPER})
     public Response stopContainer(@PathParam("serviceId") String serviceId) {
         servicesService.stopContainer(serviceId);
         return Response.ok().build();
@@ -95,14 +98,14 @@ public class ServicesResource {
     
     @PUT
     @Path("/{serviceId}/container/recreate")
-    @SecureResourceOrToken
+    @RolesAllowed({AuthRole.DEVELOPER})
     public Response recreateContainer(@PathParam("serviceId") String serviceId) {
         servicesService.recreateContainer(serviceId);
         return Response.ok().build();
     }
     
     @POST
-    @SecureResource
+    @RolesAllowed({AuthRole.DEVELOPER})
     public Response createService(Service service) {
         Service created = servicesService.createService(service);
         return Response.status(Response.Status.CREATED).entity(created).build();
@@ -110,23 +113,15 @@ public class ServicesResource {
     
     @GET
     @Path("/{serviceId}/health")
-    @SecureResourceOrToken
+    @PermitAll
     public Response getServiceHealth(@PathParam("serviceId") String serviceId) {
         servicesService.doHealthCheck(serviceId);
         return Response.ok().build();
     }
     
-    /*@PATCH
-    @Path("/{serviceId}/token")
-    @SecureResource
-    public Response generateServiceToken(@PathParam("serviceId") String serviceId) {
-        ServiceToken token = servicesService.generateServiceToken(serviceId);
-        return Response.status(Response.Status.CREATED).entity(token).build();
-    }*/
-    
     @DELETE
     @Path("/{serviceId}")
-    @SecureResource
+    @RolesAllowed({AuthRole.DEVELOPER})
     public Response deleteService(@PathParam("serviceId") String serviceId) {
         servicesService.deleteService(serviceId);
         return Response.noContent().build();

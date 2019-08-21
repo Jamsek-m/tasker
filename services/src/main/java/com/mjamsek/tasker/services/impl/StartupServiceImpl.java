@@ -65,7 +65,8 @@ public class StartupServiceImpl implements StartupService {
     }
     
     private void populateData() {
-        try (Connection conn = dataSource.getConnection()) {
+        // Add default configuration values
+        /*try (Connection conn = dataSource.getConnection()) {
             
             PreparedStatement createConfigStatement = conn
                 .prepareStatement("INSERT INTO configuration(id, config_key, config_value) VALUES (?, ?, ?)");
@@ -73,19 +74,11 @@ public class StartupServiceImpl implements StartupService {
             createConfigStatement.setString(2, "TASKER_ENABLED_REGISTRATION");
             createConfigStatement.setString(3, "false");
             createConfigStatement.execute();
-    
-            PreparedStatement addAdminUserStatement = conn
-                .prepareStatement("INSERT INTO users(id, password, username) VALUES (?, ?, ?)");
-            String password = BCrypt.hashpw(ConfigurationUtil.getInstance().get("tasker.admin.password").get(), BCrypt.gensalt());
-            addAdminUserStatement.setInt(1, 1);
-            addAdminUserStatement.setString(2, password);
-            addAdminUserStatement.setString(3, ConfigurationUtil.getInstance().get("tasker.admin.username").get());
-            addAdminUserStatement.execute();
             
         } catch (SQLException e) {
             e.printStackTrace();
             System.exit(1);
-        }
+        }*/
     }
     
     private void writeInitFile() {
