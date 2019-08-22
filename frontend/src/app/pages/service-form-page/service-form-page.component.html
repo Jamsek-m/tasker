@@ -3,7 +3,7 @@
         <div class="basic-info">
             <h3>General info</h3>
             <div class="form-row">
-                <div class="col-9">
+                <div class="col-6">
                     <label for="name">
                         Service name:
                         <tasker-help
@@ -28,6 +28,20 @@
                         {{validation.version}}
                     </div>
                 </div>
+                <div class="col-3 form-group">
+                    <label for="type">
+                        Type:
+                        <tasker-help help="Service type."></tasker-help>
+                    </label>
+                    <select id="type" name="type" class="custom-select" required
+                        [disabled]="mode === 'edit'" [class.is-invalid]="validation.type" [(ngModel)]="service.type">
+                        <option value="" [disabled]="true"></option>
+                        <option *ngFor="let type of typeEnum" [value]="type.value">{{type.label}}</option>
+                    </select>
+                    <div class="invalid-feedback" *ngIf="validation.type">
+                        {{validation.type}}
+                    </div>
+                </div>
             </div>
             <div class="form-group">
                 <label for="description">
@@ -41,6 +55,7 @@
 
         <hr/>
 
+        <!--
         <div class="service-location">
             <h3>Deployment</h3>
             <div class="form-check form-check-inline group-enabler">
@@ -85,34 +100,42 @@
                 </div>
             </div>
         </div>
-
         <hr/>
+        -->
+
+        <tasker-service-form-client-section [service]="service" [validation]="validation"
+            *ngIf="service.type === 'CLIENT_APP' || service.type === 'WEB_APP'"
+        ></tasker-service-form-client-section>
+
+        <tasker-service-form-api-section [service]="service" [validation]="validation"
+            *ngIf="service.type === 'API_SERVICE' || service.type === 'WEB_APP'"
+        ></tasker-service-form-api-section>
 
         <div class="service-deployment">
-            <h3>Docker deployment</h3>
+            <h3>Deployment</h3>
 
             <div class="form-check group-enabler">
                 <input type="checkbox" id="is-dockerized" name="is-dockerized" class="form-check-input"
-                    [(ngModel)]="service.isDockerized"/>
+                    [(ngModel)]="hasDeployment" (ngModelChange)="initDeployment()"/>
                 <label class="form-check-label" for="is-dockerized">
                     Is deployed on docker?
                     <tasker-help help="If service is not deployed on docker disable this option."></tasker-help>
                 </label>
             </div>
-            <div class="form-row" *ngIf="service.isDockerized">
+            <div class="form-row" *ngIf="hasDeployment">
                 <div class="col">
                     <label for="daemon">
                         Docker daemon:
                         <tasker-help help="Docker daemon where your service is deployed."></tasker-help>
                     </label>
                     <select class="custom-select" id="daemon" name="daemon" required
-                        [ngClass]="{'is-invalid': validation.dockerDaemon}"
+                        [class.is-invalid]="validation.dockerEndpoint"
                         [compareWith]="compareDaemonsFn"
-                        [(ngModel)]="service.deployment.dockerDaemon">
-                        <option *ngFor="let daemon of daemons" [ngValue]="daemon">{{daemon.name}}</option>
+                        [(ngModel)]="service.deployment.dockerEndpoint">
+                        <option *ngFor="let endpoint of dockerEndpoints" [ngValue]="endpoint">{{endpoint.name}}</option>
                     </select>
-                    <div class="invalid-feedback" *ngIf="validation.dockerDaemon">
-                        {{validation.dockerDaemon}}
+                    <div class="invalid-feedback" *ngIf="validation.dockerEndpoint">
+                        {{validation.dockerEndpoint}}
                     </div>
                 </div>
                 <div class="col">
@@ -123,7 +146,7 @@
                     </label>
                     <input type="text" id="container-name" name="container-name" class="form-control"
                         required
-                        [ngClass]="{'is-invalid': validation.containerName}"
+                        [class.is-invalid]="validation.containerName"
                         [typeaheadAsync]="true"
                         [typeahead]="dockerContainerNameObservable"
                         [typeaheadOptionsLimit]="5"
@@ -139,14 +162,14 @@
                     </ng-template>
                 </div>
             </div>
-            <div class="form-group" *ngIf="service.isDockerized">
+            <div class="form-group" *ngIf="hasDeployment">
                 <label for="container-id">
                     Container id:
                     <tasker-help
                         help="Id of your deployed container. If container is recreated its id will change."></tasker-help>
                 </label>
                 <input class="form-control" type="text" readonly name="container-id" required
-                    [ngClass]="{'is-invalid': validation.containerId}"
+                    [class.is-invalid]="validation.containerId"
                     id="container-id" [(ngModel)]="service.deployment.containerId"/>
                 <div class="invalid-feedback" *ngIf="validation.containerId">
                     {{validation.containerId}}
@@ -156,6 +179,8 @@
 
         <hr/>
 
+
+        <!--
         <div class="service-healthcheck">
             <h3>Healthcheck</h3>
             <div class="form-check group-enabler">
@@ -183,7 +208,7 @@
                 </div>
             </div>
         </div>
-
+        -->
         <div class="service-actions">
             <button class="btn btn-outline-danger cancel" (click)="cancel()">Cancel</button>
             <button class="btn btn-outline-primary save" (click)="save()">Save</button>

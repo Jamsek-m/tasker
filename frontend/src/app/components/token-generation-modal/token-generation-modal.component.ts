@@ -13,7 +13,7 @@ export class TokenGenerationModalComponent implements OnInit, OnDestroy {
     public service: Service;
 
     public tokenGenerated = false;
-    public generatedToken: Service.Token = null;
+    public generatedToken: any = null;
 
     constructor(private ref: BsModalRef, private servicesService: ServicesService) {
     }
@@ -26,12 +26,12 @@ export class TokenGenerationModalComponent implements OnInit, OnDestroy {
     }
 
     public generateToken() {
-        this.servicesService.generateServiceToken(this.service.id).subscribe(
+        /*this.servicesService.generateServiceToken(this.service.id).subscribe(
             (token: Service.Token) => {
                 this.tokenGenerated = true;
                 this.generatedToken = token;
             }
-        );
+        );*/
     }
 
     public close() {

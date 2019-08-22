@@ -13,7 +13,6 @@ export class DomainService {
 
     constructor(private http: HttpClient,
                 @Inject(API_URL) private apiUrl: string) {
-
     }
 
     public getDomains(limit: number, offset: number): Observable<EntityList<Domain>> {
@@ -39,5 +38,9 @@ export class DomainService {
         );
     }
 
+    public addDomain(domain: Domain): Observable<Domain> {
+        const url = `${this.apiUrl}/domains`;
+        return this.http.post(url, JSON.stringify(domain)).pipe(map(res => res as Domain));
+    }
 
 }

@@ -1,7 +1,7 @@
 import {AfterViewInit, Component, ElementRef, HostListener, OnInit, ViewChild} from "@angular/core";
 import {DockerEndpointsService} from "../../services/docker-endpoints.service";
 import {DockerEndpoint} from "../../models/docker-endpoint.model";
-import {Service, ServiceValidation} from "../../models/service.class";
+import {Service, ServiceDeployment, ServiceValidation} from "../../models/service.class";
 import {DockerService} from "../../services/docker.service";
 import {Observable} from "rxjs";
 import {mergeMap} from "rxjs/operators";
@@ -20,13 +20,16 @@ import {NavigationUtil} from "../../utils/navigation.util";
 })
 export class ServiceFormPageComponent implements OnInit, AfterViewInit {
 
-    public daemons: DockerEndpoint[] = [];
-    public service = Service.empty();
+    public service = new Service();
+    public hasDeployment = false;
     public validation = new ServiceValidation();
-    public dockerContainerNameObservable: Observable<any>;
+
     public mode: "edit" | "add" | "new-version";
-    private serviceId: number;
     public editVersionPlaceholder: string;
+
+    public dockerEndpoints: DockerEndpoint[] = [];
+    public typeEnum = Service.Types;
+    public dockerContainerNameObservable: Observable<any>;
 
     @ViewChild("formSummary", {static: false})
     public formSummary: ElementRef<HTMLDivElement>;
@@ -47,7 +50,6 @@ export class ServiceFormPageComponent implements OnInit, AfterViewInit {
     ngOnInit() {
         if (this.router.url.endsWith("edit")) {
             this.mode = "edit";
-            this.serviceId = this.activatedRoute.snapshot.params.id;
             this.getServiceInformation();
         } else if (this.router.url.endsWith("new-version")) {
             this.mode = "new-version";
@@ -55,6 +57,7 @@ export class ServiceFormPageComponent implements OnInit, AfterViewInit {
                 this.service = Service.recreate(NavigationUtil.routeData);
                 this.editVersionPlaceholder = this.service.version;
                 this.service.version = "";
+                this.hasDeployment = !!this.service.deployment;
             } else {
                 this.router.navigate(["/service/add"]);
             }
@@ -62,7 +65,7 @@ export class ServiceFormPageComponent implements OnInit, AfterViewInit {
             this.mode = "add";
         }
 
-        this.initDaemons();
+        this.getDockerEndpoints();
         this.setDefaultOptions();
         this.registerContainerSearchObserver();
     }
@@ -90,11 +93,12 @@ export class ServiceFormPageComponent implements OnInit, AfterViewInit {
         this.service.deployment.containerId = containerInfo.Id;
     }
 
-    public prependUrlToHealthcheck(): void {
-        this.service.healthCheck.healthUrl = this.service.serviceUrl.url + (this.service.healthCheck.healthUrl || "");
-    }
-
     public save(): void {
+
+        if (!this.hasDeployment) {
+            this.service.deployment = null;
+        }
+
         this.validation = this.servicesService.validateService(this.service);
         if (this.validation.validEntity) {
 
@@ -128,7 +132,7 @@ export class ServiceFormPageComponent implements OnInit, AfterViewInit {
         this.messageService.openConfirmationDialog("Are you sure? All unsaved data will be lost.", {
             onConfirmation: (ref: BsModalRef) => {
                 ref.hide();
-                this.router.navigate(["/"]);
+                this.router.navigate(["/services"]);
             }
         }, {confirmIsDestructive: true});
     }
@@ -140,10 +144,18 @@ export class ServiceFormPageComponent implements OnInit, AfterViewInit {
         return false;
     }
 
+    public initDeployment() {
+        if (!this.service.deployment) {
+            this.service.deployment = new ServiceDeployment();
+        }
+    }
+
     private getServiceInformation(): void {
-        this.servicesService.getService(this.serviceId).subscribe(
+        const serviceId = this.activatedRoute.snapshot.params.id;
+        this.servicesService.getService(serviceId).subscribe(
             (service: Service) => {
-                this.service = Service.recreate(service);
+                this.service = service;
+                this.hasDeployment = !!this.service.deployment;
             },
             (err: BaseError) => {
                 if (err instanceof NotFoundError) {
@@ -159,14 +171,14 @@ export class ServiceFormPageComponent implements OnInit, AfterViewInit {
         this.dockerContainerNameObservable = new Observable((observer: any) => {
             observer.next(this.service.deployment.containerName);
         }).pipe(mergeMap((nameQuery: string) => {
-            return this.dockerService.searchContainerByName(nameQuery, this.service.deployment.dockerDaemon);
+            return this.dockerService.searchContainerByName(nameQuery, this.service.deployment.dockerEndpoint);
         }));
     }
 
-    private initDaemons(): void {
+    private getDockerEndpoints(): void {
         this.dockerDaemonService.getEndpoints().subscribe(
             (list: DockerEndpoint[]) => {
-                this.daemons = list;
+                this.dockerEndpoints = list;
             },
             (err) => {
                 console.error(err);
@@ -177,8 +189,6 @@ export class ServiceFormPageComponent implements OnInit, AfterViewInit {
     private setDefaultOptions(): void {
         if (this.mode === "add") {
             this.service.version = "1.0.0";
-            this.service.serviceUrl.url = "http://";
-            this.service.deployment.containerName = "";
         }
     }
 

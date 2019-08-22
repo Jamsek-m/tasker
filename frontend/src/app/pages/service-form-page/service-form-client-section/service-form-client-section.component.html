@@ -1,0 +1,20 @@
+<div class="client">
+    <h3>Client configuration</h3>
+
+    <div class="form-row">
+        <div class="col">
+            <label for="app-url">
+                Application url:
+                <tasker-help help="Base url of client application"></tasker-help>
+            </label>
+            <input class="form-control" type="text" name="app-url" required
+                [class.is-invalid]="validation.applicationUrl"
+                id="app-url" [(ngModel)]="service.applicationUrl"/>
+            <div class="invalid-feedback" *ngIf="validation.applicationUrl">
+                {{validation.applicationUrl}}
+            </div>
+        </div>
+    </div>
+</div>
+
+<hr/>

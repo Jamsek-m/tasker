@@ -23,64 +23,76 @@
     <h2>{{service.name}}@{{service.version}}</h2>
     <p class="description">{{service.description}}</p>
 
-    <h4>
-        <fa-icon [icon]="['fas', 'cogs']"></fa-icon>
-        Service
-    </h4>
-    <div>
-        <div *ngIf="service.serviceUrl; else noDeployment">
+    <div *ngIf="service.type === 'WEB_APP' || service.type === 'CLIENT_APP'">
+        <h4>
+            <fa-icon [icon]="['far', 'window-restore']"></fa-icon>
+            Client application
+        </h4>
+        <div *ngIf="service.applicationUrl; else noAppUrl">
             <div class="data-row">
-                <span class="row-title">Base url:</span>
-                <span class="row-value">{{service.serviceUrl.url}}</span>
-                <tasker-clipboard [data]="service.serviceUrl.url"></tasker-clipboard>
-            </div>
-            <div class="data-row">
-                <span class="row-title">API base url:</span>
-                <span class="row-value">{{
-                    service.serviceUrl.urlVersioning ?
-                        service.serviceUrl.url + '/' + service.serviceUrl.version :
-                        service.serviceUrl.url
-                    }}</span>
-                <tasker-clipboard [data]="
-                    service.serviceUrl.urlVersioning ?
-                        service.serviceUrl.url + '/' + service.serviceUrl.version :
-                        service.serviceUrl.url">
-                </tasker-clipboard>
+                <span class="row-title">Application url:</span>
+                <span class="row-value">{{service.applicationUrl}}</span>
+                <tasker-clipboard [data]="service.applicationUrl"></tasker-clipboard>
             </div>
         </div>
-        <ng-template #noDeployment>
-            <div>Service is not deployed.</div>
+        <ng-template #noAppUrl>
+            <div>Service does not have registered client application.</div>
         </ng-template>
+
+        <hr/>
     </div>
 
-    <h4>
-        <fa-icon [icon]="['fas', 'heartbeat']"></fa-icon>
-        Health
-    </h4>
-    <div>
-        <div *ngIf="service.healthCheck; else noHealth">
+    <div *ngIf="service.type === 'WEB_APP' || service.type === 'API_SERVICE'">
+        <h4>
+            <fa-icon [icon]="['fas', 'cogs']"></fa-icon>
+            API
+        </h4>
+        <div *ngIf="service.baseUrl; else noBaseUrl">
+            <div class="data-row">
+                <span class="row-title">API base url:</span>
+                <span class="row-value">{{service.baseUrl}}</span>
+                <tasker-clipboard [data]="service.baseUrl"></tasker-clipboard>
+            </div>
+            <div class="data-row">
+                <span class="row-title">Major version:</span>
+                <span class="row-value">{{service.majorVersion}}</span>
+            </div>
+        </div>
+        <ng-template #noBaseUrl>
+            <div>Service does not have registered base url.</div>
+        </ng-template>
+        <hr/>
+    </div>
+
+    <div *ngIf="service.type === 'WEB_APP' || service.type === 'API_SERVICE'">
+        <h4>
+            <fa-icon [icon]="['fas', 'heartbeat']"></fa-icon>
+            Service health
+        </h4>
+        <div *ngIf="service.healthcheckUrl; else noHealth">
             <div class="data-row">
                 <span class="row-title">Status:</span>
                 <span class="row-value">
-                <span (click)="checkHealth()" class="health-status status-{{status}}">{{status}}</span>
-            </span>
+                    <span (click)="checkHealth()" class="health-status status-{{status}}">{{status}}</span>
+                </span>
             </div>
             <div class="data-row">
                 <span class="row-title">Health url:</span>
-                <span class="row-value">{{service.healthCheck.healthUrl}}</span>
-                <tasker-clipboard [data]="service.healthCheck.healthUrl"></tasker-clipboard>
+                <span class="row-value">{{service.healthcheckUrl}}</span>
+                <tasker-clipboard [data]="service.healthcheckUrl"></tasker-clipboard>
             </div>
         </div>
         <ng-template #noHealth>
-            <div>Service does not have registered healthchecks.</div>
+            <div>Service does not have registered healthcheck.</div>
         </ng-template>
+        <hr/>
     </div>
 
-    <h4>
-        <fa-icon [icon]="['fab', 'docker']"></fa-icon>
-        Deployment
-    </h4>
     <div>
+        <h4>
+            <fa-icon [icon]="['fab', 'docker']"></fa-icon>
+            Deployment
+        </h4>
         <div *ngIf="service.deployment; else noDocker">
             <h5>
                 Container
@@ -104,9 +116,9 @@
                 <tasker-clipboard [data]="service.deployment.containerId"></tasker-clipboard>
             </div>
             <div class="data-row">
-                <span class="row-title">Daemon:</span>
+                <span class="row-title">Docker endpoint:</span>
                 <span class="row-value daemon-link" (click)="goToDaemons()">
-                    {{service.deployment.dockerDaemon.name}}
+                    {{service.deployment.dockerEndpoint.name}}
                     <fa-icon [icon]="['fas', 'arrow-right']"></fa-icon>
                 </span>
             </div>
@@ -116,13 +128,15 @@
                 Service is not deployed on docker.
             </div>
         </ng-template>
+        <hr/>
     </div>
+
 
     <h4>
         <fa-icon [icon]="['fas', 'bolt']"></fa-icon>
         Actions
     </h4>
-    <div class="actions" *ngIf="service.deployment && service.deployment.dockerDaemon && containerState && containerState.status &&
+    <div class="actions" *ngIf="service.deployment && service.deployment.dockerEndpoint && containerState && containerState.status &&
           service.deployment.containerId && service.deployment.containerId !== ''; else noActions">
         <button class="btn btn-outline-info with-marg" (click)="getContainerInfo()"
             [disabled]="blockActions">Inspect

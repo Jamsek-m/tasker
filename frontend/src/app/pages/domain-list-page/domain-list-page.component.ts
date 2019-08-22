@@ -14,6 +14,9 @@ export class DomainListPageComponent implements OnInit {
     public limit = 10;
     private offset = 0;
     public domains: Domain[];
+    public showAddForm = false;
+    public newDomain: Domain = new Domain();
+    public domainValidation: string = null;
 
     constructor(private domainService: DomainService) {
     }
@@ -39,6 +42,29 @@ export class DomainListPageComponent implements OnInit {
                 domain = updatedDomain;
             }
         );
+    }
+
+    public addDomain(): void {
+        this.domainValidation = null;
+        this.domainValidation = this.validateDomain(this.newDomain);
+        if (!this.domainValidation) {
+            this.domainService.addDomain(this.newDomain).subscribe(
+                () => {
+                    this.getDomains();
+                }
+            );
+        }
+    }
+
+    private validateDomain(domain: Domain): string | null {
+        if (domain.domain) {
+            domain.domain = domain.domain.trim();
+        }
+
+        if (!domain.domain || domain.domain.length === 0) {
+            return "Domain must not be empty!";
+        }
+        return null;
     }
 
     private getDomains(): void {

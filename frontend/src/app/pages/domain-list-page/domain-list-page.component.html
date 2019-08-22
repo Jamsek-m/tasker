@@ -1,30 +1,61 @@
-<tasker-pagination-limit (whenLimitChanges)="limitChange($event)"></tasker-pagination-limit>
+<div>
 
-<div class="table-responsive">
-    <table class="table">
-        <thead>
-            <tr>
-                <th class="tb-domain">Domain</th>
-                <th class="tb-ssl">SSL enabled</th>
-                <th class="tb-actions">Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr *ngFor="let domain of domains; let i = index">
-                <td class="tb-domain">{{domain.domain}}</td>
-                <td class="tb-ssl">
-                    <div class="custom-control custom-switch">
-                        <input type="checkbox" class="custom-control-input" id="switch-{{i}}"
-                            [(ngModel)]="domain.sslEnabled" (ngModelChange)="updateSSL(domain)">
-                        <label for="switch-{{i}}" class="custom-control-label"></label>
-                    </div>
-                </td>
-                <td class="tb-actions"></td>
-            </tr>
-        </tbody>
-    </table>
+    <h1>Domains</h1>
+    <div class="actions row">
+        <div class="col" *ngIf="!showAddForm">
+            <button class="btn btn-sm btn-outline-primary" (click)="showAddForm = true">
+                <fa-icon [icon]="['fas', 'plus']"></fa-icon>
+                Add domain
+            </button>
+        </div>
+        <div class="input-group col-4" *ngIf="showAddForm">
+            <input type="text" class="form-control" placeholder="Add domain"
+                [class.is-invalid]="domainValidation"
+                name="domain" id="domain" [(ngModel)]="newDomain.domain"/>
+            <div class="input-group-append confirm-group" (click)="addDomain()">
+                <div class="input-group-text">
+                    <fa-icon [icon]="['fas', 'check']"></fa-icon>
+                </div>
+            </div>
+            <div class="invalid-feedback" *ngIf="domainValidation">
+                {{domainValidation}}
+            </div>
+        </div>
+    </div>
+
+    <tasker-pagination-limit (whenLimitChanges)="limitChange($event)"></tasker-pagination-limit>
+
+    <div class="table-responsive">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th class="tb-domain">Domain</th>
+                    <th class="tb-ssl">SSL enabled</th>
+                    <th class="tb-actions">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let domain of domains; let i = index">
+                    <td class="tb-domain">{{domain.domain}}</td>
+                    <td class="tb-ssl">
+                        <div class="custom-control custom-switch">
+                            <input type="checkbox" class="custom-control-input" id="switch-{{i}}"
+                                [(ngModel)]="domain.sslEnabled" (ngModelChange)="updateSSL(domain)">
+                            <label for="switch-{{i}}" class="custom-control-label"></label>
+                        </div>
+                    </td>
+                    <td class="tb-actions"></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <tasker-pagination [totalItems]="totalCount" [itemsPerPage]="limit"
+        (whenPageChange)="pageChange($event)">
+    </tasker-pagination>
 </div>
 
-<tasker-pagination [totalItems]="totalCount" [itemsPerPage]="limit"
-    (whenPageChange)="pageChange($event)">
-</tasker-pagination>
+
+
+
+

@@ -82,7 +82,6 @@ public class ServiceMapper {
                 return null;
         }
         
-        entity.setId(service.getId());
         entity.setActive(service.getActive());
         entity.setName(service.getName());
         entity.setDescription(service.getDescription());
@@ -107,8 +106,11 @@ public class ServiceMapper {
     }
     
     public static ServiceDeploymentEntity deploymentToEntity(ServiceDeployment deployment) {
+        if (deployment == null) {
+            return null;
+        }
+        
         ServiceDeploymentEntity entity = new ServiceDeploymentEntity();
-        entity.setId(deployment.getId());
         entity.setContainerId(deployment.getContainerId());
         entity.setContainerName(deployment.getContainerName());
         if (deployment.getDockerEndpoint() != null) {

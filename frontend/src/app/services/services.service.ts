@@ -10,14 +10,9 @@ import {ValidationError} from "../errors/validation.error";
 import {UnknownError} from "../errors/unknown.error";
 import {InternalServerError} from "../errors/server.error";
 import {API_URL} from "../injectables";
-import {UrlUtil} from "../utils/url.util";
 import {EntityList} from "../models/common/dto.model";
-
-export enum HealthCheckResponse {
-    OK,
-    ERROR,
-    UNDEF
-}
+import {HealthCheckResponse} from "../models/enums/healthcheck-response.enum";
+import {UrlUtil} from "../utils/url.util";
 
 @Injectable({
     providedIn: "root"
@@ -46,18 +41,22 @@ export class ServicesService {
     }
 
     public queryServicesByName(name: string): Observable<Service[]> {
-        const url = `${this.apiUrl}/services?filter=name:LIKEIC:%${name}%&limit=5`;
-        return this.http.get(url).pipe(map(res => res as Service[]));
+        const url = `${this.apiUrl}/services`;
+        const params = {
+            filter: `name:LIKEIC:'%${name}%'`,
+            limit: "5"
+        };
+        return this.http.get(url, {params}).pipe(map(res => res as Service[]));
     }
 
-    public getService(serviceId: number): Observable<Service> {
+    public getService(serviceId: string): Observable<Service> {
         const url = `${this.apiUrl}/services/${serviceId}`;
         return this.http.get(url).pipe(
             map(res => res as Service)
         );
     }
 
-    public doHealthCheck(serviceId: number): Observable<HealthCheckResponse> {
+    public doHealthCheck(serviceId: string): Observable<HealthCheckResponse> {
         const url = `${this.apiUrl}/services/${serviceId}/health`;
         return this.http.get(url, {observe: "response"}).pipe(
             map(() => HealthCheckResponse.OK),
@@ -80,42 +79,55 @@ export class ServicesService {
             validation.validEntity = false;
             validation.name = "Name can contain only lowercase alphanumeric symbols, underscore and dash!";
         }
-
-        if (!entity.version) {
-            validation.validEntity = false;
-            validation.version = "Version must not be empty!";
-        }
         if (!entity.name) {
             validation.validEntity = false;
             validation.name = "Name must not be empty!";
         }
 
-        entity.healthCheck.healthUrl = UrlUtil.buildUrl(entity.healthCheck.healthUrl);
-        if (entity.hasHealthcheck && !entity.healthCheck.healthUrl) {
+        if (!entity.version) {
             validation.validEntity = false;
-            validation.healthUrl = "Healthcheck url must not be empty!";
-        }
-        if (entity.isDeployed && entity.serviceUrl.urlVersioning && !entity.serviceUrl.version) {
-            validation.validEntity = false;
-            validation.ApiVersion = "API version must not be empty!";
+            validation.version = "Version must not be empty!";
         }
 
-        entity.serviceUrl.url = UrlUtil.buildUrl(entity.serviceUrl.url);
-        if (entity.isDeployed && !entity.serviceUrl.url) {
+        if (!entity.type) {
             validation.validEntity = false;
-            validation.url = "Base URL must not be empty!";
+            validation.type = "Type must not be null!";
         }
-        if (entity.isDockerized && ObjectUtil.isEmpty(entity.deployment.dockerDaemon)) {
+
+        if (entity.deployment && ObjectUtil.isEmpty(entity.deployment.dockerEndpoint)) {
             validation.validEntity = false;
-            validation.dockerDaemon = "Please choose a daemon.";
+            validation.dockerEndpoint = "Please choose an endpoint.";
         }
-        if (entity.isDockerized && !entity.deployment.containerName) {
+        if (entity.deployment && !entity.deployment.containerName) {
             validation.validEntity = false;
             validation.containerName = "Container name must not be empty!";
         }
-        if (entity.isDockerized && !entity.deployment.containerId) {
+        if (entity.deployment && !entity.deployment.containerId) {
             validation.validEntity = false;
             validation.containerId = "Container ID must not be empty!";
+        }
+
+        if (entity.type === "CLIENT_APP" || entity.type === "WEB_APP") {
+
+            entity.applicationUrl = UrlUtil.buildUrl(entity.applicationUrl);
+            if (!entity.applicationUrl) {
+                validation.validEntity = false;
+                validation.applicationUrl = "Application url must not be null and must be valid url!";
+            }
+        }
+
+        if (entity.type === "API_SERVICE" || entity.type === "WEB_APP") {
+            entity.healthcheckUrl = UrlUtil.buildUrl(entity.healthcheckUrl);
+            entity.baseUrl = UrlUtil.buildUrl(entity.baseUrl);
+            if (!entity.baseUrl) {
+                validation.validEntity = false;
+                validation.baseUrl = "Base url must not be null and must be valid url!";
+            }
+
+            if (!entity.majorVersion) {
+                validation.validEntity = false;
+                validation.majorVersion = "Major version must not be null!";
+            }
         }
 
         return validation;
@@ -158,14 +170,9 @@ export class ServicesService {
         );
     }
 
-    public generateServiceToken(serviceId: number): Observable<Service.Token> {
-        const url = `${this.apiUrl}/services/${serviceId}/token`;
-        return this.http.patch(url, null).pipe(map(res => res as Service.Token));
-    }
-
-    public removeService(serviceId: number): Observable<void> {
+    public removeService(serviceId: string): Observable<void> {
         const url = `${this.apiUrl}/services/${serviceId}`;
-        return this.http.delete(url).pipe(map(res => null));
+        return this.http.delete(url).pipe(map(() => null));
     }
 
 }

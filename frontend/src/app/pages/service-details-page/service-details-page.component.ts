@@ -1,6 +1,6 @@
 import {Component, OnInit} from "@angular/core";
 import {ActivatedRoute, Router} from "@angular/router";
-import {HealthCheckResponse, ServicesService} from "../../services/services.service";
+import {ServicesService} from "../../services/services.service";
 import {Service} from "../../models/service.class";
 import {HttpErrorResponse} from "@angular/common/http";
 import {DockerService} from "../../services/docker.service";
@@ -11,6 +11,7 @@ import {BaseError} from "../../errors/base.error";
 import {NotFoundError} from "../../errors/not-found.error";
 import {NavigationUtil} from "../../utils/navigation.util";
 import {TokenGenerationModalComponent} from "../../components/token-generation-modal/token-generation-modal.component";
+import {HealthCheckResponse} from "../../models/enums/healthcheck-response.enum";
 
 @Component({
     selector: "tasker-service-details-page",
@@ -98,7 +99,7 @@ export class ServiceDetailsPageComponent implements OnInit {
     }
 
     public back(): void {
-        this.router.navigate(["/"]);
+        this.router.navigate(["/services"]);
     }
 
     public edit(): void {
@@ -163,7 +164,7 @@ export class ServiceDetailsPageComponent implements OnInit {
                 this.servicesService.removeService(this.service.id).subscribe(
                     () => {
                         this.messageService.openToastNotification("Success!", "Service was deleted!", "ok");
-                        this.router.navigate(["/"]);
+                        this.router.navigate(["/services"]);
                     }
                 );
             }

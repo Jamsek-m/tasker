@@ -41,9 +41,11 @@ import {TokenGenerationModalComponent} from "./components/token-generation-modal
 import {NoopAnimationsModule} from "@angular/platform-browser/animations";
 import {API_URL, BASE_URL, KEYCLOAK_CONFIG} from "./injectables";
 import {environment} from "../environments/environment";
-import { DashboardPageComponent } from './pages/dashboard-page/dashboard-page.component';
+import {DashboardPageComponent} from "./pages/dashboard-page/dashboard-page.component";
 import {AuthInterceptor} from "./services/auth.interceptor";
-import { DomainListPageComponent } from './pages/domain-list-page/domain-list-page.component';
+import {DomainListPageComponent} from "./pages/domain-list-page/domain-list-page.component";
+import {ServiceFormClientSectionComponent} from "./pages/service-form-page/service-form-client-section/service-form-client-section.component";
+import {ServiceFormApiSectionComponent} from "./pages/service-form-page/service-form-api-section/service-form-api-section.component";
 
 
 @NgModule({
@@ -75,7 +77,9 @@ import { DomainListPageComponent } from './pages/domain-list-page/domain-list-pa
         DocsApiEntryComponent,
         TokenGenerationModalComponent,
         DashboardPageComponent,
-        DomainListPageComponent
+        DomainListPageComponent,
+        ServiceFormClientSectionComponent,
+        ServiceFormApiSectionComponent
     ],
     imports: [
         BrowserModule,

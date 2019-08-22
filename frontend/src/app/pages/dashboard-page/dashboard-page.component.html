@@ -1,1 +1,12 @@
-<p>dashboard-page works!</p>
+
+<div class="charts">
+
+    <div class="chart-wrapper" *ngFor="let chart of charts">
+        <h3>{{chart.title}}</h3>
+        <div class="chart">
+            <canvas [attr.id]="chart.canvasId"></canvas>
+        </div>
+    </div>
+
+</div>
+

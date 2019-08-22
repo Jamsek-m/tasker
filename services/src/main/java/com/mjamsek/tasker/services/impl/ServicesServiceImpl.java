@@ -5,18 +5,22 @@ import com.kumuluz.ee.rest.beans.QueryParameters;
 import com.kumuluz.ee.rest.enums.FilterOperation;
 import com.kumuluz.ee.rest.utils.JPAUtils;
 import com.mjamsek.tasker.entities.dto.ServiceToken;
-import com.mjamsek.tasker.entities.persistence.service.ApiServiceEntity;
-import com.mjamsek.tasker.entities.persistence.service.ServiceEntity;
-import com.mjamsek.tasker.entities.persistence.service.WebAppServiceEntity;
+import com.mjamsek.tasker.entities.persistence.service.*;
+import com.mjamsek.tasker.lib.v1.ApiService;
+import com.mjamsek.tasker.lib.v1.ClientApp;
 import com.mjamsek.tasker.lib.v1.Service;
-import com.mjamsek.tasker.lib.v1.ServiceDeployment;
+import com.mjamsek.tasker.lib.v1.WebApp;
 import com.mjamsek.tasker.lib.v1.enums.LogSeverity;
+import com.mjamsek.tasker.lib.v1.enums.ServiceType;
 import com.mjamsek.tasker.lib.v1.exceptions.*;
 import com.mjamsek.tasker.lib.v1.integration.docker.DockerContainerInfo;
 import com.mjamsek.tasker.lib.v1.integration.docker.DockerState;
 import com.mjamsek.tasker.mappers.DockerMapper;
 import com.mjamsek.tasker.mappers.ServiceMapper;
-import com.mjamsek.tasker.services.*;
+import com.mjamsek.tasker.services.DockerService;
+import com.mjamsek.tasker.services.LogService;
+import com.mjamsek.tasker.services.ServicesService;
+import com.mjamsek.tasker.services.Validator;
 import com.mjamsek.tasker.utils.HttpClient;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -100,26 +104,21 @@ public class ServicesServiceImpl implements ServicesService {
     @Override
     public Service createService(Service service) {
         
-        validator.assertNotNull(service);
+        if (service == null) {
+            throw new ValidationException("validation.empty.payload");
+        }
         
         validator.assertNotBlank(service.getName(), "name");
         validator.assertNotBlank(service.getVersion(), "version");
         validator.assertNotNull(service.getType(), "type");
         
-        if (service.getDeployment() != null) {
-            ServiceDeployment deployment = service.getDeployment();
-            validator.assertNotBlank(deployment.getContainerId(), "containerId", "service.deployment");
-            validator.assertNotBlank(deployment.getContainerName(), "containerName", "service.deployment");
-            validator.assertNotNull(deployment.getDockerEndpoint(), "dockerEndpoint", "service.deployment");
-            validator.assertNotBlank(deployment.getDockerEndpoint().getId(), "id", "service.deployment.dockerEndpoint");
-        }
-        
         ServiceEntity existing = this.getExisting(service.getName(), service.getVersion());
-        if (existing != null && service.getVersion().equals(existing.getVersion())) {
+        if (existing != null) {
             throw new ConflictException("Service with given name and version already exists!");
         }
         
         ServiceEntity entity = ServiceMapper.toEntity(service);
+        
         entity.setActive(true);
         
         try {
@@ -129,6 +128,7 @@ public class ServicesServiceImpl implements ServicesService {
             logService.log(LogSeverity.INFO, "Service '" + service.getName() + "' was created.");
             return ServiceMapper.fromEntity(entity);
         } catch (Exception e) {
+            e.printStackTrace();
             em.getTransaction().rollback();
             logService.log(LogSeverity.ERROR, "Error saving service '" + service.getName() + "'!");
             throw new TaskerException("Error saving entity!");
@@ -137,25 +137,60 @@ public class ServicesServiceImpl implements ServicesService {
     
     @Override
     public Service updateService(Service service, String serviceId) {
-        // TODO: update service implementation
         ServiceEntity entity = getServiceById(serviceId);
         if (entity == null) {
             throw new EntityNotFoundException("Service with given id doesn't exist!");
         }
-        
-        return null;
     
-        /*try {
+        if (service.getType().equals(ServiceType.CLIENT_APP) && entity instanceof ClientAppServiceEntity) {
+            ClientApp clientApp = (ClientApp) service;
+            validator.assertNotBlank(clientApp.getApplicationUrl());
+            
+            ((ClientAppServiceEntity) entity).setApplicationUrl(clientApp.getApplicationUrl());
+            
+        } else if (service.getType().equals(ServiceType.WEB_APP) && entity instanceof WebAppServiceEntity) {
+            WebApp webApp = (WebApp) service;
+            validator.assertNotBlank(webApp.getApplicationUrl());
+            validator.assertNotBlank(webApp.getBaseUrl());
+            validator.assertNotNull(webApp.getMajorVersion());
+            
+            ((WebAppServiceEntity) entity).setApplicationUrl(webApp.getApplicationUrl());
+            ((WebAppServiceEntity) entity).setMajorVersion(webApp.getMajorVersion());
+            ((WebAppServiceEntity) entity).setBaseUrl(webApp.getBaseUrl());
+            ((WebAppServiceEntity) entity).setHealthcheckUrl(webApp.getHealthcheckUrl());
+            
+        } else if (service.getType().equals(ServiceType.API_SERVICE) && entity instanceof ApiServiceEntity) {
+            ApiService apiService = (ApiService) service;
+            validator.assertNotBlank(apiService.getBaseUrl());
+            validator.assertNotNull(apiService.getMajorVersion());
+            
+            ((ApiServiceEntity) entity).setMajorVersion(apiService.getMajorVersion());
+            ((ApiServiceEntity) entity).setBaseUrl(apiService.getBaseUrl());
+            ((ApiServiceEntity) entity).setHealthcheckUrl(apiService.getHealthcheckUrl());
+        } else {
+            throw new ValidationException("validation.error.type.mismatch")
+                .withField("type")
+                .withEntity("ServiceType");
+        }
+        
+        if (service.getDeployment() != null) {
+            ServiceDeploymentEntity deploymentEntity = ServiceMapper.deploymentToEntity(service.getDeployment());
+            entity.setDeployment(deploymentEntity);
+        } else {
+            entity.setDeployment(null);
+        }
+    
+        try {
             em.getTransaction().begin();
-            em.merge(service);
+            em.merge(entity);
             em.getTransaction().commit();
             logService.log(LogSeverity.INFO, "Service '" + service.getName() + "' was updated.");
             return service;
         } catch (Exception e) {
             em.getTransaction().rollback();
             logService.log(LogSeverity.ERROR, "Error saving service '" + service.getName() + "'!");
-            throw new TaskerException("Error saving entity!");
-        }*/
+            throw new PersistenceException();
+        }
     }
     
     @Override

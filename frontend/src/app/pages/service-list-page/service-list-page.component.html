@@ -28,27 +28,36 @@
     </div>
 
     <tasker-pagination-limit (whenLimitChanges)="limitChange($event)"></tasker-pagination-limit>
-    <div class="table-responsive">
+
+    <div class="table-responsive service-table">
         <table class="table">
             <thead>
                 <tr>
-                    <th class="tb-id">ID</th>
-                    <th class="tb-health">Health</th>
+                    <th class="tb-id">Id</th>
+                    <th class="tb-type">Type</th>
                     <th class="tb-name">Name</th>
+                    <th class="tb-health">Health</th>
                 </tr>
             </thead>
             <tbody>
                 <tr *ngFor="let service of services">
                     <td class="tb-id">
-                        {{service.id}}
+                        <tasker-clipboard [data]="service.id" icon="copy"></tasker-clipboard>
                     </td>
-                    <td class="tb-health">
-                        <tasker-health-overview [service]="service"></tasker-health-overview>
+                    <td class="tb-type">
+                        {{displayType(service)}}
                     </td>
                     <td class="tb-name">
                         <a class="details-link" [routerLink]="['/service', service.id]">
                             {{service.name}}@{{service.version}}
                         </a>
+                    </td>
+                    <td class="tb-health">
+                        <tasker-health-overview *ngIf="service.type === 'API_SERVICE' || service.type === 'WEB_APP'; else noHealth"
+                            [service]="service"></tasker-health-overview>
+                        <ng-template #noHealth>
+                            <span class="health-placeholder"></span>
+                        </ng-template>
                     </td>
                 </tr>
             </tbody>

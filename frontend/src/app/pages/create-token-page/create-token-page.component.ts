@@ -68,7 +68,7 @@ export class CreateTokenPageComponent implements OnInit, OnDestroy {
     }
 
     public goBack(): void {
-        this.router.navigate(["/"]);
+        this.router.navigate(["/services"]);
     }
 
     private getAllActions(): void {

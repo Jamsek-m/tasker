@@ -1,0 +1,47 @@
+<div class="client">
+    <h3>API configuration</h3>
+
+    <div class="form-row">
+        <div class="col-9">
+            <label for="base-url">
+                Base url:
+                <tasker-help help="API base url"></tasker-help>
+            </label>
+            <input class="form-control" type="text" name="base-url" required
+                [class.is-invalid]="validation.baseUrl"
+                id="base-url" [(ngModel)]="service.baseUrl"/>
+            <div class="invalid-feedback" *ngIf="validation.baseUrl">
+                {{validation.baseUrl}}
+            </div>
+        </div>
+
+        <div class="col-3">
+            <label for="major-version">
+                Major version:
+                <tasker-help help="API's major version"></tasker-help>
+            </label>
+            <input class="form-control" type="text" name="major-version" required
+                [class.is-invalid]="validation.majorVersion"
+                id="major-version" [(ngModel)]="service.majorVersion"/>
+            <div class="invalid-feedback" *ngIf="validation.majorVersion">
+                {{validation.majorVersion}}
+            </div>
+        </div>
+
+        <div class="col-12">
+            <label for="healtcheck">
+                Healthcheck url:
+                <tasker-help help="API's healthcheck url"></tasker-help>
+            </label>
+            <input class="form-control" type="text" name="healtcheck"
+                [class.is-invalid]="validation.healthcheckUrl"
+                id="healtcheck" [(ngModel)]="service.healthcheckUrl"/>
+            <div class="invalid-feedback" *ngIf="validation.healthcheckUrl">
+                {{validation.healthcheckUrl}}
+            </div>
+        </div>
+    </div>
+</div>
+
+<hr/>
+

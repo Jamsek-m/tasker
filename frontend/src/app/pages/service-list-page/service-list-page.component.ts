@@ -67,6 +67,19 @@ export class ServiceListPageComponent implements OnInit {
         this.router.navigate(["/service", service.id]);
     }
 
+    public displayType(service: Service): string {
+        switch (service.type) {
+            case "API_SERVICE":
+                return "API";
+            case "CLIENT_APP":
+                return "CLIENT";
+            case "WEB_APP":
+                return "WEB";
+            default:
+                return "";
+        }
+    }
+
     private registerServiceQueryObserver(): void {
         this.serviceQueryObservable = new Observable((observer: any) => {
             observer.next(this.query);

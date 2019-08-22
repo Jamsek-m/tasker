@@ -7,7 +7,6 @@ public class ConfigEntryMapper {
     
     public static ConfigEntryEntity toEntity(ConfigEntry entry) {
         ConfigEntryEntity entity = new ConfigEntryEntity();
-        entity.setId(entry.getId());
         entity.setKey(entry.getKey());
         entity.setValue(entry.getValue());
         return entity;

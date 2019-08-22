@@ -14,73 +14,61 @@ export class ServiceUrl {
 }
 
 export class ServiceDeployment {
-    public id: number;
+    public id: string;
     public containerId: string;
     public containerName: string;
-    public version: string;
-    public dockerDaemon: DockerEndpoint;
+    public dockerEndpoint: DockerEndpoint;
 }
 
 export class Service {
-    public id: number;
+    public id: string;
     public name: string;
     public version: string;
     public description: string;
-    public serviceUrl: ServiceUrl;
+    public type: Service.Type;
+    public active: boolean;
     public deployment: ServiceDeployment;
-    public healthCheck: ServiceHealthCheck;
-
-    public hasHealthcheck: boolean;
-    public isDeployed: boolean;
-    public isDockerized: boolean;
+    public baseUrl: string;
+    public healthcheckUrl: string;
+    public majorVersion: number;
+    public applicationUrl: string;
 
     constructor() {
-        this.isDeployed = true;
-        this.isDockerized = true;
-        this.hasHealthcheck = true;
     }
 
     public static empty(): Service {
         const service = new Service();
-        service.serviceUrl = new ServiceUrl();
-        service.healthCheck = new ServiceHealthCheck();
-        service.deployment = new ServiceDeployment();
-        service.deployment.dockerDaemon = new DockerEndpoint();
-        service.healthCheck.fixes = [];
         return service;
     }
 
     public static recreate(data: any): Service {
-        const service = Object.assign(new Service(), data) as Service;
-        service.setStates();
-        if (!service.serviceUrl) {
-            service.serviceUrl = new ServiceUrl();
-        }
-        if (!service.healthCheck) {
-            service.healthCheck = new ServiceHealthCheck();
-        }
-        if (!service.deployment) {
-            service.deployment = new ServiceDeployment();
-        }
-        if (!service.deployment.dockerDaemon) {
-            service.deployment.dockerDaemon = new DockerEndpoint();
-        }
-        service.healthCheck.fixes = [];
-        return service;
+        return Object.assign(new Service(), data) as Service;
     }
 
-    public setStates(): Service {
-        this.isDeployed = !!this.serviceUrl;
-        this.isDockerized = !!this.deployment;
-        this.hasHealthcheck = !!this.healthCheck;
-        return this;
-    }
 }
 
 export namespace Service {
-    export class Token {
-        public token: string;
-    }
+    export type Type = "API_SERVICE" | "WEB_APP" | "CLIENT_APP";
+    export const Type = {
+        API_SERVICE: "API_SERVICE" as Type,
+        WEB_APP: "WEB_APP" as Type,
+        CLIENT_APP: "CLIENT_APP" as Type
+    };
+
+    export const Types = [
+        {
+            label: "API service",
+            value: "API_SERVICE" as Type
+        },
+        {
+            label: "Web application",
+            value: "WEB_APP" as Type
+        },
+        {
+            label: "Client application",
+            value: "CLIENT_APP" as Type
+        }
+    ];
 }
 
 export class ServiceValidation {
@@ -89,11 +77,15 @@ export class ServiceValidation {
     public description: string;
     public containerId: string;
     public containerName: string;
-    public deploymentVersion: string;
     public url: string;
     public ApiVersion: string;
     public healthUrl: string;
-    public dockerDaemon: string;
+    public dockerEndpoint: string;
+    public type: string;
+    public applicationUrl: string;
+    public baseUrl: string;
+    public healthcheckUrl: string;
+    public majorVersion: string;
 
     public validEntity: boolean;
 

@@ -7,7 +7,6 @@ public class LogEntryMapper {
     
     public static LogEntryEntity toEntity(LogEntry entry) {
         LogEntryEntity entity = new LogEntryEntity();
-        entity.setId(entry.getId());
         entity.setMessage(entry.getMessage());
         entity.setSeverity(entry.getSeverity());
         entity.setTimestamp(entry.getTimestamp());

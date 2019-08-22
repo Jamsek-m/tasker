@@ -15,7 +15,8 @@ import {
 import {faDocker} from "@fortawesome/free-brands-svg-icons";
 import {
     faCopy as farCopy,
-    faTrashAlt as farTrashAlt
+    faTrashAlt as farTrashAlt,
+    faWindowRestore as farWindowRestore
 } from "@fortawesome/free-regular-svg-icons";
 
 @NgModule({
@@ -48,7 +49,8 @@ export class IconsModule {
             faPencilAlt,
             farCopy,
             faLock,
-            farTrashAlt
+            farTrashAlt,
+            farWindowRestore
         );
     }
 }

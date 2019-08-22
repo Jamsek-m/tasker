@@ -1,6 +1,7 @@
 import {Component, Input, OnInit} from "@angular/core";
-import {HealthCheckResponse, ServicesService} from "../../services/services.service";
+import {ServicesService} from "../../services/services.service";
 import {Service} from "../../models/service.class";
+import {HealthCheckResponse} from "../../models/enums/healthcheck-response.enum";
 
 @Component({
     selector: "tasker-health-overview",

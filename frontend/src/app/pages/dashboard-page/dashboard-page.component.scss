@@ -1,0 +1,21 @@
+
+.charts {
+    display: flex;
+    justify-content: space-between;
+
+    .chart-wrapper {
+        width: 40%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+
+        h3 {
+
+        }
+        .chart {
+            width: 400px;
+        }
+    }
+}
+

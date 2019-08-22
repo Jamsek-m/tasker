@@ -36,7 +36,7 @@ public class ServiceEntity {
     @Column
     protected Boolean active;
     
-    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "deployment_id")
     protected ServiceDeploymentEntity deployment;
     

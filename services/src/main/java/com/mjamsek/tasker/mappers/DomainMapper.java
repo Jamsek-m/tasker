@@ -19,7 +19,6 @@ public class DomainMapper {
         if (domain == null) return null;
         
         DomainEntity entity = new DomainEntity();
-        entity.setId(domain.getId());
         entity.setDomain(domain.getDomain());
         if (domain.getSslEnabled() == null) {
             entity.setSslEnabled(false);

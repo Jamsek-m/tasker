@@ -18,6 +18,8 @@
     }
 }
 .back-2 {
+    margin-top: 40px;
+
     button {
         fa-icon {
             margin-right: 8px;
@@ -32,6 +34,13 @@
 h4 {
     margin-top: 60px;
     margin-bottom: 20px;
+
+    fa-icon {
+        margin-right: 8px;
+    }
+}
+hr {
+    margin: 1.5rem 0;
 }
 
 .health-status {
@@ -79,7 +88,7 @@ h4 {
     padding: 5px 0;
 
     .row-title {
-        width: 100px;
+        width: 140px;
         display: inline-block;
         margin-right: 5px;
     }
