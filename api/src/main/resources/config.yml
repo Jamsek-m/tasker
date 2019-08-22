@@ -31,7 +31,6 @@ kumuluzee:
       pool:
         max-size: 20
   security:
-    # disable-jetty-auth: true
     keycloak:
       json: '{
                "realm": "mjamsek-test",
@@ -42,8 +41,6 @@ kumuluzee:
                "confidential-port": 0
              }'
 tasker:
-  session:
-    duration: 3600
   admin:
     username: admin
     password: admin

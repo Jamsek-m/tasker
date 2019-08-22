@@ -1,6 +1,5 @@
 package com.mjamsek.tasker.mappers;
 
-import com.mjamsek.tasker.entities.exceptions.ValidationException;
 import com.mjamsek.tasker.lib.v1.exceptions.*;
 
 import javax.ws.rs.core.Response;
@@ -29,7 +28,7 @@ public class AdminExceptionMapper implements ExceptionMapper<TaskerException> {
         } else if (exception instanceof FailedHealthCheckException) {
             return Response.status(Response.Status.BAD_REQUEST).entity(response).build();
         } else if (exception instanceof ValidationException) {
-            return Response.status(422).entity(response).build();
+            return Response.status(422).entity(((ValidationException) exception).getResponse()).build();
         } else if (exception instanceof ConflictException) {
             return Response.status(Response.Status.CONFLICT).entity(response).build();
         } else if (exception instanceof NotDeployedException) {
