@@ -16,7 +16,7 @@ import {Error404PageComponent} from "./pages/error404-page/error404-page.compone
 import {DocsPageComponent} from "./docs/docs-page.component";
 import {DocsTaskPageComponent} from "./docs/docs-task-page/docs-task-page.component";
 import {DocsPluginPageComponent} from "./docs/docs-plugin-page/docs-plugin-page.component";
-import {ConfigurationPageComponent} from "./pages/configuration-page/configuration-page.component";
+import {DockerEndpointsPageComponent} from "./pages/docker-endpoints-page/docker-endpoints-page.component";
 import {LogsPageComponent} from "./pages/logs-page/logs-page.component";
 import {UserProfilePageComponent} from "./pages/user-profile-page/user-profile-page.component";
 
@@ -39,13 +39,15 @@ import {SpinerComponent} from "./components/spiner/spiner.component";
 import {DocsApiEntryComponent} from "./docs/docs-api-entry/docs-api-entry.component";
 import {TokenGenerationModalComponent} from "./components/token-generation-modal/token-generation-modal.component";
 import {NoopAnimationsModule} from "@angular/platform-browser/animations";
-import {API_URL, BASE_URL, KEYCLOAK_CONFIG} from "./injectables";
+import {API_URL, BASE_URL, KEYCLOAK_CONFIG, TASKER_META} from "./injectables";
 import {environment} from "../environments/environment";
 import {DashboardPageComponent} from "./pages/dashboard-page/dashboard-page.component";
 import {AuthInterceptor} from "./services/auth.interceptor";
 import {DomainListPageComponent} from "./pages/domain-list-page/domain-list-page.component";
 import {ServiceFormClientSectionComponent} from "./pages/service-form-page/service-form-client-section/service-form-client-section.component";
 import {ServiceFormApiSectionComponent} from "./pages/service-form-page/service-form-api-section/service-form-api-section.component";
+import { Error403PageComponent } from './pages/error403-page/error403-page.component';
+import { CancelIconComponent } from './components/cancel-icon/cancel-icon.component';
 
 
 @NgModule({
@@ -62,7 +64,7 @@ import {ServiceFormApiSectionComponent} from "./pages/service-form-page/service-
         DocsPageComponent,
         DocsTaskPageComponent,
         DocsPluginPageComponent,
-        ConfigurationPageComponent,
+        DockerEndpointsPageComponent,
         LogsPageComponent,
         UserProfilePageComponent,
         HealthOverviewComponent,
@@ -79,7 +81,9 @@ import {ServiceFormApiSectionComponent} from "./pages/service-form-page/service-
         DashboardPageComponent,
         DomainListPageComponent,
         ServiceFormClientSectionComponent,
-        ServiceFormApiSectionComponent
+        ServiceFormApiSectionComponent,
+        Error403PageComponent,
+        CancelIconComponent
     ],
     imports: [
         BrowserModule,
@@ -96,7 +100,8 @@ import {ServiceFormApiSectionComponent} from "./pages/service-form-page/service-
         {provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true},
         {provide: API_URL, useValue: environment.baseUrl + "/" + environment.apiVersion},
         {provide: BASE_URL, useValue: environment.baseUrl},
-        {provide: KEYCLOAK_CONFIG, useValue: environment.keycloak}
+        {provide: KEYCLOAK_CONFIG, useValue: environment.keycloak},
+        {provide: TASKER_META, useValue: environment.projectMeta}
     ],
     entryComponents: [
         ConfirmationDialogComponent,

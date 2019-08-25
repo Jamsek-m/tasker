@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ConfigurationPageComponent } from './configuration-page.component';
+import { Error403PageComponent } from './error403-page.component';
 
-describe('ConfigurationPageComponent', () => {
-  let component: ConfigurationPageComponent;
-  let fixture: ComponentFixture<ConfigurationPageComponent>;
+describe('Error403PageComponent', () => {
+  let component: Error403PageComponent;
+  let fixture: ComponentFixture<Error403PageComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ ConfigurationPageComponent ]
+      declarations: [ Error403PageComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(ConfigurationPageComponent);
+    fixture = TestBed.createComponent(Error403PageComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

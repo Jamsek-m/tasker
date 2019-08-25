@@ -10,7 +10,7 @@ import {
     faClipboard,
     faArrowRight,
     faQuestionCircle,
-    faBolt, faSearch, faArrowLeft, faExclamationTriangle, faPencilAlt, faLock
+    faBolt, faSearch, faArrowLeft, faExclamationTriangle, faPencilAlt, faLock, faChevronRight
 } from "@fortawesome/free-solid-svg-icons";
 import {faDocker} from "@fortawesome/free-brands-svg-icons";
 import {
@@ -50,7 +50,8 @@ export class IconsModule {
             farCopy,
             faLock,
             farTrashAlt,
-            farWindowRestore
+            farWindowRestore,
+            faChevronRight
         );
     }
 }

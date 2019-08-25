@@ -44,7 +44,9 @@
                             <label for="switch-{{i}}" class="custom-control-label"></label>
                         </div>
                     </td>
-                    <td class="tb-actions"></td>
+                    <td class="tb-actions">
+                        <tasker-cancel-icon (whenClicked)="removeDomain(domain)"></tasker-cancel-icon>
+                    </td>
                 </tr>
             </tbody>
         </table>

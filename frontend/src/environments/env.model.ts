@@ -3,6 +3,14 @@ export interface TaskerEnvironment {
     baseUrl: string;
     apiVersion: string;
     keycloak: KeycloakConfig;
+    projectMeta: TaskerProjectMeta;
+}
+
+export interface TaskerProjectMeta {
+    gitRepo: string;
+    releasesPage: string;
+    version: string;
+    bugsPage: string;
 }
 
 export interface KeycloakConfig {

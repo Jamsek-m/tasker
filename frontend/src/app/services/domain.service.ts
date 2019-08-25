@@ -43,4 +43,9 @@ export class DomainService {
         return this.http.post(url, JSON.stringify(domain)).pipe(map(res => res as Domain));
     }
 
+    public deleteDomain(domainId: string): Observable<void> {
+        const url = `${this.apiUrl}/domains/${domainId}`;
+        return this.http.delete(url).pipe(map(() => null));
+    }
+
 }

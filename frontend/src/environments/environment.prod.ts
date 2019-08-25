@@ -8,5 +8,11 @@ export const environment: TaskerEnvironment = {
         realm: "mjamsek-test",
         authServerUrl: "https://keycloak.mjamsek.com/auth",
         resource: "tasker-public"
+    },
+    projectMeta: {
+        version: "1.0.0",
+        gitRepo: "https://github.com/Jamsek-m/tasker",
+        releasesPage: "https://github.com/Jamsek-m/tasker/releases",
+        bugsPage: "https://github.com/Jamsek-m/tasker/issues"
     }
 };

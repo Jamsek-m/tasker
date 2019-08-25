@@ -22,8 +22,8 @@ export const menuItems: MenuItem[] = [
         requiredRoles: [AuthRole.ADMIN]
     },
     {
-        label: "Config",
-        url: "/config",
+        label: "Docker Endpoints",
+        url: "/docker-endpoints",
         external: false,
         requireAuth: true,
         requiredRoles: [AuthRole.ADMIN]

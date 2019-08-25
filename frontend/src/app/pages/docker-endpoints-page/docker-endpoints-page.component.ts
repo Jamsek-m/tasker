@@ -7,10 +7,10 @@ import {MessageService} from "../../services/message.service";
 
 @Component({
     selector: "tasker-configuration-page",
-    templateUrl: "./configuration-page.component.html",
-    styleUrls: ["./configuration-page.component.scss"]
+    templateUrl: "./docker-endpoints-page.component.html",
+    styleUrls: ["./docker-endpoints-page.component.scss"]
 })
-export class ConfigurationPageComponent implements OnInit {
+export class DockerEndpointsPageComponent implements OnInit {
 
     public configs: SettingsLine<ConfigEntry>[];
     public newConfig: ConfigEntry;

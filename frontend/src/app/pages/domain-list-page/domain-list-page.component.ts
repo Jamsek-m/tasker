@@ -2,6 +2,7 @@ import {Component, OnInit} from "@angular/core";
 import {Domain} from "../../models/domain.model";
 import {DomainService} from "../../services/domain.service";
 import {EntityList} from "../../models/common/dto.model";
+import {MessageService} from "../../services/message.service";
 
 @Component({
     selector: "tasker-domain-list-page",
@@ -18,7 +19,10 @@ export class DomainListPageComponent implements OnInit {
     public newDomain: Domain = new Domain();
     public domainValidation: string = null;
 
-    constructor(private domainService: DomainService) {
+    constructor(
+        private domainService: DomainService,
+        private messageService: MessageService
+    ) {
     }
 
     ngOnInit() {
@@ -50,10 +54,30 @@ export class DomainListPageComponent implements OnInit {
         if (!this.domainValidation) {
             this.domainService.addDomain(this.newDomain).subscribe(
                 () => {
+                    this.showAddForm = false;
+                    this.newDomain = new Domain();
                     this.getDomains();
                 }
             );
         }
+    }
+
+    public removeDomain(domain: Domain): void {
+        this.messageService.openConfirmationDialog("Are you sure you want to remove domain?",
+            {
+                onConfirmation: ref => {
+                    this.domainService.deleteDomain(domain.id).subscribe(
+                        () => {
+                            ref.hide();
+                            this.messageService.openToastNotification("Success!", "Domain was removed!", "ok");
+                            this.getDomains();
+                        },
+                        (err) => {
+                            console.error(err);
+                        }
+                    );
+                }
+            }, {confirmIsDestructive: true});
     }
 
     private validateDomain(domain: Domain): string | null {

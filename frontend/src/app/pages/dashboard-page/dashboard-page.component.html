@@ -1,12 +1,82 @@
+<div class="page-wrapper">
+    <div *ngIf="authenticated; else noAuth">
 
-<div class="charts">
+        <div class="row">
 
-    <div class="chart-wrapper" *ngFor="let chart of charts">
-        <h3>{{chart.title}}</h3>
-        <div class="chart">
-            <canvas [attr.id]="chart.canvasId"></canvas>
+            <div class="col-md-5 col-12">
+
+                <div class="box-container">
+
+                    <div class="box" [class.clickable]="true" (click)="goTo('/services')">
+                        <div class="box-content">
+                            <span class="box-title">Total services:</span>
+                            <span class="box-value">{{stats ? stats.totalServices : 0}}</span>
+                        </div>
+                    </div>
+
+                    <div class="box" [class.clickable]="userHasPermission(adminAccess)" (click)="goTo('/domains', adminAccess)">
+                        <div class="box-content">
+                            <span class="box-title">Total domains:</span>
+                            <span class="box-value">{{stats ? stats.totalDomains : 0}}</span>
+                        </div>
+                    </div>
+
+                    <div class="box" [class.clickable]="userHasPermission(adminAccess)" (click)="goTo('/docker-endpoints', adminAccess)">
+                        <div class="box-content">
+                            <span class="box-title">Total docker endpoints:</span>
+                            <span class="box-value">{{stats ? stats.totalDockerEndpoints : 0}}</span>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="links">
+
+                    <div class="link">
+                        <a [routerLink]="['/docs']">
+                            <fa-icon [icon]="['fas', 'chevron-right']"></fa-icon>
+                            <span>Documentation</span>
+                        </a>
+                    </div>
+
+                    <div class="link">
+                        <a href="{{projectMeta.gitRepo}}" rel="noreferrer noopener" target="_blank">
+                            <fa-icon [icon]="['fas', 'chevron-right']"></fa-icon>
+                            <span>Tasker project</span>
+                        </a>
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="col-md-7 col-12 charts">
+                <div class="row">
+                    <div class="col-12 d-flex flex-column align-items-center">
+                        <h3 class="text-center">Service types</h3>
+                        <div class="chart">
+                            <canvas id="service-types"></canvas>
+                        </div>
+                    </div>
+                    <div class="col-12 d-flex flex-column align-items-center deployment-chart">
+                        <h3 class="text-center">Service deployments</h3>
+                        <div class="chart">
+                            <canvas id="service-deployments"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
         </div>
+
     </div>
 
-</div>
+    <ng-template #noAuth>
+        <div>
+            <h1>Welcome to Tasker</h1>
+            <p>Please log in.</p>
+        </div>
+    </ng-template>
 
+</div>

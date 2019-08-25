@@ -1,8 +1,13 @@
-import {AfterViewInit, Component, OnInit} from "@angular/core";
+import {AfterViewInit, Component, Inject, OnInit} from "@angular/core";
 import {DashboardService} from "../../services/dashboard.service";
 import {Statistics} from "../../models/statistics.model";
 import {DashboardCharts} from "./dashboard.charts";
 import {Chart} from "chart.js";
+import {AuthService} from "../../services/auth.service";
+import {TASKER_META} from "../../injectables";
+import {TaskerProjectMeta} from "../../../environments/env.model";
+import {Router} from "@angular/router";
+import {AuthRole} from "../../models/enums/auth-role.enum";
 
 @Component({
     selector: "tasker-dashboard-page",
@@ -11,27 +16,39 @@ import {Chart} from "chart.js";
 })
 export class DashboardPageComponent implements OnInit, AfterViewInit {
 
+    public authenticated = false;
     public stats: Statistics;
-    public charts: DashboardChart[] = [
-        {
-            canvasId: "service-types",
-            title: "Service types"
-        },
-        {
-            canvasId: "service-deployments",
-            title: "Service deployments"
-        }
-    ];
+    public adminAccess = [AuthRole.ADMIN];
 
-    constructor(private dashboardService: DashboardService) {
+    constructor(
+        private auth: AuthService,
+        private router: Router,
+        private dashboardService: DashboardService,
+        @Inject(TASKER_META) public projectMeta: TaskerProjectMeta) {
     }
 
     ngOnInit() {
-
+        this.authenticated = this.auth.isAuthenticated();
     }
 
     ngAfterViewInit(): void {
-        this.getStatistics();
+        if (this.auth.isAuthenticated()) {
+            this.getStatistics();
+        }
+    }
+
+    public goTo(url: string, allowForRoles?: string[]): void {
+        if (this.userHasPermission(allowForRoles)) {
+            this.router.navigate([url]);
+        }
+    }
+
+    public userHasPermission(allowForRoles: string[]): boolean {
+        if (allowForRoles) {
+            const userRole = allowForRoles.filter(role => this.auth.hasRole(role));
+            return userRole.length > 0;
+        }
+        return true;
     }
 
     private getStatistics() {
@@ -60,10 +77,4 @@ export class DashboardPageComponent implements OnInit, AfterViewInit {
         DashboardCharts.drawServiceDeploymentChart(context, this.stats);
     }
 
-}
-
-interface DashboardChart {
-    chart?: Chart;
-    canvasId: string;
-    title: string;
 }
