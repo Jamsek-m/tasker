@@ -1,45 +1,61 @@
 <h5>General info</h5>
-<div *ngIf="service.name && service.version; else nameUndef">
+<div *ngIf="service.name && service.version && service.type; else nameUndef">
     <div>
         Service:
-        <span class="field-val">{{service.name}}@{{service.version}}</span>
+        <span class="field-val">{{service.name}}@{{service.version}} ({{service.type}})</span>
     </div>
     <div class="description">{{service.description}}</div>
 </div>
 <ng-template #nameUndef>
-    <div class="undef">Name and version must be specified!</div>
+    <div class="undef">Name, version and type must be specified!</div>
 </ng-template>
 
 <hr/>
 
-<h5>Deployment</h5>
-<div *ngIf="service.isDeployed; else notDeployed">
-    <div *ngIf="service.serviceUrl.url && service.serviceUrl.url !== 'http://' && service.serviceUrl.version; else serviceUrlUndef">
-        <div>
-            Service base url:
-            <span class="field-val">{{service.serviceUrl.url}}</span>
+<div *ngIf="service.type === 'CLIENT_APP' || service.type === 'WEB_APP'">
+    <h5>Client configuration</h5>
+    <div>
+        <div *ngIf="service.applicationUrl; else noAppUrl">
+            <div>
+                Client application url:
+                <span class="field-val">{{service.applicationUrl}}</span>
+            </div>
         </div>
-        <div>
-            API base url:
-            <span class="field-val">{{service.serviceUrl.url + (service.serviceUrl.urlVersioning ? '/' + service.serviceUrl.version : '')}}</span>
-        </div>
+        <ng-template #noAppUrl>
+            <div class="undef">Client application url must be specified!</div>
+        </ng-template>
     </div>
-    <ng-template #serviceUrlUndef>
-        <div class="undef">Service base url and version must be specified!</div>
-    </ng-template>
-</div>
-<ng-template #notDeployed>
-    <div class="not-used">Service is not deployed.</div>
-</ng-template>
 
-<hr/>
+    <hr/>
+</div>
+
+<div *ngIf="service.type === 'API_SERVICE' || service.type === 'WEB_APP'">
+    <h5>API configuration</h5>
+    <div>
+        <div *ngIf="service.baseUrl && service.majorVersion; else noBaseUrl">
+            <div>
+                API base url:
+                <span class="field-val">{{service.baseUrl}}</span>
+            </div>
+            <div>
+                API's major version:
+                <span class="field-val">{{service.majorVersion}}</span>
+            </div>
+        </div>
+        <ng-template #noBaseUrl>
+            <div class="undef">API base url and major version must be specified!</div>
+        </ng-template>
+    </div>
+
+    <hr/>
+</div>
 
 <h5>Docker deployment</h5>
-<div *ngIf="service.isDockerized; else notDockerized">
-    <div *ngIf="service.deployment.dockerDaemon && service.deployment.containerId && service.deployment.containerName; else dockerUndef">
+<div *ngIf="service.deployment; else notDockerized">
+    <div *ngIf="service.deployment.dockerEndpoint && service.deployment.containerId && service.deployment.containerName; else dockerUndef">
         <div>
             Docker daemon:
-            <span class="field-val">{{service.deployment.dockerDaemon.name}}</span>
+            <span class="field-val">{{service.deployment.dockerEndpoint.name}}</span>
         </div>
         <div>
             Container name:
@@ -60,18 +76,18 @@
 
 <hr/>
 
-<h5>Healthcheck</h5>
-<div *ngIf="service.hasHealthcheck; else noHealthcheck">
-    <div *ngIf="service.healthCheck.healthUrl; else healthUndef">
-        <div>
-            Healthcheck endpoint:
-            <span class="field-val">{{service.healthCheck.healthUrl}}</span>
+<div *ngIf="service.type === 'API_SERVICE' || service.type === 'WEB_APP'">
+    <h5>Healthcheck</h5>
+    <div>
+        <div *ngIf="service.healthcheckUrl; else noHealthcheck">
+            <div>
+                Healthcheck endpoint:
+                <span class="field-val">{{service.healthcheckUrl}}</span>
+            </div>
         </div>
+        <ng-template #noHealthcheck>
+            <div class="not-used">Service doesn't have healthcheck.</div>
+        </ng-template>
     </div>
-    <ng-template #healthUndef>
-        <div class="undef">Healthcheck url must be provided!</div>
-    </ng-template>
+
 </div>
-<ng-template #noHealthcheck>
-    <div class="not-used">Service doesn't have healthcheck.</div>
-</ng-template>
