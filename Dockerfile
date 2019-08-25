@@ -6,11 +6,14 @@ ENV KUMULUZEE_ENV_PROD=true
 
 RUN mkdir /app
 RUN mkdir /app/data
+# create symlink to access configuration for angular project
+RUN ln -s /app/classes/webapp/assets/config /ng-config
+RUN ln -s /app/classes/webapp /ng-root
 
 WORKDIR /app
 
-ADD ./api/target/tasker.jar /app
+ADD ./api/target/ /app
 
 EXPOSE 8080
 
-CMD ["java", "-jar", "tasker.jar"]
+CMD ["java", "-server", "-cp", "classes:dependency/*", "com.kumuluz.ee.EeApplication"]

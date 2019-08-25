@@ -62,6 +62,10 @@
     <build>
         <finalName>tasker</finalName>
         <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+            </plugin>
             <!-- Clean angular files -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -141,7 +145,7 @@
                         <id>package</id>
                         <phase>compile</phase>
                         <goals>
-                            <goal>repackage</goal>
+                            <goal>copy-dependencies</goal>
                         </goals>
                     </execution>
                 </executions>

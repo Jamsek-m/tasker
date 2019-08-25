@@ -9,7 +9,7 @@ if (environment.production) {
     enableProdMode();
 }
 
-AuthService.init(environment.keycloak).then(() => {
+AuthService.init(environment.keycloakJsonPath).then(() => {
     platformBrowserDynamic().bootstrapModule(AppModule)
         .catch(err => console.error(err));
 }).catch(err => {

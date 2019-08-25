@@ -39,15 +39,15 @@ import {SpinerComponent} from "./components/spiner/spiner.component";
 import {DocsApiEntryComponent} from "./docs/docs-api-entry/docs-api-entry.component";
 import {TokenGenerationModalComponent} from "./components/token-generation-modal/token-generation-modal.component";
 import {NoopAnimationsModule} from "@angular/platform-browser/animations";
-import {API_URL, BASE_URL, KEYCLOAK_CONFIG, TASKER_META} from "./injectables";
+import {API_URL, BASE_URL, TASKER_META} from "./injectables";
 import {environment} from "../environments/environment";
 import {DashboardPageComponent} from "./pages/dashboard-page/dashboard-page.component";
 import {AuthInterceptor} from "./services/auth.interceptor";
 import {DomainListPageComponent} from "./pages/domain-list-page/domain-list-page.component";
 import {ServiceFormClientSectionComponent} from "./pages/service-form-page/service-form-client-section/service-form-client-section.component";
 import {ServiceFormApiSectionComponent} from "./pages/service-form-page/service-form-api-section/service-form-api-section.component";
-import { Error403PageComponent } from './pages/error403-page/error403-page.component';
-import { CancelIconComponent } from './components/cancel-icon/cancel-icon.component';
+import {Error403PageComponent} from "./pages/error403-page/error403-page.component";
+import {CancelIconComponent} from "./components/cancel-icon/cancel-icon.component";
 
 
 @NgModule({
@@ -100,7 +100,6 @@ import { CancelIconComponent } from './components/cancel-icon/cancel-icon.compon
         {provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true},
         {provide: API_URL, useValue: environment.baseUrl + "/" + environment.apiVersion},
         {provide: BASE_URL, useValue: environment.baseUrl},
-        {provide: KEYCLOAK_CONFIG, useValue: environment.keycloak},
         {provide: TASKER_META, useValue: environment.projectMeta}
     ],
     entryComponents: [

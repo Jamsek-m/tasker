@@ -4,11 +4,7 @@ export const environment: TaskerEnvironment = {
     production: true,
     baseUrl: "",
     apiVersion: "v1",
-    keycloak: {
-        realm: "mjamsek-test",
-        authServerUrl: "https://keycloak.mjamsek.com/auth",
-        resource: "tasker-public"
-    },
+    keycloakJsonPath: "/assets/config/keycloak.json",
     projectMeta: {
         version: "1.0.0",
         gitRepo: "https://github.com/Jamsek-m/tasker",

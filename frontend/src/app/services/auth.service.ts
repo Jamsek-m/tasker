@@ -5,7 +5,6 @@ import {map} from "rxjs/operators";
 import {User} from "../models/user.class";
 import {API_URL} from "../injectables";
 import {KeycloakInitOptions, KeycloakInstance} from "keycloak-js";
-import {KeycloakConfig} from "../../environments/env.model";
 import * as Keycloak_ from "keycloak-js";
 
 const Keycloak = Keycloak_;
@@ -24,12 +23,8 @@ export class AuthService {
         private http: HttpClient) {
     }
 
-    public static init(keycloakConfig: KeycloakConfig): Promise<void> {
-        const keycloakAuth: KeycloakInstance = Keycloak({
-            url: keycloakConfig.authServerUrl,
-            realm: keycloakConfig.realm,
-            clientId: keycloakConfig.resource
-        });
+    public static init(keycloakJsonPath: string): Promise<void> {
+        const keycloakAuth: KeycloakInstance = Keycloak(keycloakJsonPath);
 
         const config: KeycloakInitOptions = {
             onLoad: "check-sso"

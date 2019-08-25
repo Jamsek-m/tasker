@@ -1,0 +1,5 @@
+{
+    "realm": "mjamsek-test",
+    "auth-server-url": "https://keycloak.mjamsek.com/auth",
+    "resource": "tasker-public"
+}

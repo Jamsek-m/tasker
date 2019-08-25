@@ -6,6 +6,9 @@ Tasker is service for monitoring and managing services deployed
 in docker containers.
 
 ## Config
-TASKER_ADMIN_USERNAME
 
-TASKER_ADMIN_PASSWORD
+### Angular config
+When starting container create bind from /ng-config to directory with keycloak.json
+
+### API config
+Set keycloak credentials via environment variables
