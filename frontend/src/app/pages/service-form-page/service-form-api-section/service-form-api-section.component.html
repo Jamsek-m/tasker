@@ -20,7 +20,7 @@
                 Major version:
                 <tasker-help help="API's major version"></tasker-help>
             </label>
-            <input class="form-control" type="text" name="major-version" required
+            <input class="form-control" type="number" name="major-version" required
                 [class.is-invalid]="validation.majorVersion"
                 id="major-version" [(ngModel)]="service.majorVersion"/>
             <div class="invalid-feedback" *ngIf="validation.majorVersion">

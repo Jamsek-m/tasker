@@ -9,4 +9,14 @@ export class ObjectUtil {
 
         return JSON.stringify(obj) === JSON.stringify({});
     }
+
+    public static isInteger(value: any): boolean {
+        let x;
+        if (isNaN(value)) {
+            return false;
+        }
+        x = parseFloat(value);
+        // tslint:disable-next-line:no-bitwise
+        return (x | 0) === x;
+    }
 }

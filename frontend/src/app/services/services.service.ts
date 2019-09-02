@@ -127,6 +127,9 @@ export class ServicesService {
             if (!entity.majorVersion) {
                 validation.validEntity = false;
                 validation.majorVersion = "Major version must not be null!";
+            } else if (!ObjectUtil.isInteger(entity.majorVersion)) {
+                validation.validEntity = false;
+                validation.majorVersion = "Major version must be integer!";
             }
         }
 

@@ -16,6 +16,7 @@ import {Error403PageComponent} from "./pages/error403-page/error403-page.compone
 import {GuardRoles} from "./models/auth.models";
 import {RoleGuard} from "./services/role.guard";
 import {AuthRole} from "./models/enums/auth-role.enum";
+import {AuthRedirectComponent} from "./pages/auth-redirect/auth-redirect.component";
 
 const routes: Routes = [
     {path: "", pathMatch: "full", component: DashboardPageComponent},
@@ -30,6 +31,7 @@ const routes: Routes = [
     {path: "docs", component: DocsPageComponent},
     {path: "profile", component: UserProfilePageComponent, canActivate: [AuthGuard]},
     {path: "login", component: LoginPageComponent},
+    {path: "auth", component: AuthRedirectComponent},
     {path: "404", component: Error404PageComponent},
     {path: "403", component: Error403PageComponent},
     {path: "**", redirectTo: "/404"}

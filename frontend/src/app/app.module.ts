@@ -48,6 +48,7 @@ import {ServiceFormClientSectionComponent} from "./pages/service-form-page/servi
 import {ServiceFormApiSectionComponent} from "./pages/service-form-page/service-form-api-section/service-form-api-section.component";
 import {Error403PageComponent} from "./pages/error403-page/error403-page.component";
 import {CancelIconComponent} from "./components/cancel-icon/cancel-icon.component";
+import {AuthRedirectComponent} from "./pages/auth-redirect/auth-redirect.component";
 
 
 @NgModule({
@@ -83,7 +84,8 @@ import {CancelIconComponent} from "./components/cancel-icon/cancel-icon.componen
         ServiceFormClientSectionComponent,
         ServiceFormApiSectionComponent,
         Error403PageComponent,
-        CancelIconComponent
+        CancelIconComponent,
+        AuthRedirectComponent
     ],
     imports: [
         BrowserModule,

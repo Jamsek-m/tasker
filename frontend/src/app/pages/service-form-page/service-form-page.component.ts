@@ -39,7 +39,7 @@ export class ServiceFormPageComponent implements OnInit, AfterViewInit {
 
     public sticky: number;
 
-    constructor(private dockerDaemonService: DockerEndpointsService,
+    constructor(private dockerEndpointsService: DockerEndpointsService,
                 private router: Router,
                 private activatedRoute: ActivatedRoute,
                 private servicesService: ServicesService,
@@ -176,7 +176,7 @@ export class ServiceFormPageComponent implements OnInit, AfterViewInit {
     }
 
     private getDockerEndpoints(): void {
-        this.dockerDaemonService.getEndpoints().subscribe(
+        this.dockerEndpointsService.getEndpoints().subscribe(
             (list: DockerEndpoint[]) => {
                 this.dockerEndpoints = list;
             },
