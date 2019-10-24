@@ -115,10 +115,6 @@ export class AuthService {
         AuthService.auth.logout();
     }
 
-    public login(): void {
-        AuthService.auth.login();
-    }
-
     public isAuthenticated(): boolean {
         return AuthService.auth.authenticated;
     }
@@ -136,24 +132,6 @@ export class AuthService {
 
     public redirectToLogin(): void {
         AuthService.auth.login();
-    }
-
-    public changePassword(dto: User): Observable<void> {
-        const url = `${this.apiUrl}/auth/user/${dto.id}`;
-        return this.http.put(url, JSON.stringify(dto)).pipe(map(() => null));
-    }
-
-    public getCurrentUser(): Observable<User> {
-        const url = `${this.apiUrl}/auth/current-user`;
-        return this.http.get(url).pipe(map(res => res as User));
-    }
-
-    public registerAuthEvent(username?: string): void {
-        this.eventEmitter.emit(username);
-    }
-
-    public getAuthEvent(): EventEmitter<string | null> {
-        return this.eventEmitter;
     }
 
     /** Returns user id
@@ -186,5 +164,16 @@ export class AuthService {
      */
     public hasRole(role: string): boolean {
         return this.hasRealmRole(role) || this.hasResourceRole(role, "tasker-public");
+    }
+
+    public getUserUsername(): string {
+        return (AuthService.auth.tokenParsed as any)["preferred_username"];
+    }
+
+    public getUserEmail(): string {
+        return (AuthService.auth.tokenParsed as any)["email"];
+    }
+    public userHasVerifiedEmail(): string {
+        return (AuthService.auth.tokenParsed as any)["email_verified"];
     }
 }

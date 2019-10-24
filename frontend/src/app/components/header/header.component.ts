@@ -14,6 +14,8 @@ export class HeaderComponent implements OnInit {
     public navbarOpened = false;
     public menuItems: MenuItem[] = menuItems;
     public isAuthorized = false;
+    public username: string = null;
+    public email: string = null;
 
     constructor(private router: Router,
                 private authService: AuthService,
@@ -22,7 +24,13 @@ export class HeaderComponent implements OnInit {
 
     ngOnInit() {
         this.isAuthorized = this.authService.isAuthenticated();
-        this.checkNotifications();
+        if (this.isAuthorized) {
+            this.username = this.authService.getUserUsername();
+            if (this.authService.userHasVerifiedEmail()) {
+                this.email = this.authService.getUserEmail();
+            }
+        }
+        // this.checkNotifications();
     }
 
     public toggleNavbar() {
@@ -34,7 +42,7 @@ export class HeaderComponent implements OnInit {
     }
 
     public login() {
-        this.authService.login();
+        this.authService.redirectToLogin();
     }
 
     public hasRole(menuItem: MenuItem): boolean {

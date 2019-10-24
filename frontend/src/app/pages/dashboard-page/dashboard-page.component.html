@@ -21,6 +21,13 @@
                         </div>
                     </div>
 
+                    <div class="box" [class.clickable]="userHasPermission(adminAccess)" (click)="goTo('/servers', adminAccess)">
+                        <div class="box-content">
+                            <span class="box-title">Total servers:</span>
+                            <span class="box-value">{{stats ? stats.totalServers : 0}}</span>
+                        </div>
+                    </div>
+
                     <div class="box" [class.clickable]="userHasPermission(adminAccess)" (click)="goTo('/docker-endpoints', adminAccess)">
                         <div class="box-content">
                             <span class="box-title">Total docker endpoints:</span>

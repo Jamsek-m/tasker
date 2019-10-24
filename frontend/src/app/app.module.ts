@@ -18,7 +18,6 @@ import {DocsTaskPageComponent} from "./docs/docs-task-page/docs-task-page.compon
 import {DocsPluginPageComponent} from "./docs/docs-plugin-page/docs-plugin-page.component";
 import {DockerEndpointsPageComponent} from "./pages/docker-endpoints-page/docker-endpoints-page.component";
 import {LogsPageComponent} from "./pages/logs-page/logs-page.component";
-import {UserProfilePageComponent} from "./pages/user-profile-page/user-profile-page.component";
 
 import {HeaderComponent} from "./components/header/header.component";
 import {HeaderLinkComponent} from "./components/header/header-link/header-link.component";
@@ -67,7 +66,6 @@ import {AuthRedirectComponent} from "./pages/auth-redirect/auth-redirect.compone
         DocsPluginPageComponent,
         DockerEndpointsPageComponent,
         LogsPageComponent,
-        UserProfilePageComponent,
         HealthOverviewComponent,
         ServiceDetailsPageComponent,
         ServiceFormPageComponent,

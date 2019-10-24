@@ -5,6 +5,7 @@ import com.kumuluz.ee.rest.beans.QueryParameters;
 import com.kumuluz.ee.rest.enums.FilterOperation;
 import com.kumuluz.ee.rest.utils.JPAUtils;
 import com.mjamsek.tasker.entities.persistence.DomainEntity;
+import com.mjamsek.tasker.entities.persistence.ServerEntity;
 import com.mjamsek.tasker.entities.persistence.service.*;
 import com.mjamsek.tasker.lib.v1.Statistics;
 import com.mjamsek.tasker.services.StatisticsService;
@@ -45,6 +46,9 @@ public class StatisticsServiceImpl implements StatisticsService {
         
         long totalDomains = JPAUtils.queryEntitiesCount(em, DomainEntity.class, new QueryParameters());
         statistics.setTotalDomains(totalDomains);
+        
+        long totalServers = JPAUtils.queryEntitiesCount(em, ServerEntity.class, new QueryParameters());
+        statistics.setTotalServers(totalServers);
         
         return statistics;
     }

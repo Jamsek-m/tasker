@@ -6,4 +6,5 @@ export interface Statistics {
     totalDomains: number;
     totalDockerEndpoints: number;
     totalDeployedServices: number;
+    totalServers: number;
 }

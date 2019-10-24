@@ -16,6 +16,8 @@ public class Statistics {
     
     private long totalDeployedServices;
     
+    private long totalServers;
+    
     public long getTotalServices() {
         return totalServices;
     }
@@ -70,5 +72,13 @@ public class Statistics {
     
     public void setTotalDeployedServices(long totalDeployedServices) {
         this.totalDeployedServices = totalDeployedServices;
+    }
+    
+    public long getTotalServers() {
+        return totalServers;
+    }
+    
+    public void setTotalServers(long totalServers) {
+        this.totalServers = totalServers;
     }
 }

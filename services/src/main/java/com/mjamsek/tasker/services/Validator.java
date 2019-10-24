@@ -16,4 +16,10 @@ public interface Validator {
     
     void assertNotBlank(String value, String fieldName, String entity) throws ValidationException;
     
+    void assertRegex(String value, String regex) throws ValidationException;
+    
+    void assertRegex(String value, String regex, String fieldName) throws ValidationException;
+    
+    void assertRegex(String value, String regex, String fieldName, String entity) throws ValidationException;
+    
 }

@@ -11,10 +11,10 @@
                 [hasPermission]="isAuthorized && hasRole(item)"
                 [item]="item"></tasker-header-link>
         </div>
-        <button class="btn btn-primary">
-            <span class="badge badge-light">7</span>
-        </button>
-        <a class="profile-link" *ngIf="isAuthorized" [routerLink]="['/profile']">Profile</a>
+<!--        <button class="btn btn-primary">-->
+<!--            <span class="badge badge-light">7</span>-->
+<!--        </button>-->
+        <span class="profile-link" *ngIf="isAuthorized" [tooltip]="email">{{username}}</span>
         <a class="logout-link" *ngIf="isAuthorized" (click)="logout()">Logout</a>
         <a class="logout-link" *ngIf="!isAuthorized" (click)="login()">Login</a>
     </div>

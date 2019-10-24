@@ -68,4 +68,34 @@ public class ValidatorImpl implements Validator {
                 .withStatus(Response.Status.BAD_REQUEST.getStatusCode());
         }
     }
+    
+    @Override
+    public void assertRegex(String value, String regex) throws ValidationException {
+        if (!value.matches(regex)) {
+            throw new ValidationException("validation.error.property.regex.false")
+                .withDescription("Value does not match required form!")
+                .withStatus(Response.Status.BAD_REQUEST.getStatusCode());
+        }
+    }
+    
+    @Override
+    public void assertRegex(String value, String regex, String fieldName) throws ValidationException {
+        if (!value.matches(regex)) {
+            throw new ValidationException("validation.error.property.regex.false")
+                .withDescription(String.format("Value does not match required form! Field '%s' must be in required form!", fieldName))
+                .withField(fieldName)
+                .withStatus(Response.Status.BAD_REQUEST.getStatusCode());
+        }
+    }
+    
+    @Override
+    public void assertRegex(String value, String regex, String fieldName, String entity) throws ValidationException {
+        if (!value.matches(regex)) {
+            throw new ValidationException("validation.error.property.regex.false")
+                .withDescription(String.format("Value does not match required form! Field '%s' of entity '%s' must be in required form!", fieldName, entity))
+                .withField(fieldName)
+                .withEntity(entity)
+                .withStatus(Response.Status.BAD_REQUEST.getStatusCode());
+        }
+    }
 }

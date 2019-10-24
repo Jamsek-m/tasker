@@ -7,7 +7,6 @@ import {DocsPageComponent} from "./docs/docs-page.component";
 import {DockerEndpointsPageComponent} from "./pages/docker-endpoints-page/docker-endpoints-page.component";
 import {LogsPageComponent} from "./pages/logs-page/logs-page.component";
 import {AuthGuard} from "./services/auth.guard";
-import {UserProfilePageComponent} from "./pages/user-profile-page/user-profile-page.component";
 import {ServiceDetailsPageComponent} from "./pages/service-details-page/service-details-page.component";
 import {ServiceFormPageComponent} from "./pages/service-form-page/service-form-page.component";
 import {DashboardPageComponent} from "./pages/dashboard-page/dashboard-page.component";
@@ -29,7 +28,6 @@ const routes: Routes = [
     {path: "logs", component: LogsPageComponent, canActivate: [RoleGuard], data: GuardRoles.withRoles([AuthRole.ADMIN])},
     {path: "docker-endpoints", component: DockerEndpointsPageComponent, canActivate: [RoleGuard], data: GuardRoles.withRoles([AuthRole.ADMIN])},
     {path: "docs", component: DocsPageComponent},
-    {path: "profile", component: UserProfilePageComponent, canActivate: [AuthGuard]},
     {path: "login", component: LoginPageComponent},
     {path: "auth", component: AuthRedirectComponent},
     {path: "404", component: Error404PageComponent},
