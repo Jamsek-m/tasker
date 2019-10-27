@@ -5,6 +5,7 @@ pipeline {
         dockerImageTag = "docker.mjamsek.com/tasker"
         dockerImage = ""
         version = ""
+        commitAuthor = ""
     }
 
     agent any
@@ -27,6 +28,8 @@ pipeline {
             steps {
                 script {
                     version = readFile('VERSION').trim()
+                    sh "git --no-pager show -s --format='%ae' > COMMIT_INFO"
+                    commitAuthor = readFile("COMMIT_INFO").trim()
                 }
             }
         }
@@ -62,6 +65,14 @@ pipeline {
                 sh "docker rmi $dockerImageTag:$version"
                 sh "docker rmi $dockerImageTag:latest"
             }
+        }
+    }
+    post {
+        success {
+            slackSend (color: '#00FF00', message: "SUCCESSFUL: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' from ${commitAuthor} (${env.BUILD_URL})")
+        }
+        failure {
+            slackSend (color: '#FF0000', message: "FAILED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' from ${commitAuthor} (${env.BUILD_URL})")
         }
     }
 }
