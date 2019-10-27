@@ -57,11 +57,10 @@ pipeline {
                 }
             }
         }
-        stage("Cleanup phase") {
+        stage("Cleanup docker images") {
             steps {
                 sh "docker rmi $dockerImageTag:$version"
                 sh "docker rmi $dockerImageTag:latest"
-                sh "rm .npmrc"
             }
         }
     }
