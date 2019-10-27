@@ -1,4 +1,5 @@
 # Tasker
+[![Build Status](https://jenkins.mjamsek.com/buildStatus/icon?job=tasker)](https://jenkins.mjamsek.com/job/tasker/)
 > Service for managing docker services
 
 ## About
