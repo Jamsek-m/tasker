@@ -42,7 +42,9 @@ kumuluzee:
                "use-resource-role-mappings": true,
                "confidential-port": 0
              }'
-tasker:
-  admin:
-    username: admin
-    password: admin
+client:
+  keycloak:
+    config-dir: api/target/classes/webapp/config
+    realm: temp
+    client-id: temp
+    auth-url: http://

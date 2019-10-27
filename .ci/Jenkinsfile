@@ -1,7 +1,7 @@
 pipeline {
     environment {
         registry = "https://docker.mjamsek.com"
-        registryCredential = "mjamsek-hub"
+        registryCredential = "nexus-username"
         dockerImageTag = "docker.mjamsek.com/tasker"
         dockerImage = ""
         version = ""
@@ -10,16 +10,16 @@ pipeline {
     agent any
 
     tools {
-        maven "maven3.6"
-        nodejs "node11.6"
-        jdk "jdk8"
+        maven "mvn-3.6"
+        nodejs "node-12"
+        jdk "jdk-13"
     }
 
     stages {
         stage("Cloning git") {
             steps {
                 git branch: "master",
-                        credentialsId: "github-token",
+                        credentialsId: "github-username",
                         url: "https://github.com/Jamsek-m/tasker.git"
             }
         }
@@ -32,7 +32,9 @@ pipeline {
         }
         stage("Packaging application") {
             steps {
-                sh "npm install --prefix ./frontend"
+                withCredentials([string(credentialsId: 'npm-public', variable: 'NPM_TOKEN')]) {
+                    sh "npm install --prefix ./frontend"
+                }
                 sh "mvn clean package"
             }
         }

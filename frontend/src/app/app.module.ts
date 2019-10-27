@@ -1,5 +1,5 @@
 import {BrowserModule} from "@angular/platform-browser";
-import {NgModule} from "@angular/core";
+import {APP_INITIALIZER, NgModule} from "@angular/core";
 
 import {FormsModule} from "@angular/forms";
 import {HTTP_INTERCEPTORS, HttpClientModule} from "@angular/common/http";
@@ -39,7 +39,6 @@ import {DocsApiEntryComponent} from "./docs/docs-api-entry/docs-api-entry.compon
 import {TokenGenerationModalComponent} from "./components/token-generation-modal/token-generation-modal.component";
 import {NoopAnimationsModule} from "@angular/platform-browser/animations";
 import {API_URL, BASE_URL, TASKER_META} from "./injectables";
-import {environment} from "../environments/environment";
 import {DashboardPageComponent} from "./pages/dashboard-page/dashboard-page.component";
 import {AuthInterceptor} from "./services/auth.interceptor";
 import {DomainListPageComponent} from "./pages/domain-list-page/domain-list-page.component";
@@ -48,6 +47,7 @@ import {ServiceFormApiSectionComponent} from "./pages/service-form-page/service-
 import {Error403PageComponent} from "./pages/error403-page/error403-page.component";
 import {CancelIconComponent} from "./components/cancel-icon/cancel-icon.component";
 import {AuthRedirectComponent} from "./pages/auth-redirect/auth-redirect.component";
+import {ApiUrlFactory, BaseUrlFactory, AppConfigFactory, MetaConfigFactory} from "./factories";
 
 
 @NgModule({
@@ -96,11 +96,12 @@ import {AuthRedirectComponent} from "./pages/auth-redirect/auth-redirect.compone
         NgJsonEditorModule
     ],
     providers: [
+        {provide: APP_INITIALIZER, useFactory: AppConfigFactory, multi: true},
         {provide: HTTP_INTERCEPTORS, useClass: HttpApiInterceptor, multi: true},
         {provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true},
-        {provide: API_URL, useValue: environment.baseUrl + "/" + environment.apiVersion},
-        {provide: BASE_URL, useValue: environment.baseUrl},
-        {provide: TASKER_META, useValue: environment.projectMeta}
+        {provide: API_URL, useFactory: ApiUrlFactory, multi: false},
+        {provide: BASE_URL, useFactory: BaseUrlFactory, multi: false},
+        {provide: TASKER_META, useFactory: MetaConfigFactory, multi: false}
     ],
     entryComponents: [
         ConfirmationDialogComponent,

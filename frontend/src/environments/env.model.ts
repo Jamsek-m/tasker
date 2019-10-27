@@ -2,8 +2,14 @@ export interface TaskerEnvironment {
     production: boolean;
     baseUrl: string;
     apiVersion: string;
-    keycloakJsonPath: string;
     projectMeta: TaskerProjectMeta;
+    keycloak?: TaskerKeycloakConfig;
+}
+
+export interface TaskerKeycloakConfig {
+    realm: string;
+    "auth-server-url": string;
+    resource: string;
 }
 
 export interface TaskerProjectMeta {

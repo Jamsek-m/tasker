@@ -12,3 +12,7 @@ When starting container create bind from /ng-config to directory with keycloak.j
 
 ### API config
 Set keycloak credentials via environment variables
+
+## Volume
+
+Map docker volume to `my-volume:/app/data`

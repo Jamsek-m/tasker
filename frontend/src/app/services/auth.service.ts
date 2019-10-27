@@ -1,11 +1,10 @@
 import {EventEmitter, Inject, Injectable} from "@angular/core";
 import {HttpClient} from "@angular/common/http";
-import {Observable} from "rxjs";
-import {map} from "rxjs/operators";
-import {User} from "../models/user.class";
 import {API_URL} from "../injectables";
 import {KeycloakInitOptions, KeycloakInstance} from "keycloak-js";
+import {ConfigService} from "@mjamsek/ngx-config";
 import * as Keycloak_ from "keycloak-js";
+import {TaskerEnvironment} from "../../environments/env.model";
 
 const Keycloak = Keycloak_;
 
@@ -23,18 +22,23 @@ export class AuthService {
         private http: HttpClient) {
     }
 
-    public static init(keycloakJsonPath: string): Promise<void> {
-        const keycloakAuth: KeycloakInstance = Keycloak(keycloakJsonPath);
+    public static init(): Promise<void> {
+        const keycloakAuth: KeycloakInstance = Keycloak({
+            url: ConfigService.getConfig<TaskerEnvironment>().keycloak["auth-server-url"],
+            clientId: ConfigService.getConfig<TaskerEnvironment>().keycloak.resource,
+            realm: ConfigService.getConfig<TaskerEnvironment>().keycloak.realm
+        });
 
         const config: KeycloakInitOptions = {
-            onLoad: "check-sso"
+            onLoad: "check-sso",
+            promiseType: "native"
         };
 
         return new Promise<void>((resolve, reject) => {
-            keycloakAuth.init(config).success(() => {
+            keycloakAuth.init(config).then(() => {
                 AuthService.auth = keycloakAuth;
                 resolve();
-            }).error(() => {
+            }).catch(() => {
                 reject();
             });
         });
@@ -58,9 +62,9 @@ export class AuthService {
                 // token is about to expire
                 if (timeUntilExpiry > 0) {
                     // token is not already expired
-                    AuthService.auth.updateToken(validityTime).success(() => {
+                    AuthService.auth.updateToken(validityTime).then(() => {
                         resolve();
-                    }).error(err => {
+                    }).catch((err: Error) => {
                         reject(err);
                     });
                 } else {
@@ -74,9 +78,9 @@ export class AuthService {
 
                     if (timeUntilRefreshExpiry > 30000) {
                         // refresh token is still valid - update access token
-                        AuthService.auth.updateToken(validityTime).success(() => {
+                        AuthService.auth.updateToken(validityTime).then(() => {
                             resolve();
-                        }).error(err => {
+                        }).catch((err: Error) => {
                             reject(err);
                         });
                     } else {
@@ -173,6 +177,7 @@ export class AuthService {
     public getUserEmail(): string {
         return (AuthService.auth.tokenParsed as any)["email"];
     }
+
     public userHasVerifiedEmail(): string {
         return (AuthService.auth.tokenParsed as any)["email_verified"];
     }
