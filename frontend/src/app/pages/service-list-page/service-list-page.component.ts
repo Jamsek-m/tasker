@@ -6,6 +6,7 @@ import {ServicesService} from "../../services/services.service";
 import {Observable} from "rxjs";
 import {mergeMap} from "rxjs/operators";
 import {EntityList} from "../../models/common/dto.model";
+import {MessageService} from "../../services/message.service";
 
 @Component({
     selector: "tasker-token-list-page",
@@ -27,7 +28,9 @@ export class ServiceListPageComponent implements OnInit {
     @ViewChild("detailsModal", {static: false})
     private detailsModal: TemplateRef<any>;
 
-    constructor(private router: Router, private servicesService: ServicesService, private modalService: BsModalService) {
+    constructor(private router: Router,
+                private servicesService: ServicesService,
+                private messageService: MessageService) {
     }
 
     ngOnInit() {
@@ -47,6 +50,7 @@ export class ServiceListPageComponent implements OnInit {
             },
             (err: any) => {
                 console.error(err);
+                this.messageService.openToastNotification("Error", "Error retrieving list of services!", "error", {duration: -1});
             }
         );
     }

@@ -48,6 +48,7 @@ import {Error403PageComponent} from "./pages/error403-page/error403-page.compone
 import {CancelIconComponent} from "./components/cancel-icon/cancel-icon.component";
 import {AuthRedirectComponent} from "./pages/auth-redirect/auth-redirect.component";
 import {ApiUrlFactory, BaseUrlFactory, AppConfigFactory, MetaConfigFactory} from "./factories";
+import { ServerListPageComponent } from './pages/server-list-page/server-list-page.component';
 
 
 @NgModule({
@@ -83,7 +84,8 @@ import {ApiUrlFactory, BaseUrlFactory, AppConfigFactory, MetaConfigFactory} from
         ServiceFormApiSectionComponent,
         Error403PageComponent,
         CancelIconComponent,
-        AuthRedirectComponent
+        AuthRedirectComponent,
+        ServerListPageComponent
     ],
     imports: [
         BrowserModule,

@@ -74,6 +74,7 @@ export class DomainListPageComponent implements OnInit {
                         },
                         (err) => {
                             console.error(err);
+                            this.messageService.openToastNotification("Error", "Error removing domain!", "error", {duration: -1});
                         }
                     );
                 }
@@ -96,6 +97,10 @@ export class DomainListPageComponent implements OnInit {
             (list: EntityList<Domain>) => {
                 this.totalCount = list.count;
                 this.domains = list.entities;
+            },
+            (err) => {
+                console.error(err);
+                this.messageService.openToastNotification("Error", "Error retrieving list of domains!", "error", {duration: -1});
             }
         );
     }

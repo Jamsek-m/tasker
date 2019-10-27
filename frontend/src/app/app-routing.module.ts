@@ -16,6 +16,7 @@ import {GuardRoles} from "./models/auth.models";
 import {RoleGuard} from "./services/role.guard";
 import {AuthRole} from "./models/enums/auth-role.enum";
 import {AuthRedirectComponent} from "./pages/auth-redirect/auth-redirect.component";
+import {ServerListPageComponent} from "./pages/server-list-page/server-list-page.component";
 
 const routes: Routes = [
     {path: "", pathMatch: "full", component: DashboardPageComponent},
@@ -27,6 +28,7 @@ const routes: Routes = [
     {path: "service/:id", component: ServiceDetailsPageComponent, canActivate: [AuthGuard]},
     {path: "logs", component: LogsPageComponent, canActivate: [RoleGuard], data: GuardRoles.withRoles([AuthRole.ADMIN])},
     {path: "docker-endpoints", component: DockerEndpointsPageComponent, canActivate: [RoleGuard], data: GuardRoles.withRoles([AuthRole.ADMIN])},
+    {path: "servers", component: ServerListPageComponent, canActivate: [RoleGuard], data: GuardRoles.withRoles([AuthRole.ADMIN])},
     {path: "docs", component: DocsPageComponent},
     {path: "login", component: LoginPageComponent},
     {path: "auth", component: AuthRedirectComponent},

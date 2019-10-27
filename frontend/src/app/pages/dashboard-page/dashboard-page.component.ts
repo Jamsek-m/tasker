@@ -8,6 +8,7 @@ import {TASKER_META} from "../../injectables";
 import {TaskerProjectMeta} from "../../../environments/env.model";
 import {Router} from "@angular/router";
 import {AuthRole} from "../../models/enums/auth-role.enum";
+import {MessageService} from "../../services/message.service";
 
 @Component({
     selector: "tasker-dashboard-page",
@@ -24,6 +25,7 @@ export class DashboardPageComponent implements OnInit, AfterViewInit {
         private auth: AuthService,
         private router: Router,
         private dashboardService: DashboardService,
+        private messageService: MessageService,
         @Inject(TASKER_META) public projectMeta: TaskerProjectMeta) {
     }
 
@@ -56,6 +58,10 @@ export class DashboardPageComponent implements OnInit, AfterViewInit {
             (stats: Statistics) => {
                 this.stats = stats;
                 this.renderGraphs();
+            },
+            (err) => {
+                console.error(err);
+                this.messageService.openToastNotification("Error", "Error retrieving statistics!", "error", {duration: -1});
             }
         );
     }

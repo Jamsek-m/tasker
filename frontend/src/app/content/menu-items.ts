@@ -15,15 +15,22 @@ export const menuItems: MenuItem[] = [
         requiredRoles: [AuthRole.ADMIN]
     },
     {
-        label: "Logs",
-        url: "/logs",
+        label: "Servers",
+        url: "/servers",
         external: false,
         requireAuth: true,
         requiredRoles: [AuthRole.ADMIN]
     },
     {
-        label: "Docker Endpoints",
+        label: "Docker endpoints",
         url: "/docker-endpoints",
+        external: false,
+        requireAuth: true,
+        requiredRoles: [AuthRole.ADMIN]
+    },
+    {
+        label: "Logs",
+        url: "/logs",
         external: false,
         requireAuth: true,
         requiredRoles: [AuthRole.ADMIN]

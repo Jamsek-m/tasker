@@ -65,6 +65,7 @@ export class DockerEndpointsPageComponent implements OnInit {
             },
             (err) => {
                 console.error(err);
+                this.messageService.openToastNotification("Error", "Error updating endpoint!", "error", {duration: -1});
             }
         );
     }
@@ -97,6 +98,7 @@ export class DockerEndpointsPageComponent implements OnInit {
             },
             (err) => {
                 console.error(err);
+                this.messageService.openToastNotification("Error", "Error adding endpoint!", "error", {duration: -1});
             }
         );
     }
@@ -135,6 +137,7 @@ export class DockerEndpointsPageComponent implements OnInit {
             },
             (err) => {
                 console.error(err);
+                this.messageService.openToastNotification("Error", "Error retrieving configuration!", "error", {duration: -1});
             }
         );
     }
@@ -151,6 +154,7 @@ export class DockerEndpointsPageComponent implements OnInit {
             },
             (err) => {
                 console.error(err);
+                this.messageService.openToastNotification("Error", "Error retrieving list of endpoints!", "error", {duration: -1});
             }
         );
     }

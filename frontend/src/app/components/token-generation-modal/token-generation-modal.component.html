@@ -11,9 +11,10 @@
 
     <ng-template #gotToken>
         <p>Token generated!</p>
+        <p>Write it down, as you won't be able to retrieve it once again after you close this popup!</p>
         <p>
-            <span class="mr-2">{{generatedToken.token}}</span>
-            <tasker-clipboard [data]="generatedToken.token"></tasker-clipboard>
+            <span class="mr-2">{{generatedToken}}</span>
+            <tasker-clipboard [data]="generatedToken"></tasker-clipboard>
         </p>
     </ng-template>
 </div>

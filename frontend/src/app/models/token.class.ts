@@ -5,3 +5,7 @@ export class Token {
     public expired: Date;
     public allowedActions: string[];
 }
+
+export interface ServiceToken {
+    token: string;
+}

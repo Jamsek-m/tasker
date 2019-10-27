@@ -12,6 +12,7 @@
         <class>com.mjamsek.tasker.entities.persistence.service.WebAppServiceEntity</class>
         <class>com.mjamsek.tasker.entities.persistence.service.ServiceDeploymentEntity</class>
         <class>com.mjamsek.tasker.entities.persistence.service.DockerEndpointEntity</class>
+        <class>com.mjamsek.tasker.entities.persistence.service.ServiceTokenEntity</class>
         <class>com.mjamsek.tasker.entities.persistence.DomainEntity</class>
         <class>com.mjamsek.tasker.entities.persistence.ServerEntity</class>
 

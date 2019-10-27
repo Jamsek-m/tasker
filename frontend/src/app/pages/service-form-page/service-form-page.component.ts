@@ -162,6 +162,7 @@ export class ServiceFormPageComponent implements OnInit, AfterViewInit {
                     this.router.navigate(["/404"]);
                 } else {
                     console.error(err);
+                    this.messageService.openToastNotification("Error", "Error retrieving details of service!", "error", {duration: -1});
                 }
             }
         );
@@ -182,6 +183,7 @@ export class ServiceFormPageComponent implements OnInit, AfterViewInit {
             },
             (err) => {
                 console.error(err);
+                this.messageService.openToastNotification("Error", "Error retrieving list of endpoints!", "error", {duration: -1});
             }
         );
     }

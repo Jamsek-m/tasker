@@ -2,7 +2,7 @@ import {Inject, Injectable} from "@angular/core";
 import {HttpClient, HttpErrorResponse, HttpResponse} from "@angular/common/http";
 import {Observable, of, throwError} from "rxjs";
 import {Service, ServiceValidation} from "../models/service.class";
-import {catchError, map} from "rxjs/operators";
+import {catchError, map, tap} from "rxjs/operators";
 import {StringUtil} from "../utils/string.util";
 import {ObjectUtil} from "../utils/object.util";
 import {ConflictError} from "../errors/conflict.error";
@@ -13,6 +13,7 @@ import {API_URL} from "../injectables";
 import {EntityList} from "../models/common/dto.model";
 import {HealthCheckResponse} from "../models/enums/healthcheck-response.enum";
 import {UrlUtil} from "../utils/url.util";
+import {ServiceToken} from "../models/token.class";
 
 @Injectable({
     providedIn: "root"
@@ -176,6 +177,13 @@ export class ServicesService {
     public removeService(serviceId: string): Observable<void> {
         const url = `${this.apiUrl}/services/${serviceId}`;
         return this.http.delete(url).pipe(map(() => null));
+    }
+
+    public createServiceToken(serviceId: string): Observable<ServiceToken> {
+        const url = `${this.apiUrl}/services/${serviceId}/token`;
+        return this.http.post(url, null).pipe(
+            map(res => res as ServiceToken)
+        );
     }
 
 }

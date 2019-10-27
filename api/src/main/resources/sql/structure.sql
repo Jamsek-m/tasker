@@ -8,6 +8,7 @@ create table services (service_type varchar(50) not null, id varchar(255) not nu
 create table web_apps (application_url varchar(255), base_url varchar(255), healthcheck_url varchar(255), major_version integer, id varchar(255) not null, primary key (id));
 create table domains (id varchar(255) not null, ssl_enabled boolean, domain varchar(255), primary key (id));
 create table servers (id varchar(255) not null, name varchar(255) not null, ip_address varchar(255), primary key (id));
+create table service_tokens (id varchar(255) not null, user_id varchar(255) not null, token varchar(255) not null, service_id varchar(255) not null, primary key (id));
 create index KEY_UNIQUE_INDEX on configuration (config_key);
 alter table configuration add constraint UK_fe9jr3m4w3y3gy1pchksbt7v5 unique (config_key);
 alter table docker_endpoints add constraint UK_rby7ea40selhpgk0isap43dlu unique (name);
@@ -18,3 +19,4 @@ alter table service_deployments add constraint FKl5b6soqbyjpg8ftfhksd5v39x forei
 alter table services add constraint FK15pn8oulot7n6s9ws11p8dl1f foreign key (deployment_id) references service_deployments;
 alter table web_apps add constraint FKt8ol7xqq527fl66a6ecf3ecmc foreign key (id) references services;
 alter table servers add constraint SERVER_NAME_UNIQ_INDEX unique (name);
+alter table service_tokens add constraint FK_SERVICE_TOKEN foreign key (service_id) references services;

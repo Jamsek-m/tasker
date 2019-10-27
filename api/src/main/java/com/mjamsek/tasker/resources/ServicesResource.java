@@ -2,6 +2,7 @@ package com.mjamsek.tasker.resources;
 
 import com.kumuluz.ee.rest.beans.QueryParameters;
 import com.kumuluz.ee.security.annotations.Secure;
+import com.mjamsek.tasker.entities.dto.ServiceToken;
 import com.mjamsek.tasker.lib.v1.Service;
 import com.mjamsek.tasker.lib.v1.common.AuthRole;
 import com.mjamsek.tasker.lib.v1.common.HttpHeader;
@@ -125,6 +126,14 @@ public class ServicesResource {
     public Response deleteService(@PathParam("serviceId") String serviceId) {
         servicesService.deleteService(serviceId);
         return Response.noContent().build();
+    }
+    
+    @POST
+    @Path("/{serviceId}/token")
+    @RolesAllowed({AuthRole.ADMIN})
+    public Response createToken(@PathParam("serviceId") String serviceId) {
+        ServiceToken token = servicesService.generateServiceToken(serviceId);
+        return Response.ok(token).build();
     }
     
 }

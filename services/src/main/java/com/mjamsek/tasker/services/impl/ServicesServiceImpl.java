@@ -13,22 +13,24 @@ import com.mjamsek.tasker.lib.v1.WebApp;
 import com.mjamsek.tasker.lib.v1.enums.LogSeverity;
 import com.mjamsek.tasker.lib.v1.enums.ServiceType;
 import com.mjamsek.tasker.lib.v1.exceptions.*;
+import com.mjamsek.tasker.lib.v1.exceptions.EntityNotFoundException;
+import com.mjamsek.tasker.lib.v1.exceptions.PersistenceException;
 import com.mjamsek.tasker.lib.v1.integration.docker.DockerContainerInfo;
 import com.mjamsek.tasker.lib.v1.integration.docker.DockerState;
 import com.mjamsek.tasker.mappers.DockerMapper;
 import com.mjamsek.tasker.mappers.ServiceMapper;
+import com.mjamsek.tasker.providers.AuthContext;
 import com.mjamsek.tasker.services.DockerService;
 import com.mjamsek.tasker.services.LogService;
 import com.mjamsek.tasker.services.ServicesService;
 import com.mjamsek.tasker.services.Validator;
 import com.mjamsek.tasker.utils.HttpClient;
+import com.mjamsek.tasker.utils.RandomStringGenerator;
+import org.mindrot.jbcrypt.BCrypt;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
-import javax.persistence.EntityManager;
-import javax.persistence.NoResultException;
-import javax.persistence.PersistenceContext;
-import javax.persistence.TypedQuery;
+import javax.persistence.*;
 import javax.ws.rs.core.Response;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -49,6 +51,9 @@ public class ServicesServiceImpl implements ServicesService {
     
     @Inject
     private Validator validator;
+    
+    @Inject
+    private AuthContext authContext;
     
     @Override
     public List<Service> getServices(QueryParameters queryParameters) {
@@ -195,7 +200,52 @@ public class ServicesServiceImpl implements ServicesService {
     
     @Override
     public ServiceToken generateServiceToken(String serviceId) {
-        return null;
+        ServiceEntity entity = getServiceById(serviceId);
+        if (entity == null) {
+            throw new ServiceNotFoundException(serviceId);
+        }
+    
+        ServiceToken tokenResponse = new ServiceToken();
+        ServiceTokenEntity existingToken = this.getExistingServiceToken(serviceId, authContext.getId());
+        if (existingToken != null) {
+            tokenResponse.setToken(RandomStringGenerator.generate(20));
+            existingToken.setToken(BCrypt.hashpw(tokenResponse.getToken(), BCrypt.gensalt()));
+            try {
+                em.getTransaction().begin();
+                em.merge(existingToken);
+                em.getTransaction().commit();
+                return tokenResponse;
+            } catch (Exception e) {
+                em.getTransaction().rollback();
+                throw new PersistenceException();
+            }
+        } else {
+            ServiceTokenEntity token = new ServiceTokenEntity();
+            token.setService(entity);
+            token.setUserId(authContext.getId());
+            tokenResponse.setToken(RandomStringGenerator.generate(20));
+            token.setToken(BCrypt.hashpw(tokenResponse.getToken(), BCrypt.gensalt()));
+            try {
+                em.getTransaction().begin();
+                em.persist(token);
+                em.getTransaction().commit();
+                return tokenResponse;
+            } catch (Exception e) {
+                em.getTransaction().rollback();
+                throw new PersistenceException();
+            }
+        }
+    }
+    
+    private ServiceTokenEntity getExistingServiceToken(String serviceId, String userId) {
+        TypedQuery<ServiceTokenEntity> query = em.createNamedQuery(ServiceTokenEntity.FIND_BY_USER_AND_SERVICE, ServiceTokenEntity.class);
+        query.setParameter("serviceId", serviceId);
+        query.setParameter("userId", userId);
+        try {
+            return query.getSingleResult();
+        } catch (NonUniqueResultException | NoResultException e) {
+            return null;
+        }
     }
     
     @Override

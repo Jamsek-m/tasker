@@ -1,0 +1,65 @@
+<div>
+
+    <h1>Servers</h1>
+    <div class="actions row">
+        <div class="col" *ngIf="!showAddForm">
+            <button class="btn btn-sm btn-outline-primary" (click)="showAddForm = true">
+                <fa-icon [icon]="['fas', 'plus']"></fa-icon>
+                Add server
+            </button>
+        </div>
+        <div class="input-group col-4" *ngIf="showAddForm">
+            <input type="text" class="form-control" placeholder="Server name"
+                [class.is-invalid]="serverValidation && serverValidation.name"
+                name="server-name" id="server-name" [(ngModel)]="newServer.name"/>
+            <div class="invalid-feedback" *ngIf="serverValidation && serverValidation.name">
+                {{serverValidation.name}}
+            </div>
+        </div>
+        <div class="input-group col-4" *ngIf="showAddForm">
+            <input type="text" class="form-control" placeholder="Server IP"
+                [class.is-invalid]="serverValidation && serverValidation.ip"
+                name="server-ip" id="server-ip" [(ngModel)]="newServer.ipAddress"/>
+            <div class="invalid-feedback" *ngIf="serverValidation && serverValidation.ip">
+                {{serverValidation.ip}}
+            </div>
+        </div>
+        <div class="col-4" *ngIf="showAddForm">
+            <button class="btn btn-outline-primary pl-3 pr-3" (click)="addServer()">
+                <fa-icon [icon]="['fas', 'check']"></fa-icon>
+            </button>
+        </div>
+    </div>
+
+    <tasker-pagination-limit (whenLimitChanges)="limitChange($event)"></tasker-pagination-limit>
+
+    <div class="table-responsive">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th class="tb-name">Server</th>
+                    <th class="tb-ip">IP</th>
+                    <th class="tb-actions">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let server of servers; let i = index">
+                    <td class="tb-name">{{server.name}}</td>
+                    <td class="tb-ip">{{server.ipAddress}}</td>
+                    <td class="tb-actions">
+                        <tasker-cancel-icon (whenClicked)="removeServer(server)"></tasker-cancel-icon>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <tasker-pagination [totalItems]="totalCount" [itemsPerPage]="limit"
+        (whenPageChange)="pageChange($event)">
+    </tasker-pagination>
+</div>
+
+
+
+
+

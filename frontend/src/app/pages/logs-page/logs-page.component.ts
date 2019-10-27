@@ -3,6 +3,7 @@ import {LogsService} from "../../services/logs.service";
 import {LogEntry} from "../../models/log-entry.model";
 import {HttpErrorResponse} from "@angular/common/http";
 import {EntityList} from "../../models/common/dto.model";
+import {MessageService} from "../../services/message.service";
 
 @Component({
     selector: "tasker-logs-page",
@@ -19,7 +20,8 @@ export class LogsPageComponent implements OnInit {
     public dateFilter: Date;
     public timeFilter: Date;
 
-    constructor(private logsService: LogsService) {
+    constructor(private logsService: LogsService,
+                private messageService: MessageService) {
     }
 
     ngOnInit() {
@@ -37,6 +39,7 @@ export class LogsPageComponent implements OnInit {
             },
             (err: HttpErrorResponse) => {
                 console.error(err);
+                this.messageService.openToastNotification("Error", "Error retrieving logs!", "error", {duration: -1});
             }
         );
     }
