@@ -34,8 +34,7 @@ pipeline {
             steps {
                 script {
                     withCredentials([string(credentialsId: 'npm-public', variable: 'NPM_TOKEN')]) {
-                        sh "echo //https://nexus.mjamsek.com/repository/npm-public/:_authToken=$NPM_TOKEN > frontend/.npmrc"
-                        sh "cat frontend/.npmrc"
+                        sh "echo registry=https://nexus.mjamsek.com/repository/npm-public/\n_authToken=$NPM_TOKEN > frontend/.npmrc"
                     }
                 }
             }
