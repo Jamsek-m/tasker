@@ -30,11 +30,19 @@ pipeline {
                 }
             }
         }
+        stage("Set NPM credentials") {
+            steps {
+                script {
+                    withCredentials([string(credentialsId: 'npm-public', variable: 'NPM_TOKEN')]) {
+                        sh "echo //https://nexus.mjamsek.com/repository/npm-public/:_authToken=$NPM_TOKEN > .npmrc"
+                        sh "cat .npmrc"
+                    }
+                }
+            }
+        }
         stage("Packaging application") {
             steps {
-                withCredentials([string(credentialsId: 'npm-public', variable: 'NPM_TOKEN')]) {
-                    sh "npm install --prefix ./frontend --registry=https://nexus.mjamsek.com/repository/npm-public/"
-                }
+                sh "npm install --prefix ./frontend"
                 sh "mvn clean package"
             }
         }
@@ -55,10 +63,11 @@ pipeline {
                 }
             }
         }
-        stage("Removing generated docker images") {
+        stage("Cleanup phase") {
             steps {
                 sh "docker rmi $dockerImageTag:$version"
                 sh "docker rmi $dockerImageTag:latest"
+                sh "rm .npmrc"
             }
         }
     }
