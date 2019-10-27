@@ -32,8 +32,10 @@ pipeline {
         }
         stage("Packaging application") {
             steps {
-                withNPM(npmrcConfig: 'npm-public-file') {
-                    sh "npm install --prefix ./frontend"
+                dir("frontend") {
+                    withNPM(npmrcConfig: 'npm-public-file') {
+                        sh "npm install"
+                    }
                 }
                 sh "mvn clean package"
             }
