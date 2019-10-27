@@ -42,7 +42,7 @@ pipeline {
         }
         stage("Packaging application") {
             steps {
-                sh "npm install --prefix ./frontend"
+                sh "npm install --prefix ./frontend --registry=https://nexus.mjamsek.com/repository/npm-public/"
                 sh "mvn clean package"
             }
         }
