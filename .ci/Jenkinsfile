@@ -30,18 +30,11 @@ pipeline {
                 }
             }
         }
-        stage("Set NPM credentials") {
-            steps {
-                script {
-                    withCredentials([string(credentialsId: 'npm-public', variable: 'NPM_TOKEN')]) {
-                        sh "echo -e registry=https://nexus.mjamsek.com/repository/npm-public/\n_authToken=$NPM_TOKEN > frontend/.npmrc"
-                    }
-                }
-            }
-        }
         stage("Packaging application") {
             steps {
-                sh "npm install --prefix ./frontend --registry=https://nexus.mjamsek.com/repository/npm-public/"
+                withNPM(npmrcConfig: 'npm-public-file') {
+                    sh "npm install --prefix ./frontend"
+                }
                 sh "mvn clean package"
             }
         }
