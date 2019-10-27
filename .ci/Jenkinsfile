@@ -33,7 +33,7 @@ pipeline {
         stage("Packaging application") {
             steps {
                 withCredentials([string(credentialsId: 'npm-public', variable: 'NPM_TOKEN')]) {
-                    sh "npm install --prefix ./frontend"
+                    sh "npm install --prefix ./frontend --registry=https://nexus.mjamsek.com/repository/npm-public/"
                 }
                 sh "mvn clean package"
             }
