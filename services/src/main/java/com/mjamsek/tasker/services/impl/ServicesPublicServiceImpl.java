@@ -5,9 +5,11 @@ import com.mjamsek.tasker.lib.v1.common.HttpHeader;
 import com.mjamsek.tasker.lib.v1.exceptions.TaskerException;
 import com.mjamsek.tasker.lib.v1.exceptions.UnauthorizedException;
 import com.mjamsek.tasker.services.ServicesPublicService;
+import com.mjamsek.tasker.services.ServicesService;
 import org.mindrot.jbcrypt.BCrypt;
 
 import javax.enterprise.context.RequestScoped;
+import javax.inject.Inject;
 import javax.persistence.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.core.Context;
@@ -21,16 +23,19 @@ public class ServicesPublicServiceImpl implements ServicesPublicService {
     @PersistenceContext(unitName = "main-jpa-unit")
     private EntityManager em;
     
+    @Inject
+    private ServicesService servicesService;
+    
     @Override
     public void startContainer(String serviceId) {
         this.verifyToken(serviceId);
-        
+        servicesService.startContainer(serviceId);
     }
     
     @Override
     public void recreateContainer(String serviceId) {
         this.verifyToken(serviceId);
-        
+        servicesService.recreateContainer(serviceId);
     }
     
     private void verifyToken(String serviceId) {
