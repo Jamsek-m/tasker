@@ -198,6 +198,24 @@ public class ServicesServiceImpl implements ServicesService {
         }
     }
     
+    private String generateTokenId() {
+        ServiceTokenEntity tokenEntity;
+        String tokenId;
+        do {
+            tokenId = RandomStringGenerator.generate(8);
+            TypedQuery<ServiceTokenEntity> query = em.createNamedQuery(ServiceTokenEntity.FIND_BY_TOKEN_ID, ServiceTokenEntity.class);
+            query.setParameter("tokenId", tokenId);
+            
+            List<ServiceTokenEntity> tokensWithSameId = query.getResultList();
+            if (tokensWithSameId.size() > 0) {
+                tokenEntity = tokensWithSameId.get(0);
+            } else {
+                tokenEntity = null;
+            }
+        } while (tokenEntity != null);
+        return tokenId;
+    }
+    
     @Override
     public ServiceToken generateServiceToken(String serviceId) {
         ServiceEntity entity = getServiceById(serviceId);
@@ -205,11 +223,16 @@ public class ServicesServiceImpl implements ServicesService {
             throw new ServiceNotFoundException(serviceId);
         }
     
+        String generatedToken = RandomStringGenerator.generate(21);
+        String tokenId = generateTokenId();
+        
         ServiceToken tokenResponse = new ServiceToken();
         ServiceTokenEntity existingToken = this.getExistingServiceToken(serviceId, authContext.getId());
         if (existingToken != null) {
-            tokenResponse.setToken(RandomStringGenerator.generate(20));
-            existingToken.setToken(BCrypt.hashpw(tokenResponse.getToken(), BCrypt.gensalt()));
+            
+            tokenResponse.setToken(tokenId + "." + generatedToken);
+            existingToken.setToken(BCrypt.hashpw(generatedToken, BCrypt.gensalt()));
+            existingToken.setTokenId(tokenId);
             try {
                 em.getTransaction().begin();
                 em.merge(existingToken);
@@ -223,8 +246,9 @@ public class ServicesServiceImpl implements ServicesService {
             ServiceTokenEntity token = new ServiceTokenEntity();
             token.setService(entity);
             token.setUserId(authContext.getId());
-            tokenResponse.setToken(RandomStringGenerator.generate(20));
-            token.setToken(BCrypt.hashpw(tokenResponse.getToken(), BCrypt.gensalt()));
+            tokenResponse.setToken(tokenId + "." + generatedToken);
+            token.setToken(BCrypt.hashpw(generatedToken, BCrypt.gensalt()));
+            token.setTokenId(tokenId);
             try {
                 em.getTransaction().begin();
                 em.persist(token);

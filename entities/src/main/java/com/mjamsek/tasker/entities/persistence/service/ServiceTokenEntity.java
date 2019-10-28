@@ -8,11 +8,14 @@ import javax.persistence.*;
 @Table(name = "service_tokens")
 @NamedQueries({
     @NamedQuery(name = ServiceTokenEntity.FIND_BY_USER_AND_SERVICE,
-        query = "SELECT s FROM ServiceTokenEntity s WHERE s.userId = :userId AND s.service.id = :serviceId")
+        query = "SELECT s FROM ServiceTokenEntity s WHERE s.userId = :userId AND s.service.id = :serviceId"),
+    @NamedQuery(name = ServiceTokenEntity.FIND_BY_TOKEN_ID,
+        query = "SELECT s FROM ServiceTokenEntity s WHERE s.tokenId = :tokenId")
 })
 public class ServiceTokenEntity {
     
     public static final String FIND_BY_USER_AND_SERVICE = "ServiceToken.findByUserAndService";
+    public static final String FIND_BY_TOKEN_ID = "ServiceToken.findByTokenId";
     
     @Id
     @GeneratedValue(generator = "uuid")
@@ -21,6 +24,9 @@ public class ServiceTokenEntity {
     
     @Column(name = "user_id")
     private String userId;
+    
+    @Column(name = "token_id", unique = true)
+    private String tokenId;
     
     @Column(name = "token")
     private String token;
@@ -59,5 +65,13 @@ public class ServiceTokenEntity {
     
     public void setService(ServiceEntity service) {
         this.service = service;
+    }
+    
+    public String getTokenId() {
+        return tokenId;
+    }
+    
+    public void setTokenId(String tokenId) {
+        this.tokenId = tokenId;
     }
 }

@@ -20,6 +20,7 @@ public class AdminExceptionMapper implements ExceptionMapper<TaskerException> {
         } else if (exception instanceof DockerException) {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(response).build();
         } else if (exception instanceof UnauthorizedException) {
+            response.putIfAbsent("message", "Unauthorized!");
             return Response.status(Response.Status.UNAUTHORIZED).entity(response).build();
         } else if (exception instanceof EntityNotFoundException) {
             return Response.status(Response.Status.NOT_FOUND).entity(response).build();
