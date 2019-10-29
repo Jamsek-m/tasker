@@ -5,7 +5,7 @@ import {AuthService} from "./services/auth.service";
 
 export function AppConfigFactory() {
     return async () => {
-        await ConfigService.initialize<TaskerEnvironment>("/config/config.json", environment);
+        await ConfigService.initialize<TaskerEnvironment>({path: "/config/config.json", environment});
 
         await AuthService.init();
 
