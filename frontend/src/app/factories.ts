@@ -7,7 +7,7 @@ import {NavigationStart, Router} from "@angular/router";
 export function AppConfigFactory() {
     return async () => {
         await ConfigService.initialize<TaskerEnvironment>({path: "/config/config.json", environment});
-
+        console.log("Configuration: ", ConfigService.getConfig());
         await KeycloakService.initialize({
             ...ConfigService.getConfig<TaskerEnvironment>().keycloak,
             allowAnonymousAccess: true,
