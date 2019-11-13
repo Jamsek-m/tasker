@@ -36,6 +36,8 @@ pipeline {
         stage("Packaging application") {
             steps {
                 dir("frontend") {
+                    // remove when using release libs instead of snapshots
+                    sh "rm package-lock.json"
                     withNPM(npmrcConfig: 'npm-public-file') {
                         sh "npm install"
                     }
