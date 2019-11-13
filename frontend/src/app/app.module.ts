@@ -1,5 +1,5 @@
 import {BrowserModule} from "@angular/platform-browser";
-import {APP_INITIALIZER, NgModule} from "@angular/core";
+import {APP_BOOTSTRAP_LISTENER, APP_INITIALIZER, NgModule} from "@angular/core";
 
 import {FormsModule} from "@angular/forms";
 import {HTTP_INTERCEPTORS, HttpClientModule} from "@angular/common/http";
@@ -9,7 +9,6 @@ import {BootstrapModule} from "./bootstrap.module";
 
 import {AppComponent} from "./app.component";
 
-import {LoginPageComponent} from "./pages/login-page/login-page.component";
 import {ServiceListPageComponent} from "./pages/service-list-page/service-list-page.component";
 import {CreateTokenPageComponent} from "./pages/create-token-page/create-token-page.component";
 import {Error404PageComponent} from "./pages/error404-page/error404-page.component";
@@ -40,22 +39,22 @@ import {TokenGenerationModalComponent} from "./components/token-generation-modal
 import {NoopAnimationsModule} from "@angular/platform-browser/animations";
 import {API_URL, BASE_URL, TASKER_META} from "./injectables";
 import {DashboardPageComponent} from "./pages/dashboard-page/dashboard-page.component";
-import {AuthInterceptor} from "./services/auth.interceptor";
 import {DomainListPageComponent} from "./pages/domain-list-page/domain-list-page.component";
 import {ServiceFormClientSectionComponent} from "./pages/service-form-page/service-form-client-section/service-form-client-section.component";
 import {ServiceFormApiSectionComponent} from "./pages/service-form-page/service-form-api-section/service-form-api-section.component";
 import {Error403PageComponent} from "./pages/error403-page/error403-page.component";
 import {CancelIconComponent} from "./components/cancel-icon/cancel-icon.component";
 import {AuthRedirectComponent} from "./pages/auth-redirect/auth-redirect.component";
-import {ApiUrlFactory, BaseUrlFactory, AppConfigFactory, MetaConfigFactory} from "./factories";
+import {ApiUrlFactory, BaseUrlFactory, AppConfigFactory, MetaConfigFactory, AppBootstrap} from "./factories";
 import {ServerListPageComponent} from "./pages/server-list-page/server-list-page.component";
+import {AuthInterceptor} from "@mjamsek/ngx-keycloak-service";
+import {Router} from "@angular/router";
 
 
 @NgModule({
     declarations: [
         AppComponent,
         ServiceListPageComponent,
-        LoginPageComponent,
         Error404PageComponent,
         HeaderComponent,
         CreateTokenPageComponent,
@@ -99,6 +98,7 @@ import {ServerListPageComponent} from "./pages/server-list-page/server-list-page
     ],
     providers: [
         {provide: APP_INITIALIZER, useFactory: AppConfigFactory, multi: true},
+        {provide: APP_BOOTSTRAP_LISTENER, useFactory: AppBootstrap, multi: true, deps: [Router]},
         {provide: HTTP_INTERCEPTORS, useClass: HttpApiInterceptor, multi: true},
         {provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true},
         {provide: API_URL, useFactory: ApiUrlFactory, multi: false},

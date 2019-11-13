@@ -5,7 +5,7 @@ export const menuItems: MenuItem[] = [
         label: "Services",
         url: "/services",
         external: false,
-        requireAuth: true
+        requireAuth: true,
     },
     {
         label: "Domains",

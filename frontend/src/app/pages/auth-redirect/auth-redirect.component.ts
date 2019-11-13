@@ -1,6 +1,6 @@
 import {Component, OnInit} from "@angular/core";
-import {AuthService} from "../../services/auth.service";
 import {Router} from "@angular/router";
+import {KeycloakService} from "@mjamsek/ngx-keycloak-service";
 
 @Component({
     selector: "tasker-auth-redirect-page",
@@ -8,15 +8,15 @@ import {Router} from "@angular/router";
 })
 export class AuthRedirectComponent implements OnInit {
 
-    constructor(private auth: AuthService, private router: Router) {
+    constructor(private keycloakService: KeycloakService, private router: Router) {
 
     }
 
     public ngOnInit(): void {
-        if (this.auth.isAuthenticated()) {
+        if (this.keycloakService.isAuthenticated()) {
             this.router.navigate(["/"]);
         } else {
-            this.auth.redirectToLogin();
+            this.keycloakService.redirectToLogin();
         }
     }
 }

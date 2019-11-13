@@ -3,12 +3,12 @@ import {DashboardService} from "../../services/dashboard.service";
 import {Statistics} from "../../models/statistics.model";
 import {DashboardCharts} from "./dashboard.charts";
 import {Chart} from "chart.js";
-import {AuthService} from "../../services/auth.service";
 import {TASKER_META} from "../../injectables";
 import {TaskerProjectMeta} from "../../../environments/env.model";
 import {Router} from "@angular/router";
 import {AuthRole} from "../../models/enums/auth-role.enum";
 import {MessageService} from "../../services/message.service";
+import {KeycloakService} from "@mjamsek/ngx-keycloak-service";
 
 @Component({
     selector: "tasker-dashboard-page",
@@ -22,7 +22,7 @@ export class DashboardPageComponent implements OnInit, AfterViewInit {
     public adminAccess = [AuthRole.ADMIN];
 
     constructor(
-        private auth: AuthService,
+        private keycloakService: KeycloakService,
         private router: Router,
         private dashboardService: DashboardService,
         private messageService: MessageService,
@@ -30,11 +30,11 @@ export class DashboardPageComponent implements OnInit, AfterViewInit {
     }
 
     ngOnInit() {
-        this.authenticated = this.auth.isAuthenticated();
+        this.authenticated = this.keycloakService.isAuthenticated();
     }
 
     ngAfterViewInit(): void {
-        if (this.auth.isAuthenticated()) {
+        if (this.keycloakService.isAuthenticated()) {
             this.getStatistics();
         }
     }
@@ -47,7 +47,7 @@ export class DashboardPageComponent implements OnInit, AfterViewInit {
 
     public userHasPermission(allowForRoles: string[]): boolean {
         if (allowForRoles) {
-            const userRole = allowForRoles.filter(role => this.auth.hasRole(role));
+            const userRole = allowForRoles.filter(role => this.keycloakService.hasRole(role));
             return userRole.length > 0;
         }
         return true;

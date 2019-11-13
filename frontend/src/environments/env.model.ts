@@ -4,12 +4,18 @@ export interface TaskerEnvironment {
     apiVersion: string;
     projectMeta: TaskerProjectMeta;
     keycloak?: TaskerKeycloakConfig;
+    auth: AuthConfig;
+}
+
+export interface AuthConfig {
+    roleClient: string;
+    minimalRequiredRole?: string;
 }
 
 export interface TaskerKeycloakConfig {
     realm: string;
-    "auth-server-url": string;
-    resource: string;
+    url: string;
+    clientId: string;
 }
 
 export interface TaskerProjectMeta {

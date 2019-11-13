@@ -1,8 +1,8 @@
 import {Component, OnInit} from "@angular/core";
 import {MenuItem, menuItems} from "../../content/menu-items";
 import {Router} from "@angular/router";
-import {AuthService} from "../../services/auth.service";
 import {ActionsService} from "../../services/actions.service";
+import {KeycloakService, ExtendedKeycloakTokenPayload} from "@mjamsek/ngx-keycloak-service";
 
 @Component({
     selector: "tasker-header",
@@ -18,16 +18,17 @@ export class HeaderComponent implements OnInit {
     public email: string = null;
 
     constructor(private router: Router,
-                private authService: AuthService,
+                private keycloakService: KeycloakService,
                 private actionService: ActionsService) {
     }
 
     ngOnInit() {
-        this.isAuthorized = this.authService.isAuthenticated();
+        this.isAuthorized = this.keycloakService.isAuthenticated();
         if (this.isAuthorized) {
-            this.username = this.authService.getUserUsername();
-            if (this.authService.userHasVerifiedEmail()) {
-                this.email = this.authService.getUserEmail();
+            const payload: ExtendedKeycloakTokenPayload = this.keycloakService.getTokenPayload<ExtendedKeycloakTokenPayload>();
+            this.username = payload.preferred_username;
+            if (payload.email_verified) {
+                this.email = payload.email;
             }
         }
         // this.checkNotifications();
@@ -38,20 +39,27 @@ export class HeaderComponent implements OnInit {
     }
 
     public logout() {
-        this.authService.logout();
+        this.keycloakService.logout();
     }
 
     public login() {
-        this.authService.redirectToLogin();
+        this.keycloakService.redirectToLogin();
     }
 
     public hasRole(menuItem: MenuItem): boolean {
+
+        if (KeycloakService.configuration.minimalRequiredRole) {
+            if (!this.keycloakService.hasRole(KeycloakService.configuration.minimalRequiredRole)) {
+                return false;
+            }
+        }
+
         if (!menuItem.requiredRoles) {
             return true;
         }
 
         return menuItem.requiredRoles.filter(role => {
-            return this.authService.hasRealmRole(role);
+            return this.keycloakService.hasRealmRole(role);
         }).length > 0;
     }
 

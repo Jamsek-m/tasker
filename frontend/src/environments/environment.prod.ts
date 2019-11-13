@@ -12,7 +12,11 @@ export const environment: TaskerEnvironment = {
     },
     keycloak: {
         realm: "",
-        resource: "",
-        "auth-server-url": ""
+        clientId: "",
+        url: ""
+    },
+    auth: {
+        roleClient: "tasker-service",
+        minimalRequiredRole: "user"
     }
 };
