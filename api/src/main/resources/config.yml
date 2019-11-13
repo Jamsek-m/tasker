@@ -30,18 +30,10 @@ kumuluzee:
       password: ''
       pool:
         max-size: 20
-  security:
-    keycloak:
-      json: '{
-               "realm": "mjamsek-test",
-               "bearer-only": true,
-               "auth-server-url": "https://keycloak.mjamsek.com/auth",
-               "ssl-required": "external",
-               "resource": "tasker-service",
-               "verify-token-audience": true,
-               "use-resource-role-mappings": true,
-               "confidential-port": 0
-             }'
+kc:
+  realm: mjamsek-test
+  auth-server-url: https://keycloak.mjamsek.com/auth
+  client-id: tasker-service
 client:
   keycloak:
     config-dir: api/target/classes/webapp/config

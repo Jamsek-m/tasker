@@ -50,12 +50,8 @@
             <artifactId>kumuluzee-logs-log4j2</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.kumuluz.ee.security</groupId>
-            <artifactId>kumuluzee-security-keycloak</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.keycloak</groupId>
-            <artifactId>keycloak-jetty94-adapter</artifactId>
+            <groupId>com.mjamsek.auth</groupId>
+            <artifactId>kumuluzee-keycloak-integration-lib</artifactId>
         </dependency>
     </dependencies>
 

@@ -4,6 +4,7 @@ import com.kumuluz.ee.rest.beans.QueryFilter;
 import com.kumuluz.ee.rest.beans.QueryParameters;
 import com.kumuluz.ee.rest.enums.FilterOperation;
 import com.kumuluz.ee.rest.utils.JPAUtils;
+import com.mjamsek.auth.keycloak.models.AuthContext;
 import com.mjamsek.tasker.entities.dto.ServiceToken;
 import com.mjamsek.tasker.entities.persistence.service.*;
 import com.mjamsek.tasker.lib.v1.ApiService;
@@ -19,7 +20,7 @@ import com.mjamsek.tasker.lib.v1.integration.docker.DockerContainerInfo;
 import com.mjamsek.tasker.lib.v1.integration.docker.DockerState;
 import com.mjamsek.tasker.mappers.DockerMapper;
 import com.mjamsek.tasker.mappers.ServiceMapper;
-import com.mjamsek.tasker.providers.AuthContext;
+
 import com.mjamsek.tasker.services.DockerService;
 import com.mjamsek.tasker.services.LogService;
 import com.mjamsek.tasker.services.ServicesService;

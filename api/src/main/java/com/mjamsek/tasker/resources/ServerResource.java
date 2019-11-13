@@ -1,14 +1,14 @@
 package com.mjamsek.tasker.resources;
 
 import com.kumuluz.ee.rest.beans.QueryParameters;
-import com.kumuluz.ee.security.annotations.Secure;
+import com.mjamsek.auth.keycloak.annotations.AuthenticatedAllowed;
+import com.mjamsek.auth.keycloak.annotations.ClientRolesAllowed;
+import com.mjamsek.auth.keycloak.annotations.SecureResource;
 import com.mjamsek.tasker.lib.v1.Server;
-import com.mjamsek.tasker.lib.v1.common.AuthRole;
+import com.mjamsek.tasker.lib.v1.common.Auth;
 import com.mjamsek.tasker.lib.v1.common.HttpHeader;
 import com.mjamsek.tasker.services.ServerService;
 
-import javax.annotation.security.PermitAll;
-import javax.annotation.security.RolesAllowed;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.ws.rs.*;
@@ -22,7 +22,7 @@ import java.util.List;
 @RequestScoped
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-@Secure
+@SecureResource
 public class ServerResource {
     
     @Inject
@@ -32,7 +32,7 @@ public class ServerResource {
     private UriInfo uriInfo;
     
     @GET
-    @PermitAll
+    @AuthenticatedAllowed
     public Response getServers() {
         QueryParameters query = QueryParameters.query(uriInfo.getRequestUri().getQuery()).build();
         List<Server> servers = serverService.getServers(query);
@@ -42,27 +42,27 @@ public class ServerResource {
     
     @GET
     @Path("/{serverId}")
-    @PermitAll
+    @AuthenticatedAllowed
     public Response getServer(@PathParam("serverId") String serverId) {
         return Response.ok(serverService.getServer(serverId)).build();
     }
     
     @POST
-    @RolesAllowed({AuthRole.ADMIN})
+    @ClientRolesAllowed(client = Auth.CLIENT_ID, roles = {Auth.ADMIN_ROLE})
     public Response createServer(Server server) {
         return Response.status(Response.Status.CREATED).entity(serverService.createServer(server)).build();
     }
     
     @PATCH
     @Path("/{serverId}")
-    @RolesAllowed({AuthRole.ADMIN})
+    @ClientRolesAllowed(client = Auth.CLIENT_ID, roles = {Auth.ADMIN_ROLE})
     public Response updateServer(@PathParam("serverId") String serverId, Server server) {
         return Response.ok(serverService.updateServer(server, serverId)).build();
     }
     
     @DELETE
     @Path("/{serverId}")
-    @RolesAllowed({AuthRole.ADMIN})
+    @ClientRolesAllowed(client = Auth.CLIENT_ID, roles = {Auth.ADMIN_ROLE})
     public Response deleteServer(@PathParam("serverId") String serverId) {
         serverService.deleteServer(serverId);
         return Response.noContent().build();

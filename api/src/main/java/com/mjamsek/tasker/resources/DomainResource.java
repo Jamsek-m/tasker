@@ -1,14 +1,14 @@
 package com.mjamsek.tasker.resources;
 
 import com.kumuluz.ee.rest.beans.QueryParameters;
-import com.kumuluz.ee.security.annotations.Secure;
+import com.mjamsek.auth.keycloak.annotations.AuthenticatedAllowed;
+import com.mjamsek.auth.keycloak.annotations.ClientRolesAllowed;
+import com.mjamsek.auth.keycloak.annotations.SecureResource;
 import com.mjamsek.tasker.lib.v1.Domain;
-import com.mjamsek.tasker.lib.v1.common.AuthRole;
+import com.mjamsek.tasker.lib.v1.common.Auth;
 import com.mjamsek.tasker.lib.v1.common.HttpHeader;
 import com.mjamsek.tasker.services.DomainService;
 
-import javax.annotation.security.PermitAll;
-import javax.annotation.security.RolesAllowed;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.ws.rs.*;
@@ -22,7 +22,7 @@ import java.util.List;
 @RequestScoped
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-@Secure
+@SecureResource
 public class DomainResource {
     
     @Inject
@@ -32,7 +32,7 @@ public class DomainResource {
     private UriInfo uriInfo;
     
     @GET
-    @PermitAll
+    @AuthenticatedAllowed
     public Response getDomains() {
         QueryParameters query = QueryParameters.query(uriInfo.getRequestUri().getQuery()).build();
         List<Domain> domains = domainService.getDomains(query);
@@ -42,27 +42,27 @@ public class DomainResource {
     
     @GET
     @Path("/{domainId}")
-    @PermitAll
+    @AuthenticatedAllowed
     public Response getDomain(@PathParam("domainId") String domainId) {
         return Response.ok(domainService.getDomain(domainId)).build();
     }
     
     @POST
-    @RolesAllowed({AuthRole.DEVELOPER})
+    @ClientRolesAllowed(client = Auth.CLIENT_ID, roles = {Auth.DEVELOPER_ROLE})
     public Response createDomain(Domain domain) {
         return Response.status(Response.Status.CREATED).entity(domainService.createDomain(domain)).build();
     }
     
     @PATCH
     @Path("/{domainId}")
-    @RolesAllowed({AuthRole.DEVELOPER})
+    @ClientRolesAllowed(client = Auth.CLIENT_ID, roles = {Auth.DEVELOPER_ROLE})
     public Response updateDomain(@PathParam("domainId") String domainId, Domain domain) {
         return Response.ok(domainService.updateDomain(domain, domainId)).build();
     }
     
     @DELETE
     @Path("/{domainId}")
-    @RolesAllowed({AuthRole.DEVELOPER})
+    @ClientRolesAllowed(client = Auth.CLIENT_ID, roles = {Auth.DEVELOPER_ROLE})
     public Response deleteDomain(@PathParam("domainId") String domainId) {
         domainService.deleteDomain(domainId);
         return Response.noContent().build();
