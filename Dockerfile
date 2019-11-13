@@ -6,11 +6,15 @@ ENV KUMULUZEE_ENV_PROD=true
 
 ENV CLIENT_KEYCLOAK_CONFIG-DIR=classes/webapp/config
 
+ENV KC_REALM=not_set
+ENV KC_CLIENT-ID=not_set
+ENV KC_AUTH-SERVER-URL=not_set
+ENV CLIENT_KEYCLOAK_REALM=not_set
+ENV CLIENT_KEYCLOAK_CLIENT-ID=not_set
+ENV CLIENT_KEYCLOAK_AUTH-SERVER-URL=not_set
+
 RUN mkdir /app
 RUN mkdir /app/data
-# create symlink to access configuration for angular project
-RUN ln -s /app/classes/webapp/assets/config /ng-config
-RUN ln -s /app/classes/webapp /ng-root
 
 WORKDIR /app
 

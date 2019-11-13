@@ -15,7 +15,7 @@ public class ClientConfig {
     @ConfigValue("client-id")
     private String clientId;
     
-    @ConfigValue("auth-url")
+    @ConfigValue("auth-server-url")
     private String authUrl;
     
     @ConfigValue("config-dir")

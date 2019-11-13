@@ -39,4 +39,4 @@ client:
     config-dir: api/target/classes/webapp/config
     realm: temp
     client-id: temp
-    auth-url: http://
+    auth-server-url: http://
