@@ -30,7 +30,6 @@ pipeline {
                     version = readFile('VERSION').trim()
                     sh "git --no-pager show -s --format='%ae' > COMMIT_INFO"
                     commitAuthor = readFile("COMMIT_INFO").trim()
-                    sh "echo $POM_VERSION"
                 }
             }
         }
