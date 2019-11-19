@@ -8,7 +8,9 @@ export function AppConfigFactory() {
         await ConfigService.initialize<TaskerEnvironment>({path: "/config/config.json", environment});
 
         await KeycloakService.initialize({
-            ...ConfigService.getConfig<TaskerEnvironment>().keycloak,
+            url: ConfigService.getConfig<TaskerEnvironment>().keycloak["auth-server-url"],
+            realm: ConfigService.getConfig<TaskerEnvironment>().keycloak.realm,
+            clientId: ConfigService.getConfig<TaskerEnvironment>().keycloak.resource,
             allowAnonymousAccess: true,
             roleClients: ConfigService.getConfig<TaskerEnvironment>().auth.roleClient,
             forbiddenPage: {
