@@ -1,40 +1,4 @@
 <div class="page-wrapper">
-    <!--
-    <div class="general-settings">
-        <h1>Settings</h1>
-
-        <div>
-            <form (submit)="addConfiguration()">
-                <div class="new-item">
-                    <input name="new-key" [(ngModel)]="newConfig.key" class="form-control" placeholder="Key"/>
-                    <input name="new-value" [(ngModel)]="newConfig.value" class="form-control" placeholder="Value"/>
-                    <button type="submit" class="btn btn-outline-primary">Submit</button>
-                </div>
-            </form>
-        </div>
-
-        <div class="forma">
-            <div *ngFor="let conf of configs; let i = index" class="forma-item">
-                <input name="key-{{i}}" [(ngModel)]="conf.config.key" (ngModelChange)="conf.edited = true"
-                    [ngClass]="{'edited': conf.edited}" [disabled]="!conf.config.userDefined" class="form-control"/>
-
-                <input name="value-{{i}}"
-                    [(ngModel)]="conf.config.value"
-                    (ngModelChange)="conf.edited = true"
-                    [ngClass]="{'edited': conf.edited}" class="form-control"
-                />
-
-                <span (click)="updateConfig(conf)" *ngIf="conf.edited" class="checkmark">
-                    <fa-icon [icon]="['fas', 'check']"></fa-icon>
-                </span>
-                <span (click)="removeConfig(conf)" *ngIf="conf.config.userDefined" class="cross">
-                    <fa-icon [icon]="['fas', 'times']"></fa-icon>
-                </span>
-            </div>
-            <button type="button" (click)="resetConfig()" class="btn btn-secondary">Reset</button>
-        </div>
-    </div>
-    -->
     <div class="endpoints">
         <h1>Docker Endpoints</h1>
 

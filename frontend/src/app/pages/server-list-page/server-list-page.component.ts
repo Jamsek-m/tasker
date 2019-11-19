@@ -70,6 +70,7 @@ export class ServerListPageComponent implements OnInit {
                     this.showAddForm = false;
                     this.newServer = new Server();
                     this.getServers();
+                    this.messageService.openToastNotification("Success", "Server added!", "ok");
                 },
                 (err) => {
                     console.error(err);

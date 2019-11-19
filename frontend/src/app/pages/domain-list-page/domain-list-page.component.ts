@@ -44,6 +44,7 @@ export class DomainListPageComponent implements OnInit {
         this.domainService.updateDomain(domain).subscribe(
             (updatedDomain: Domain) => {
                 domain = updatedDomain;
+                this.messageService.openToastNotification("Success", "SSL updated!", "ok");
             }
         );
     }
@@ -57,6 +58,7 @@ export class DomainListPageComponent implements OnInit {
                     this.showAddForm = false;
                     this.newDomain = new Domain();
                     this.getDomains();
+                    this.messageService.openToastNotification("Success", "Domain added!", "ok");
                 }
             );
         }
