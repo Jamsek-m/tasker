@@ -41,6 +41,7 @@ public class StatisticsServiceImpl implements StatisticsService {
         
         QueryParameters query = new QueryParameters();
         query.getFilters().add(new QueryFilter("deployment", FilterOperation.ISNOTNULL));
+        query.getFilters().add(new QueryFilter("active", FilterOperation.EQ, "true"));
         long totalDeployedServices = JPAUtils.queryEntitiesCount(em, ServiceEntity.class, query);
         statistics.setTotalDeployedServices(totalDeployedServices);
         
