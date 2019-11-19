@@ -45,10 +45,9 @@ import {ServiceFormApiSectionComponent} from "./pages/service-form-page/service-
 import {Error403PageComponent} from "./pages/error403-page/error403-page.component";
 import {CancelIconComponent} from "./components/cancel-icon/cancel-icon.component";
 import {AuthRedirectComponent} from "./pages/auth-redirect/auth-redirect.component";
-import {ApiUrlFactory, BaseUrlFactory, AppConfigFactory, MetaConfigFactory, AppBootstrap} from "./factories";
+import {ApiUrlFactory, BaseUrlFactory, AppConfigFactory, MetaConfigFactory} from "./factories";
 import {ServerListPageComponent} from "./pages/server-list-page/server-list-page.component";
 import {AuthInterceptor} from "@mjamsek/ngx-keycloak-service";
-import {Router} from "@angular/router";
 
 
 @NgModule({
@@ -98,7 +97,6 @@ import {Router} from "@angular/router";
     ],
     providers: [
         {provide: APP_INITIALIZER, useFactory: AppConfigFactory, multi: true},
-        {provide: APP_BOOTSTRAP_LISTENER, useFactory: AppBootstrap, multi: true, deps: [Router]},
         {provide: HTTP_INTERCEPTORS, useClass: HttpApiInterceptor, multi: true},
         {provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true},
         {provide: API_URL, useFactory: ApiUrlFactory, multi: false},

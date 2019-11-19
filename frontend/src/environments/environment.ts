@@ -20,8 +20,7 @@ export const environment: TaskerEnvironment = {
         clientId: "tasker-service-public",
     },
     auth: {
-        roleClient: "tasker-service",
-        minimalRequiredRole: "user"
+        roleClient: "tasker-service"
     }
 };
 

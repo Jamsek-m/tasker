@@ -47,13 +47,6 @@ export class HeaderComponent implements OnInit {
     }
 
     public hasRole(menuItem: MenuItem): boolean {
-
-        if (KeycloakService.configuration.minimalRequiredRole) {
-            if (!this.keycloakService.hasRole(KeycloakService.configuration.minimalRequiredRole)) {
-                return false;
-            }
-        }
-
         if (!menuItem.requiredRoles) {
             return true;
         }
