@@ -4,9 +4,11 @@ import com.kumuluz.ee.rest.beans.QueryParameters;
 import com.kumuluz.ee.rest.utils.JPAUtils;
 import com.mjamsek.tasker.entities.persistence.ServerEntity;
 import com.mjamsek.tasker.lib.v1.Server;
+import com.mjamsek.tasker.lib.v1.enums.LogSeverity;
 import com.mjamsek.tasker.lib.v1.exceptions.EntityNotFoundException;
 import com.mjamsek.tasker.lib.v1.exceptions.PersistenceException;
 import com.mjamsek.tasker.mappers.ServerMapper;
+import com.mjamsek.tasker.services.LogService;
 import com.mjamsek.tasker.services.ServerService;
 import com.mjamsek.tasker.services.Validator;
 
@@ -22,6 +24,9 @@ public class ServerServiceImpl implements ServerService {
     
     @PersistenceContext(unitName = "main-jpa-unit")
     private EntityManager em;
+    
+    @Inject
+    private LogService logService;
     
     @Inject
     private Validator validator;
@@ -64,6 +69,7 @@ public class ServerServiceImpl implements ServerService {
             em.getTransaction().begin();
             em.persist(entity);
             em.getTransaction().commit();
+            logService.log(LogSeverity.INFO, "Server '" + server.getIpAddress() + "' was created!");
             return ServerMapper.fromEntity(entity);
         } catch (Exception e) {
             e.printStackTrace();
@@ -94,6 +100,7 @@ public class ServerServiceImpl implements ServerService {
             em.getTransaction().begin();
             em.merge(entity);
             em.getTransaction().commit();
+            logService.log(LogSeverity.INFO, "Server '" + server.getIpAddress() + "' was updated!");
             return ServerMapper.fromEntity(entity);
         } catch (Exception e) {
             e.printStackTrace();
@@ -110,6 +117,7 @@ public class ServerServiceImpl implements ServerService {
                 em.getTransaction().begin();
                 em.remove(entity);
                 em.getTransaction().commit();
+                logService.log(LogSeverity.INFO, "Server '" + entity.getIpAddress() + "' was deleted!");
             } catch (Exception e) {
                 e.printStackTrace();
                 em.getTransaction().rollback();

@@ -4,10 +4,12 @@ import com.kumuluz.ee.rest.beans.QueryParameters;
 import com.kumuluz.ee.rest.utils.JPAUtils;
 import com.mjamsek.tasker.entities.persistence.DomainEntity;
 import com.mjamsek.tasker.lib.v1.Domain;
+import com.mjamsek.tasker.lib.v1.enums.LogSeverity;
 import com.mjamsek.tasker.lib.v1.exceptions.EntityNotFoundException;
 import com.mjamsek.tasker.lib.v1.exceptions.PersistenceException;
 import com.mjamsek.tasker.mappers.DomainMapper;
 import com.mjamsek.tasker.services.DomainService;
+import com.mjamsek.tasker.services.LogService;
 import com.mjamsek.tasker.services.Validator;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -22,6 +24,9 @@ public class DomainServiceImpl implements DomainService {
     
     @PersistenceContext(unitName = "main-jpa-unit")
     private EntityManager em;
+    
+    @Inject
+    private LogService logService;
     
     @Inject
     private Validator validator;
@@ -58,6 +63,7 @@ public class DomainServiceImpl implements DomainService {
             em.getTransaction().begin();
             em.persist(entity);
             em.getTransaction().commit();
+            logService.log(LogSeverity.INFO, "Domain '" + domain.getDomain() + "' was created!");
             return DomainMapper.fromEntity(entity);
         } catch (Exception e) {
             e.printStackTrace();
@@ -82,6 +88,7 @@ public class DomainServiceImpl implements DomainService {
             em.getTransaction().begin();
             em.merge(entity);
             em.getTransaction().commit();
+            logService.log(LogSeverity.INFO, "Domain '" + domain.getDomain() + "' was updated!");
             return DomainMapper.fromEntity(entity);
         } catch (Exception e) {
             e.printStackTrace();
@@ -98,6 +105,7 @@ public class DomainServiceImpl implements DomainService {
                 em.getTransaction().begin();
                 em.remove(entity);
                 em.getTransaction().commit();
+                logService.log(LogSeverity.INFO, "Domain '" + entity.getDomain() + "' was deleted!");
             } catch (Exception e) {
                 e.printStackTrace();
                 em.getTransaction().rollback();

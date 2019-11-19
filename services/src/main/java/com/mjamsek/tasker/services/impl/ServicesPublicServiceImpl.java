@@ -2,8 +2,10 @@ package com.mjamsek.tasker.services.impl;
 
 import com.mjamsek.tasker.entities.persistence.service.ServiceTokenEntity;
 import com.mjamsek.tasker.lib.v1.common.HttpHeader;
+import com.mjamsek.tasker.lib.v1.enums.LogSeverity;
 import com.mjamsek.tasker.lib.v1.exceptions.TaskerException;
 import com.mjamsek.tasker.lib.v1.exceptions.UnauthorizedException;
+import com.mjamsek.tasker.services.LogService;
 import com.mjamsek.tasker.services.ServicesPublicService;
 import com.mjamsek.tasker.services.ServicesService;
 import org.mindrot.jbcrypt.BCrypt;
@@ -25,6 +27,9 @@ public class ServicesPublicServiceImpl implements ServicesPublicService {
     
     @Inject
     private ServicesService servicesService;
+    
+    @Inject
+    private LogService logService;
     
     @Override
     public void startContainer(String serviceId) {
@@ -57,10 +62,13 @@ public class ServicesPublicServiceImpl implements ServicesPublicService {
                 throw new UnauthorizedException();
             }
         } catch (NonUniqueResultException | NoResultException e) {
+            logService.log(LogSeverity.WARNING, "Unauthorized token access!");
             throw new UnauthorizedException();
         } catch (UnauthorizedException e) {
+            logService.log(LogSeverity.WARNING, "Unauthorized token access!");
             throw e;
         } catch (Exception e) {
+            logService.log(LogSeverity.WARNING, "Unauthorized token access!");
             e.printStackTrace();
             throw new TaskerException(e.getMessage());
         }
