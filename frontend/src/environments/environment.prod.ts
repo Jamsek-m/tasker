@@ -16,6 +16,6 @@ export const environment: TaskerEnvironment = {
         "auth-server-url": ""
     },
     auth: {
-        roleClient: "tasker-service"
+        roleClient: ""
     }
 };

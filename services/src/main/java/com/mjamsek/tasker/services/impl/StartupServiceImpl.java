@@ -39,11 +39,10 @@ public class StartupServiceImpl implements StartupService {
     
     @Override
     public void startupServer() {
+        this.createKeycloakConfigFile();
         if (!this.serviceWasInitialized()) {
-            
             this.createDatabaseStructure();
             this.populateData();
-            this.createKeycloakConfigFile();
             LOG.info("Tasker service was initialized!");
             this.writeInitFile();
         }
@@ -98,34 +97,40 @@ public class StartupServiceImpl implements StartupService {
     
     private void createKeycloakConfigFile() {
         
-        ObjectMapper mapper = new ObjectMapper();
+        if (!Files.exists(Paths.get(clientConfig.getConfigDir(), "config.json"))) {
+    
+            ObjectMapper mapper = new ObjectMapper();
+    
+            ObjectNode keycloakNode = mapper.createObjectNode();
+            keycloakNode.put("realm", clientConfig.getRealm());
+            keycloakNode.put("auth-server-url", clientConfig.getAuthUrl());
+            keycloakNode.put("resource", clientConfig.getClientId());
+    
+            String roleClient = ConfigurationUtil.getInstance().get("kc.realm").orElse(clientConfig.getClientId());
+            ObjectNode authNode = mapper.createObjectNode();
+            authNode.put("roleClient", roleClient);
+    
+            ObjectNode configNode = mapper.createObjectNode();
+            configNode.set("keycloak", keycloakNode);
+            configNode.set("auth", authNode);
+    
+            try {
         
-        ObjectNode keycloakNode = mapper.createObjectNode();
-        keycloakNode.put("realm", clientConfig.getRealm());
-        keycloakNode.put("auth-server-url", clientConfig.getAuthUrl());
-        keycloakNode.put("resource", clientConfig.getClientId());
+                Files.createDirectories(Paths.get(clientConfig.getConfigDir()));
         
-        String roleClient = ConfigurationUtil.getInstance().get("kc.realm").orElse(clientConfig.getClientId());
-        ObjectNode authNode = mapper.createObjectNode();
-        authNode.put("roleClient", roleClient);
-    
-        ObjectNode configNode = mapper.createObjectNode();
-        configNode.set("keycloak", keycloakNode);
-        configNode.set("auth", authNode);
-    
-        try {
+                String clientJsonConfig = mapper.writeValueAsString(configNode);
+                FileWriter fileWriter = new FileWriter(new File(Paths.get(clientConfig.getConfigDir(), "config.json").toString()));
+                fileWriter.write(clientJsonConfig);
+                fileWriter.close();
+        
+                LOG.info("Tasker client configuration is created!");
+            } catch (IOException e) {
+                e.printStackTrace();
+                System.exit(1);
+            }
             
-            Files.createDirectories(Paths.get(clientConfig.getConfigDir()));
-            
-            String clientJsonConfig = mapper.writeValueAsString(configNode);
-            FileWriter fileWriter = new FileWriter(new File(Paths.get(clientConfig.getConfigDir(), "config.json").toString()));
-            fileWriter.write(clientJsonConfig);
-            fileWriter.close();
-    
-            LOG.info("Tasker client configuration is created!");
-        } catch (IOException e) {
-            e.printStackTrace();
-            System.exit(1);
+        } else {
+            LOG.info("Client config already exists, skipping...");
         }
     }
 }
