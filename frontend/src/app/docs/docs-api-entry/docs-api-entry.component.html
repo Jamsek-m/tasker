@@ -1,10 +1,28 @@
 <div>
-    <h5>{{api.name}}</h5>
+    <h5>
+        <fa-icon [icon]="['fas', 'chevron-right']" style="margin-right: 8px;"></fa-icon>
+        {{api.name}}
+    </h5>
     <p class="desc">{{api.description}}</p>
     <p>
         <span class="badge badge-primary method-{{api.method | lowercase}}">{{api.method}}</span>
         {{api.path}}
     </p>
+    <h6>Parameters:</h6>
+    <div class="parameters">
+        <div *ngFor="let param of api.params | keyvalue">
+            <strong>
+                {{param.key}}
+                <span class="required-star" *ngIf="param.value.required" tooltip="required">*</span>
+            </strong>
+            <div>
+                In: <strong>{{param.value.in}}</strong>
+                <span *ngIf="param.value.defaultValue"> ({{param.value.defaultValue}})</span>
+            </div>
+            <div class="desc">{{param.value.description}}</div>
+        </div>
+    </div>
+    <h6>Responses:</h6>
     <div class="responses">
         <div *ngFor="let response of api.responses">
             <strong>{{response.status}}</strong>

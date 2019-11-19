@@ -10,7 +10,7 @@ export class DocsApiEntryComponent implements OnInit {
 
     @Input()
     public api: ApiDoc;
-
+ 
     constructor() {
     }
 

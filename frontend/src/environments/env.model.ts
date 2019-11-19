@@ -9,13 +9,12 @@ export interface TaskerEnvironment {
 
 export interface AuthConfig {
     roleClient: string;
-    minimalRequiredRole?: string;
 }
 
 export interface TaskerKeycloakConfig {
     realm: string;
-    url: string;
-    clientId: string;
+    "auth-server-url": string;
+    resource: string;
 }
 
 export interface TaskerProjectMeta {

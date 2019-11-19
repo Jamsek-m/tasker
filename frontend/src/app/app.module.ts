@@ -1,5 +1,5 @@
 import {BrowserModule} from "@angular/platform-browser";
-import {APP_BOOTSTRAP_LISTENER, APP_INITIALIZER, NgModule} from "@angular/core";
+import {APP_INITIALIZER, NgModule} from "@angular/core";
 
 import {FormsModule} from "@angular/forms";
 import {HTTP_INTERCEPTORS, HttpClientModule} from "@angular/common/http";
@@ -13,8 +13,6 @@ import {ServiceListPageComponent} from "./pages/service-list-page/service-list-p
 import {CreateTokenPageComponent} from "./pages/create-token-page/create-token-page.component";
 import {Error404PageComponent} from "./pages/error404-page/error404-page.component";
 import {DocsPageComponent} from "./docs/docs-page.component";
-import {DocsTaskPageComponent} from "./docs/docs-task-page/docs-task-page.component";
-import {DocsPluginPageComponent} from "./docs/docs-plugin-page/docs-plugin-page.component";
 import {DockerEndpointsPageComponent} from "./pages/docker-endpoints-page/docker-endpoints-page.component";
 import {LogsPageComponent} from "./pages/logs-page/logs-page.component";
 
@@ -61,8 +59,6 @@ import {AuthInterceptor} from "@mjamsek/ngx-keycloak-service";
         PaginationComponent,
         PaginationLimitComponent,
         DocsPageComponent,
-        DocsTaskPageComponent,
-        DocsPluginPageComponent,
         DockerEndpointsPageComponent,
         LogsPageComponent,
         HealthOverviewComponent,

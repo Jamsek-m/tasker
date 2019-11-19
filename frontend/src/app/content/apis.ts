@@ -1,34 +1,56 @@
 
 export const apisList: ApiDoc[] = [
     {
-        name: "Healthcheck",
-        path: "/services/{id}/health",
-        method: "GET",
-        description: "Performs registered healthcheck of a service.",
-        responses: [
-            {
-                status: 200,
-                description: "Service is in good health."
-            },
-            {
-                status: 417,
-                description: "Service does not have registered healthcheck."
-            },
-            {
-                status: 500,
-                description: "Healthcheck failed."
-            }
-        ]
-    },
-    {
         name: "Start service container",
         description: "Starts registered docker container, if not running.",
-        path: "/{id}/container/start",
+        path: "/public/services/{id}/container/start",
         method: "POST",
         responses: [
             {
                 status: 200,
                 description: "Container has started."
+            },
+            {
+                status: 404,
+                description: "Service does not exists."
+            },
+            {
+                status: 417,
+                description: "Service has no registered container."
+            }
+        ],
+        params: {
+            "X-Tasker-Key": {
+                in: "Header",
+                description: "Authentication token",
+                type: "string",
+                required: true,
+                defaultValue: ""
+            }
+        },
+    },
+    {
+        name: "Recreate service container with latest image",
+        description: "Removes old container, creates new one with latest image and starts it",
+        path: "/public/services/{id}/container/recreate",
+        method: "POST",
+        params: {
+            "X-Tasker-Key": {
+                in: "Header",
+                description: "Authentication token",
+                type: "string",
+                required: true,
+                defaultValue: ""
+            }
+        },
+        responses: [
+            {
+                status: 200,
+                description: "Container has been recreated."
+            },
+            {
+                status: 404,
+                description: "Service does not exists."
             },
             {
                 status: 417,
@@ -43,7 +65,7 @@ export interface ApiDoc {
     description?: string;
     path: string;
     method: string;
-    queryParams?: {[key: string]: ApiDoc.QueryParam};
+    params?: {[key: string]: ApiDoc.QueryParam};
     body?: any;
     responses: ApiDoc.Response[];
 }
@@ -54,6 +76,7 @@ export namespace ApiDoc {
         description: string;
         defaultValue?: string;
         type?: string;
+        in: "Header" | "Query" | "Body" | "Cookie";
     }
     export interface Response {
         status: number;
