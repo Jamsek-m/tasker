@@ -106,7 +106,7 @@ public class StartupServiceImpl implements StartupService {
             keycloakNode.put("auth-server-url", clientConfig.getAuthUrl());
             keycloakNode.put("resource", clientConfig.getClientId());
     
-            String roleClient = ConfigurationUtil.getInstance().get("kc.realm").orElse(clientConfig.getClientId());
+            String roleClient = ConfigurationUtil.getInstance().get("kc.client-id").orElse(clientConfig.getClientId());
             ObjectNode authNode = mapper.createObjectNode();
             authNode.put("roleClient", roleClient);
     
