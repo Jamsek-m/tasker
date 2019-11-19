@@ -52,7 +52,7 @@ export class HeaderComponent implements OnInit {
         }
 
         return menuItem.requiredRoles.filter(role => {
-            return this.keycloakService.hasRealmRole(role);
+            return this.keycloakService.hasClientRole(role);
         }).length > 0;
     }
 

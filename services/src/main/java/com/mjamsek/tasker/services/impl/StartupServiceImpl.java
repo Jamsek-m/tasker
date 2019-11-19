@@ -2,6 +2,7 @@ package com.mjamsek.tasker.services.impl;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.kumuluz.ee.configuration.utils.ConfigurationUtil;
 import com.kumuluz.ee.logs.LogManager;
 import com.kumuluz.ee.logs.Logger;
 import com.mjamsek.tasker.config.ClientConfig;
@@ -104,8 +105,13 @@ public class StartupServiceImpl implements StartupService {
         keycloakNode.put("auth-server-url", clientConfig.getAuthUrl());
         keycloakNode.put("resource", clientConfig.getClientId());
         
+        String roleClient = ConfigurationUtil.getInstance().get("kc.realm").orElse(clientConfig.getClientId());
+        ObjectNode authNode = mapper.createObjectNode();
+        authNode.put("roleClient", roleClient);
+    
         ObjectNode configNode = mapper.createObjectNode();
         configNode.set("keycloak", keycloakNode);
+        configNode.set("auth", authNode);
     
         try {
             
