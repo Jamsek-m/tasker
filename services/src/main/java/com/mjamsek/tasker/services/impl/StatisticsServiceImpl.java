@@ -23,17 +23,20 @@ public class StatisticsServiceImpl implements StatisticsService {
     @Override
     public Statistics getStatistics() {
         Statistics statistics = new Statistics();
+    
+        QueryParameters queryWithActive = new QueryParameters();
+        queryWithActive.getFilters().add(new QueryFilter("active", FilterOperation.EQ, "true"));
         
-        long totalServices = JPAUtils.queryEntitiesCount(em, ServiceEntity.class, new QueryParameters());
+        long totalServices = JPAUtils.queryEntitiesCount(em, ServiceEntity.class, queryWithActive);
         statistics.setTotalServices(totalServices);
         
-        long totalClientApps = JPAUtils.queryEntitiesCount(em, ClientAppServiceEntity.class, new QueryParameters());
+        long totalClientApps = JPAUtils.queryEntitiesCount(em, ClientAppServiceEntity.class, queryWithActive);
         statistics.setTotalClientApps(totalClientApps);
         
-        long totalWebApps = JPAUtils.queryEntitiesCount(em, WebAppServiceEntity.class, new QueryParameters());
+        long totalWebApps = JPAUtils.queryEntitiesCount(em, WebAppServiceEntity.class, queryWithActive);
         statistics.setTotalWebApps(totalWebApps);
         
-        long totalApiServices = JPAUtils.queryEntitiesCount(em, ApiServiceEntity.class, new QueryParameters());
+        long totalApiServices = JPAUtils.queryEntitiesCount(em, ApiServiceEntity.class, queryWithActive);
         statistics.setTotalApiServices(totalApiServices);
         
         QueryParameters query = new QueryParameters();
